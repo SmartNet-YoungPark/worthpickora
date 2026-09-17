@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test tests/catalog.test.mjs tests/catalog-storage.test.mjs tests/catalog-workbook.test.mjs tests/admin-security.test.mjs",
+    "test": "node --test tests/catalog.test.mjs tests/catalog-storage.test.mjs tests/catalog-workbook.test.mjs tests/admin-security.test.mjs tests/tap-activation.test.mjs",
     "test:auth-routes": "node tests/admin-routes.test.mjs",
     "admin:setup": "node scripts/setup-admin.mjs"
   },

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { CATEGORIES, exportCsv, importCsv, normalizeLegacyCategory, parseCsv, prepareCsvImport, productSets, sortProductsBySetCode, seedProducts, validateCategories, validateProduct, validateSetCapacity, validUrl } from "../lib/catalog.ts";
+import { CATEGORIES, exportCsv, importCsv, normalizeLegacyCategory, parseCsv, prepareCsvImport, productSets, sortProductsBySetCode, storefrontProducts, seedProducts, validateCategories, validateProduct, validateSetCapacity, validUrl } from "../lib/catalog.ts";
 
 test("CSV preserves quoted commas, escaped quotes, Unicode, and multiline descriptions", () => {
   const product = { ...seedProducts[0], name: '이어버드, "Everyday"', description: "First line\nSecond line" };
@@ -173,4 +173,16 @@ test("import results sort by numeric set then natural product code without mutat
   const before = structuredClone(report.products);
   assert.deepEqual(sortProductsBySetCode(report.products).map(({set, code}) => [set, code]), [[1, "T20"], [2, "T2"], [2, "T10"], [10, "T1"]]);
   assert.deepEqual(report.products, before);
+});
+
+
+test("storefront keeps image bytes out of page data without altering administrator data", () => {
+  const product = { ...seedProducts[0], image: "data:image/png;base64,aGVsbG8=", id: "image / product" };
+  const draft = { ...product, id: "private", status: "Draft" };
+  const result = storefrontProducts([product, draft], "revision-1");
+  assert.equal(result.length, 1);
+  assert.equal(result[0].image, "/api/products/image%20%2F%20product/image?v=revision-1");
+  assert.equal(product.image, "data:image/png;base64,aGVsbG8=");
+  assert.notEqual(storefrontProducts([product], "revision-2")[0].image, result[0].image);
+  assert.deepEqual(storefrontProducts(result, "revision-1"), result);
 });

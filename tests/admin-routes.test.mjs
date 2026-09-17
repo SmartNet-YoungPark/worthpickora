@@ -62,7 +62,7 @@ try {
   const initialCatalog = await (await request("/api/catalog?scope=admin", authed)).json();
   const updatedProducts = structuredClone(initialCatalog.products);
   updatedProducts[0] = { ...updatedProducts[0], name: "Save Regression Updated Earbuds", set: 27, image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jL1sAAAAASUVORK5CYII=", photo: null };
-  updatedProducts[1] = { ...updatedProducts[1], name: "Private Draft Must Not Leak", status: "Draft", set: 99 };
+  updatedProducts[1] = { ...updatedProducts[1], name: "Private Draft Must Not Leak", status: "Draft", set: 99, image: updatedProducts[0].image };
   updatedProducts[2].set = 2;
   updatedProducts[3].set = 3;
   const putOptions = { method: "PUT", headers: { Origin: origin, Cookie: cookie, "Content-Type": "application/json" }, body: JSON.stringify({ products: updatedProducts, revision: initialCatalog.revision }) };
@@ -75,7 +75,15 @@ try {
   const publicResponse = await request("/api/catalog");
   assert.match(publicResponse.headers.get("cache-control"), /no-store/);
   const publicProducts = (await publicResponse.json()).products;
-  assert.equal(publicProducts.find(product => product.id === updatedProducts[0].id).image, updatedProducts[0].image);
+  const publicImageUrl = publicProducts.find(product => product.id === updatedProducts[0].id).image;
+  assert.ok(publicImageUrl.startsWith("/api/products/"));
+  assert.ok(!JSON.stringify(publicProducts).includes("data:image/"));
+  const imageResponse = await request(publicImageUrl);
+  assert.equal(imageResponse.status, 200);
+  assert.equal(imageResponse.headers.get("content-type"), "image/png");
+  assert.deepEqual(Buffer.from(await imageResponse.arrayBuffer()), Buffer.from(updatedProducts[0].image.split(",")[1], "base64"));
+  assert.equal((await request(`/api/products/${encodeURIComponent(updatedProducts[1].id)}/image`)).status, 404);
+  assert.equal((await request("/api/products/missing-product/image")).status, 404);
   assert.ok(!publicProducts.some(product => product.id === updatedProducts[1].id));
   const refreshedLanding = await (await request("/")).text();
   assert.ok(refreshedLanding.includes("Save Regression Updated Earbuds"));
@@ -87,7 +95,8 @@ try {
   assert.deepEqual(setRows, [1, 2, 3, 27], "all populated sets have rows without needing View All Sets");
   assert.ok(!techSection.includes("Set 99"), "draft-only sets remain private");
   assert.ok(!refreshedLanding.includes("Private Draft Must Not Leak"));
-  assert.ok(refreshedLanding.includes(updatedProducts[0].image));
+  assert.ok(refreshedLanding.includes(publicImageUrl));
+  assert.ok(!refreshedLanding.includes(updatedProducts[0].image));
   assert.equal((await request("/api/catalog", putOptions)).status, 409);
   const badProduct = { ...updatedProducts[0], image: "javascript:alert(1)" };
   assert.equal((await request("/api/catalog", { ...putOptions, body: JSON.stringify({ products: [badProduct], revision: savedCatalog.revision }) })).status, 400);

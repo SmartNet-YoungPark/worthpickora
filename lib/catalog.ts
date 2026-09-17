@@ -31,6 +31,15 @@ export type Product = {
 };
 export type CatalogSnapshot = { products: Product[]; categories: string[]; revision: string; persisted: boolean };
 
+export function storefrontProducts(products: Product[], revision: string): Product[] {
+  return products.filter(product => product.status === "Published").map(product => ({
+    ...product,
+    image: product.image.startsWith("data:image/")
+      ? `/api/products/${encodeURIComponent(product.id)}/image?v=${encodeURIComponent(revision)}`
+      : product.image,
+  }));
+}
+
 export function compareSetCode(a: Product, b: Product): number {
   return a.set - b.set || a.code.localeCompare(b.code, "en", { numeric: true, sensitivity: "base" });
 }

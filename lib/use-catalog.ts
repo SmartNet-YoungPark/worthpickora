@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { CatalogSnapshot, normalizeLegacyCategory, Product, seedProducts, validateProduct } from "./catalog";
+import { CatalogSnapshot, normalizeLegacyCategory, Product, seedProducts, storefrontProducts, validateProduct } from "./catalog";
 
 const EVENT = "worthpickora-catalog-change";
 const SIGNAL = "worthpickora-catalog-revision";
@@ -27,7 +27,7 @@ function createStore(initial: CatalogSnapshot, admin: boolean) {
   function notify() { listeners.forEach(listener => listener()); }
   function apply(catalog: CatalogSnapshot) {
     generation++;
-    value = { ...catalog, products: admin ? catalog.products : catalog.products.filter(product => product.status === "Published"), error: "", loading: false };
+    value = { ...catalog, products: admin ? catalog.products : storefrontProducts(catalog.products, catalog.revision), error: "", loading: false };
     notify();
   }
   async function refresh() {

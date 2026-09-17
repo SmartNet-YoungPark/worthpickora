@@ -13,6 +13,12 @@ npm run dev
 - Administrator login: http://localhost:3000/admin/login
 - Product management: http://localhost:3000/admin/products
 
+For phone testing on the same Wi-Fi, run `npm run dev -- --hostname 0.0.0.0`
+and open `http://10.0.0.216:3000`. This PC address is explicitly listed in
+`allowedDevOrigins` in `next.config.ts`, so development JavaScript and hot-reload
+requests from the phone are accepted. If the PC's IP changes, update this entry
+and restart the dev server. Keep the list limited to your actual development hosts.
+
 ## Administrator PIN
 
 Run `npm run admin:setup` in an interactive terminal and enter a four-digit PIN twice. Exactly four ASCII digits are required; leading zeros are preserved. Entry is hidden. Only a salted scrypt hash and a random signing secret are stored in the git-ignored `.env.local`.
@@ -24,6 +30,8 @@ Admin pages verify an eight-hour signed HttpOnly session on the server. Login, l
 ## Shared product catalog
 
 Products and uploaded images are now saved on the server in `.data/catalog.json`, not in individual browser storage. The file is excluded from Git. Back up this file to preserve the catalog. `CATALOG_DATA_FILE` can override its location.
+
+Storefront HTML and public catalog responses contain image URLs instead of embedded image bytes. Published images load separately through `/api/products/[id]/image`; unpublished and deleted products return 404. Administrator editing and Excel exports retain the original embedded images. This keeps mobile page initialization and periodic catalog refreshes lightweight.
 
 The storefront and administrator page read the same catalog. Only Published products appear publicly. A successful save is immediately available to a new storefront request; open tabs refresh on changes, focus, and every five seconds. Drafts and archived products remain private to the administrator API. Saves use atomic file replacement and reject stale revisions instead of silently overwriting another edit.
 

@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useState, useSyncExternalStore } from "react";
+import { useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import SiteLogo from "./site-logo";
 import ProductDescription from "./product-description";
+import MoreProductsButton from "./more-products-button";
 import { useCatalog } from "@/lib/use-catalog";
 import { CatalogSnapshot, productSets, validUrl } from "@/lib/catalog";
 
@@ -72,12 +73,22 @@ export default function LandingPage({ admin, initialCatalog }: { admin: boolean;
   const [moreBrands, setMoreBrands] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, number | null>>({ Tech: 1 });
   const [showAll, setShowAll] = useState<Record<string, boolean>>({});
-  const [slide, setSlide] = useState(0);
+  const [slides, setSlides] = useState<Record<string, number>>({});
   const searchRef = useRef<HTMLInputElement>(null);
+  const collapsedSet = useRef<{ heading: HTMLElement; gridId: string } | null>(null);
+  useLayoutEffect(() => {
+    const target = collapsedSet.current;
+    collapsedSet.current = null;
+    if (!target || !target.heading.isConnected) return;
+    // Collapsing the tall mobile grid can move the page's scroll anchor past
+    // the set heading. Restore it after layout, with the toggle still visible.
+    document.getElementById(target.gridId)?.scrollTo({ left: 0, behavior: "instant" });
+    window.scrollTo({ top: Math.max(0, window.scrollY + target.heading.getBoundingClientRect().top - 16), behavior: "instant" });
+  }, [showAll]);
   function toggleSave(id: string) {
     writeSaved(saved.includes(id) ? saved.filter(item => item !== id) : [...saved, id]);
   }
-  function selectCategory(name: string) { setCategory(name); setExpanded(current => ({ ...current, [name]: current[name] || 1 })); setSlide(0); }
+  function selectCategory(name: string) { setCategory(name); setExpanded(current => ({ ...current, [name]: current[name] || 1 })); setSlides({}); }
   const filtering = !!query || savedOnly;
   const activeCategory = categoryNames.includes(category) ? category : categoryNames[0];
   const visibleCategories = filtering ? categories : [...categories.filter(item => item.name === activeCategory), ...categories.filter(item => item.name !== activeCategory)];
@@ -106,19 +117,21 @@ export default function LandingPage({ admin, initialCatalog }: { admin: boolean;
         const requestedSet = expanded[cat.name];
         const selectedSet = requestedSet == null ? requestedSet : availableSets.includes(requestedSet) ? requestedSet : availableSets[0];
         return <section key={cat.name} className={`product-section ${cat.className}`} aria-label={`${cat.name} product sets`}>
-          <div className="section-bar"><h2>{cat.name} Products Set</h2><div className="set-tabs">{availableSets.map(number => <button key={number} className={(selectedSet || availableSets[0]) === number ? "active" : ""} onClick={() => {setExpanded(current => ({ ...current, [cat.name]: number }));setSlide(0);}}>Set {String(number).padStart(2, "0")}</button>)}</div><span className="section-note">A few favorites, just for you</span></div>
+          <div className="section-bar"><h2>{cat.name} Products Set</h2><div className="set-tabs">{availableSets.map(number => <button key={number} className={(selectedSet || availableSets[0]) === number ? "active" : ""} onClick={() => {setExpanded(current => ({ ...current, [cat.name]: number }));setSlides({});}}>Set {String(number).padStart(2, "0")}</button>)}</div><span className="section-note">A few favorites, just for you</span></div>
           {availableSets.map(number => {
             const open = filtering || selectedSet === number;
             const ordered = matches.filter(product => product.set === number);
             const setKey = JSON.stringify([cat.name, number]);
-            const products = showAll[setKey] || filtering ? ordered : ordered.slice(0, 5);
+            const showingAll = !!showAll[setKey] || filtering;
+            const products = showingAll ? ordered : ordered.slice(0, 5);
+            const gridId = `products-${encodeURIComponent(cat.name)}-${number}`;
             return <div className={`product-set ${open ? "open" : ""}`} key={number}>
-              <div className="set-heading"><button className="set-toggle" onClick={() => setExpanded(current => ({ ...current, [cat.name]: open ? null : number }))} aria-expanded={open}><h3>{cat.name} Set {String(number).padStart(2, "0")}</h3>{!open && <span>{ordered.length} products</span>}</button>{open ? <div className="set-details"><span>Showing {products.length} of {ordered.length}</span>{ordered.length > 5 && !filtering && <button className={`more-products-button${!showAll[setKey] ? " has-more-products" : ""}`} aria-expanded={!!showAll[setKey]} onClick={() => setShowAll(current => ({ ...current, [setKey]: !current[setKey] }))}>{showAll[setKey] ? "Show Less" : "View More Products"}<Icon name="arrow" size={17}/></button>}</div> : <button className="expand-button" onClick={() => setExpanded(current => ({ ...current, [cat.name]: number }))} aria-label={`Expand ${cat.name} set ${number}`}><Icon name="plus"/></button>}</div>
-              {open && <><div className="product-grid" onScroll={event => { const element = event.currentTarget; setSlide(Math.round(element.scrollLeft / (element.scrollWidth - element.clientWidth || 1) * 4)); }}>{products.length === 0 && <p className="catalog-empty-set">New finds are on their way. Explore another set or store.</p>}{products.map(product => <article className="product-card" key={product.id}>
+              <div className="set-heading"><button className="set-toggle" onClick={() => setExpanded(current => ({ ...current, [cat.name]: open ? null : number }))} aria-expanded={open}><h3>{cat.name} Set {String(number).padStart(2, "0")}</h3>{!open && <span>{ordered.length} products</span>}</button>{open ? <div className="set-details"><span>Showing {products.length} of {ordered.length}</span>{ordered.length > 5 && !filtering && <MoreProductsButton expanded={!!showAll[setKey]} controls={gridId} onToggle={button => { if (showAll[setKey] && window.matchMedia("(max-width: 760px)").matches) { const heading = button.closest<HTMLElement>(".set-heading"); if (heading) collapsedSet.current = { heading, gridId }; } setShowAll(current => ({ ...current, [setKey]: !current[setKey] })); setSlides(current => ({ ...current, [setKey]: 0 })); }}/>}</div> : <button className="expand-button" onClick={() => setExpanded(current => ({ ...current, [cat.name]: number }))} aria-label={`Expand ${cat.name} set ${number}`}><Icon name="plus"/></button>}</div>
+              {open && <><div id={gridId} className={`product-grid${showingAll ? " product-grid-expanded" : ""}`} onScroll={event => { const element = event.currentTarget; const slide = Math.round(element.scrollLeft / (element.scrollWidth - element.clientWidth || 1) * 4); setSlides(current => current[setKey] === slide ? current : { ...current, [setKey]: slide }); }}>{products.length === 0 && <p className="catalog-empty-set">New finds are on their way. Explore another set or store.</p>}{products.map(product => <article className="product-card" key={product.id}>
                 <div className="card-top"><button className={`heart-button ${saved.includes(product.id) ? "is-saved" : ""}`} onClick={() => toggleSave(product.id)} aria-label={`${saved.includes(product.id) ? "Unsave" : "Save"} ${product.name}`} aria-pressed={saved.includes(product.id)}><Icon name="heart" size={23}/></button><BrandMark brand={product.store}/></div>
                 {product.image ? <Image className="catalog-uploaded-photo" src={product.image} alt={product.name} width={150} height={132} unoptimized/> : product.photo !== null ? <div className={`product-photo photo-${product.photo}`} role="img" aria-label={product.name}/> : <div className="product-illustration"><Icon name={cat.icon} size={68}/><span>THE {cat.name.toUpperCase()} EDIT</span></div>}
                 <div className="product-info"><div className="product-code-row"><h4>{product.code}</h4><ProductDescription description={product.description} name={product.name}/></div><p>{product.name}</p></div><a className="store-button" href={validUrl(product.url) ? product.url : undefined} target="_blank" rel="noopener noreferrer"><Icon name="external" size={18}/>View on Store</a>
-              </article>)}</div><div className="mobile-dots" aria-hidden="true">{[0, 1, 2, 3, 4].map(dot => <span key={dot} className={slide === dot ? "active" : ""}/>)}</div><div className="set-caption"><span><span className="little-star">✦</span> {cat.description}</span><span>Find your next favorite <Icon name="arrow" size={14}/></span></div></>}
+              </article>)}</div>{!showingAll && <div className="mobile-dots" aria-hidden="true">{[0, 1, 2, 3, 4].map(dot => <span key={dot} className={(slides[setKey] || 0) === dot ? "active" : ""}/>)}</div>}<div className="set-caption"><span><span className="little-star">✦</span> {cat.description}</span><span>Find your next favorite <Icon name="arrow" size={14}/></span></div></>}
             </div>;
           })}
         </section>;
