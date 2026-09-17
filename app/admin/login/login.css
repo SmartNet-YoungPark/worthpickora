@@ -1,0 +1,18 @@
+.admin-login-page { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; padding: 55px 20px 35px; background: radial-gradient(ellipse at 15% 20%, #fff1ea 0, transparent 45%), radial-gradient(ellipse at 85% 75%, #e9f4ff 0, transparent 50%), #fcfdfd; }
+.admin-login-page > .wordmark { font-size: 28px; }
+.admin-login-card { width: min(100%, 420px); margin: auto 0; padding: 36px; background: #ffffffeb; border: 1px solid #e9eaf0; border-radius: 18px; box-shadow: 0 15px 65px #304d6810; text-align: center; }
+.login-lock { width: 55px; height: 55px; margin: 0 auto 23px; display: grid; place-items: center; color: #f27765; background: #fff0e9; border-radius: 15px; }
+.login-eyebrow { color: #9d9b9d; font-size: 8px; letter-spacing: 2px; }
+.admin-login-card h1 { font-size: 30px; line-height: 1.25; font-weight: 600; letter-spacing: -1px; margin-top: 13px; }
+.admin-login-card > p { color: #8a94a5; font-size: 12px; line-height: 1.8; margin: 15px 0 28px; }
+.admin-login-card form { text-align: left; }
+.admin-login-card label { display: block; font-size: 11px; color: #667189; margin-bottom: 9px; }
+.admin-login-card input { width: 100%; padding: 13px; background: #fff; border: 1px solid #dfe6ef; border-radius: 8px; font-size: 14px; }
+.admin-login-card input::placeholder { color: #b3bac6; }
+.admin-login-card form > button { width: 100%; padding: 14px 17px; margin-top: 18px; gap: 12px; background: var(--coral); color: white; border-radius: 8px; font-size: 12px; }
+.admin-login-card button > span { margin-left: auto; }
+.admin-login-card button:disabled { opacity: .5; cursor: not-allowed; }
+.login-error { color: #c16b59; background: #fff3ef; border-radius: 7px; padding: 11px; margin-top: 12px; font-size: 11px; line-height: 1.6; }
+.login-back { display: inline-flex; padding: 12px; margin-top: 15px; color: #8390a5; font-size: 11px; }
+.login-footnote { font-size: 10px; color: #a7adb7; margin-top: 30px; }
+@media(max-width:500px) { .admin-login-page { padding-top: 35px; gap: 35px; }.admin-login-card { padding: 30px 24px; }.admin-login-card input { font-size: 16px; } }
