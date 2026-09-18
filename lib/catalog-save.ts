@@ -1,4 +1,5 @@
 import "server-only";
+import { optimizeProductImage } from "./optimize-product-image";
 import { catalogStorage } from "./server-catalog";
 import { adminCatalogSnapshot, adminImageUrl, Product, validateCategories, validateProduct, validateSetCapacity } from "./catalog";
 const headers = { "Cache-Control": "no-store, private" };
@@ -26,7 +27,13 @@ export async function saveCatalogPayload(input: unknown): Promise<Response> {
   }
   const capacityError = validateSetCapacity(products);
   if (capacityError) return Response.json({ error: capacityError }, { status: 400, headers });
-  try { return Response.json(adminCatalogSnapshot(await catalogStorage.write(products, data.revision, categories)), { headers }); }
+  try {
+    for (const product of products) {
+      try { product.image = await optimizeProductImage(product.image); }
+      catch { return Response.json({ error: `${product.code}: This image could not be processed. Choose another JPG, PNG, or WebP image.` }, { status: 400, headers }); }
+    }
+    return Response.json(adminCatalogSnapshot(await catalogStorage.write(products, data.revision, categories)), { headers });
+  }
   catch (error) {
     // Next.js can load server modules in separate route bundles, so classify
     // storage errors by their stable code rather than class identity.

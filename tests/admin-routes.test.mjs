@@ -8,6 +8,8 @@ import { once } from "node:events";
 import { setTimeout as pause } from "node:timers/promises";
 import { createSession, hashPassword, SESSION_COOKIE, SESSION_SECONDS } from "../lib/admin-security.ts";
 import { sendCatalogPayload } from "../lib/catalog-upload-client.ts";
+import { optimizeProductImage } from "../lib/optimize-product-image.ts";
+import sharp from "sharp";
 
 // Uses an isolated production server and ephemeral credentials, never .env.local.
 const port = 3187;
@@ -139,7 +141,8 @@ try {
   assert.equal((await request(`/api/products/${encodeURIComponent(deleted.products[0].id)}/image`)).status, 404);
   // Reproduce an Excel catalog exceeding Vercel's 4.5 MB limit, without any
   // individual browser request or catalog response exceeding that limit.
-  const imageBytes = Buffer.concat([Buffer.from(updatedProducts[0].image.split(",")[1], "base64"), Buffer.alloc(180000)]);
+  const imageBytes = Buffer.concat([await sharp({create:{width:4,height:4,channels:3,background:'#14532d'}}).png().toBuffer(), Buffer.alloc(180000)]);
+  const optimizedBytes = Buffer.from((await optimizeProductImage(`data:image/png;base64,${imageBytes.toString("base64")}`)).split(',')[1], 'base64');
   const largeProducts = Array.from({ length: 20 }, (_, i) => ({ ...updatedProducts[0], id: `large-${i}`, code: `L${String(i).padStart(3, "0")}`, name: `Excel 한글 ${i}`, category: deleted.categories[0], set: i < 10 ? 1 : 2, status: i === 0 ? "Draft" : "Published", image: `data:image/png;base64,${imageBytes.toString("base64")}` }));
   const payload = JSON.stringify({ products: largeProducts, categories: deleted.categories, revision: deletionResult.revision });
   assert.ok(Buffer.byteLength(payload) > 4.5 * 1024 * 1024);
@@ -158,14 +161,14 @@ try {
   const adminImage = largeCatalog.products.find(p => p.id === "large-0").image;
   assert.equal((await request(adminImage)).status, 401);
   assert.equal((await request("/api/products/large-0/image")).status, 404);
-  assert.deepEqual(Buffer.from(await (await request(adminImage, { headers: { Cookie: cookie } })).arrayBuffer()), imageBytes);
+  assert.deepEqual(Buffer.from(await (await request(adminImage, { headers: { Cookie: cookie } })).arrayBuffer()), optimizedBytes);
   const reloadedAdmin = await (await request("/api/catalog?scope=admin", { headers: { Cookie: cookie } })).text();
   assert.ok(reloadedAdmin.length < 100000);
   const adminHtml = await (await request("/admin/products", { headers: { Cookie: cookie } })).text();
   assert.ok(!adminHtml.includes("data:image/"));
   const editLarge = await request("/api/catalog", { ...putOptions, body: JSON.stringify({ ...largeCatalog, products: largeCatalog.products.map(p => ({ ...p, name: `${p.name} edited` })) }) });
   assert.equal(editLarge.status, 200, await editLarge.clone().text());
-  assert.deepEqual(Buffer.from(await (await request("/api/products/large-1/image")).arrayBuffer()), imageBytes, "metadata-only edits retain original image bytes");
+  assert.deepEqual(Buffer.from(await (await request("/api/products/large-1/image")).arrayBuffer()), optimizedBytes, "metadata-only edits retain optimized image bytes");
   const editedLargeCatalog = await editLarge.json();
   const groupingResponse = await request("/api/catalog", { ...putOptions, body: JSON.stringify({ ...editedLargeCatalog, products: editedLargeCatalog.products.map((p,i) => ({...p,status:"Published",set:i%11+1})) }) });
   assert.equal(groupingResponse.status,200);
@@ -173,7 +176,9 @@ try {
   assert.equal((groupedHtml.match(/<details[^>]*class="set-group"/g)||[]).length,3);
   assert.ok(groupedHtml.includes("Set 1 - "+deleted.categories[0].replaceAll("&","&amp;")+" Set 5"));
   assert.ok(groupedHtml.includes("Set 6 - "+deleted.categories[0].replaceAll("&","&amp;")+" Set 10"));
-  assert.ok(!/<details[^>]*class="set-group"[^>]*open/.test(groupedHtml),"groups start collapsed");
+  const groups=[...groupedHtml.matchAll(/<details[^>]*class="set-group"[^>]*>/g)].map(m=>m[0]);
+  assert.deepEqual(groups.map(g=>g.includes('open')), [false,false,true], "last group starts open");
+  assert.match(groupedHtml, /aria-expanded="true"><h3>.*?Set 11<\/h3>/, "last populated set starts expanded");
   assert.equal((await request("/admin/products", { headers: { Cookie: `${SESSION_COOKIE}=forged` } })).status, 307);
   const expired = createSession(secret, passwordHash, Date.now() - SESSION_SECONDS * 1000 - 1000);
   assert.equal((await request("/api/admin/session", { headers: { Cookie: `${SESSION_COOKIE}=${expired}` } })).status, 401);

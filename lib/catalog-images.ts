@@ -13,6 +13,27 @@ async function loadImage(source: string) {
   return image;
 }
 
+// Compress new embedded images before uploading, including Excel/CSV pictures.
+export async function compressProductImages(products: Product[]): Promise<Product[]> {
+  const result: Product[] = [];
+  for (const product of products) {
+    if (!product.image.startsWith("data:image/")) { result.push(product); continue; }
+    try {
+      const image = await loadImage(product.image);
+      if (Math.max(image.naturalWidth, image.naturalHeight) <= 800 && product.image.length <= 200 * 1024) { result.push(product); continue; }
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      if (!context) throw new Error("Image processing is unavailable.");
+      const ratio = Math.min(1, 800 / Math.max(image.naturalWidth, image.naturalHeight));
+      canvas.width = Math.max(1, Math.round(image.naturalWidth * ratio));
+      canvas.height = Math.max(1, Math.round(image.naturalHeight * ratio));
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      result.push({ ...product, image: canvas.toDataURL("image/webp", 0.8) });
+    } catch { throw new Error(`${product.code}: This image could not be processed. Choose another JPG, PNG, or WebP image.`); }
+  }
+  return result;
+}
+
 export async function embedProductImages(products: Product[], excelCompatible = false): Promise<Product[]> {
   const cache = new Map<string, string>();
   let reference: HTMLImageElement | undefined;

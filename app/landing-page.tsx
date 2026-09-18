@@ -72,7 +72,7 @@ export default function LandingPage({ admin, initialCatalog }: { admin: boolean;
   try { const value: unknown = JSON.parse(savedSnapshot); if (Array.isArray(value)) saved = value.filter((item): item is string => typeof item === "string"); } catch { /* Ignore malformed stored data. */ }
   const [savedOnly, setSavedOnly] = useState(false);
   const [moreBrands, setMoreBrands] = useState(false);
-  const [expanded, setExpanded] = useState<Record<string, number | null>>({ Tech: 1 });
+  const [expanded, setExpanded] = useState<Record<string, number | null>>({});
   const [showAll, setShowAll] = useState<Record<string, boolean>>({});
   const [slides, setSlides] = useState<Record<string, number>>({});
   const searchRef = useRef<HTMLInputElement>(null);
@@ -117,7 +117,8 @@ export default function LandingPage({ admin, initialCatalog }: { admin: boolean;
         const availableSets = productSets(matches, cat.name);
         const grouped = availableSets.length >= 5;
         const requestedSet = expanded[cat.name];
-        const selectedSet = requestedSet == null ? requestedSet : availableSets.includes(requestedSet) ? requestedSet : availableSets[0];
+        const lastSet = availableSets[availableSets.length - 1];
+        const selectedSet = requestedSet === null ? null : requestedSet !== undefined && availableSets.includes(requestedSet) ? requestedSet : lastSet;
         return <section key={cat.name} className={`product-section ${cat.className}`} aria-label={`${cat.name} product sets`}>
           <div className="section-bar"><h2>{cat.name} Products Set</h2>{!grouped && <div className="set-tabs">{availableSets.map(number => <button key={number} className={(selectedSet || availableSets[0]) === number ? "active" : ""} onClick={() => {setExpanded(current => ({ ...current, [cat.name]: number }));setSlides({});}}>Set {String(number).padStart(2, "0")}</button>)}</div>}<span className="section-note">{grouped ? `${availableSets.length} sets · Browse in groups of 5` : "A few favorites, just for you"}</span></div>
           {groupProductSets(availableSets).map(group => {
@@ -139,7 +140,7 @@ export default function LandingPage({ admin, initialCatalog }: { admin: boolean;
             });
             if (!grouped) return <div key={group[0]}>{rows}</div>;
             const label = group.length === 1 ? `${cat.name} Set ${group[0]}` : `${cat.name} Set ${group[0]} - ${cat.name} Set ${group[group.length - 1]}`;
-            return <details key={group[0]} className="set-group" open={filtering ? true : undefined}>
+            return <details key={group[0]} className="set-group" open={filtering || group.includes(lastSet) ? true : undefined}>
               <summary><span>{label}</span><span className="set-group-count">{group.length} {group.length === 1 ? "set" : "sets"}</span><Icon name="chevron" size={19}/></summary>
               <div className="set-group-rows">{rows}</div>
             </details>;
