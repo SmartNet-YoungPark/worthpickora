@@ -75,6 +75,7 @@
 .admin-table tr.editing { background: #fffaf8; }
 .admin-table tr.selected { background: #fff4ee; }
 .admin-image-cell { width: 65px; }
+.admin-table .admin-name-heading { text-align: center; }
 .admin-image-cell button { padding: 0; }
 .admin-product-cell { display: flex; align-items: center; text-align: left; width: 210px; min-height: 44px; padding: 0; }
 .admin-product-cell strong { display: block; font-size: 11px; color: #303c53; font-weight: 600; white-space: normal; overflow-wrap: anywhere; }
