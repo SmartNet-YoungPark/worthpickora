@@ -6,9 +6,25 @@ import { CatalogSnapshot, normalizeLegacyCategory, Product, seedProducts, storef
 const EVENT = "worthpickora-catalog-change";
 const SIGNAL = "worthpickora-catalog-revision";
 
+export async function deleteCatalogProducts(ids: string[], current: CatalogSnapshot) {
+  const response = await fetch("/api/catalog", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ids, revision: current.revision }), cache: "no-store" });
+  const data = await response.json().catch(() => { throw new Error(`The server returned HTTP ${response.status}. Refresh the catalog to check whether deletion completed.`); });
+  if (!response.ok) {
+    if (response.status === 409) window.dispatchEvent(new Event("worthpickora-catalog-refresh"));
+    throw new Error(data.error || "Could not delete products.");
+  }
+  const removed = new Set<string>(data.deleted);
+  const catalog = { ...current, products: current.products.filter(product => !removed.has(product.id)), revision: data.revision, persisted: true };
+  window.dispatchEvent(new CustomEvent(EVENT, { detail: catalog }));
+  try { localStorage.setItem(SIGNAL, data.revision); } catch { /* Optional cross-tab notification. */ }
+}
+
 export async function saveCatalog(products: Product[], revision: string, categories?: string[]): Promise<CatalogSnapshot> {
   const response = await fetch("/api/catalog", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ products, revision, categories }), cache: "no-store" });
-  const data = await response.json();
+  const data = await response.json().catch(() => {
+    if (response.status === 413) throw new Error("The hosting server rejected this request because it is too large. No changes were saved.");
+    throw new Error(`The server returned an unreadable response (HTTP ${response.status}). No changes were confirmed. Refresh the catalog before trying again.`);
+  });
   if (!response.ok) {
     if (response.status === 409) window.dispatchEvent(new Event("worthpickora-catalog-refresh"));
     throw new Error(data.error || "Could not save the catalog.");

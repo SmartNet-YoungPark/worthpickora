@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { STORES, STATUSES, CatalogSnapshot, Category, Product, ProductStatus, productSets, compareSetCode, sortProductsBySetCode, exportCsv, prepareCsvImport, validateProduct, validateSetCapacity, validUrl } from "@/lib/catalog";
 import { embedProductImages } from "@/lib/catalog-images";
-import { saveCatalog, useCatalog } from "@/lib/use-catalog";
+import { deleteCatalogProducts, saveCatalog, useCatalog } from "@/lib/use-catalog";
 import Icon, { AdminIconName } from "./icons";
 import SetPicker from "./set-picker";
 import CategoryManager from "./category-manager";
@@ -105,13 +105,13 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
     if (!editor) return;
     setDraft({ ...editor, [field]: value }); setDirty(true); setError("");
   }
-  async function persist(next: Product[], message: string, nextCategories: string[] = categoryNames) {
+  async function persist(next: Product[], message: string, nextCategories: string[] = categoryNames, onFailure?: (message: string) => void) {
     if (saving || loading) return false;
     const capacityError = validateSetCapacity(next);
-    if (capacityError) { setNotice({ message: capacityError, error: true }); return false; }
+    if (capacityError) { setNotice({ message: capacityError, error: true }); onFailure?.(capacityError); return false; }
     setSaving(true);
     try { await saveCatalog(next, revision, nextCategories); setNotice({ message, error: false }); return true; }
-    catch (problem) { setNotice({ message: problem instanceof Error ? problem.message : "Could not save. Check your connection and try again.", error: true }); return false; }
+    catch (problem) { const message = problem instanceof Error ? problem.message : "Could not save. Check your connection and try again."; setNotice({ message, error: true }); onFailure?.(message); return false; }
     finally { setSaving(false); }
   }
   function requestDelete(items: Product[]) {
@@ -125,11 +125,17 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
       return;
     }
     const ids = new Set(pendingDelete.items.map(product => product.id));
-    if (await persist(products.filter(product => !ids.has(product.id)), `${ids.size} product(s) permanently deleted.`)) {
+    setDeleteError("");
+    setSaving(true);
+    try {
+      await deleteCatalogProducts([...ids], { products, categories: categoryNames, revision, persisted: true });
+      setNotice({ message: `${ids.size} product(s) permanently deleted.`, error: false });
       setSelected(current => current.filter(id => !ids.has(id)));
       if (draft && ids.has(draft.id)) { uploadVersion.current++; setUploading(false); setDraft(null); setDirty(false); setError(""); setPreview(false); }
       setPendingDelete(null);
-    } else setDeleteError("Products were not deleted. Check the error notification and try again.");
+    } catch (problem) {
+      setDeleteError(problem instanceof Error ? problem.message : "Could not delete products. Check your connection and try again.");
+    } finally { setSaving(false); }
   }
   async function exportProducts(items: Product[], format: "xlsx" | "csv" = "xlsx") {
     if (exporting) return;

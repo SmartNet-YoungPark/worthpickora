@@ -1,0 +1,123 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import { PGlite } from "@electric-sql/pglite";
+
+test("catalog schema, capacity, relations and authorization", async t => {
+  const db = new PGlite();
+  const admin = "00000000-0000-0000-0000-000000000001";
+  const user = "00000000-0000-0000-0000-000000000002";
+  try {
+    await db.exec(`
+      create role anon nologin;
+      create role authenticated nologin;
+      create role service_role nologin bypassrls;
+      create schema auth;
+      create table auth.users(id uuid primary key, raw_user_meta_data jsonb);
+      create function auth.uid() returns uuid language sql stable as
+        $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;
+      grant usage on schema auth to anon,authenticated,service_role;
+      grant execute on function auth.uid() to anon,authenticated,service_role;
+    `);
+    for (const file of ["20260917000100_create_profiles.sql","20260918003102_create_catalog.sql","20260918004315_catalog_bridge.sql"]) {
+      await db.exec(await readFile(new URL("../supabase/migrations/" + file, import.meta.url),"utf8"));
+    }
+    await db.query("insert into auth.users values ($1,'{}'),($2,'{}')",[admin,user]);
+    await db.query("update public.profiles set role='Admin' where id=$1",[admin]);
+    const category = (await db.query("select id from public.categories where name='Tech'")).rows[0].id;
+    const store = (await db.query("select id from public.stores where name='Amazon'")).rows[0].id;
+    const sets = (await db.query("insert into public.product_sets(category_id,set_number) values ($1,1),($1,2),($1,3) returning id",[category])).rows.map(r=>r.id);
+    async function product(id, set=sets[0], status="Published", code=id) {
+      return db.query("insert into public.products(id,set_id,store_id,name,code,url,status) values ($1,$2,$3,'Product',$4,'https://example.com/product',$5)",[id,set,store,code,status]);
+    }
+    await t.test("anonymous can read lookup data but cannot mutate catalog",async()=>{
+      await db.exec("set role anon");
+      assert.equal((await db.query("select * from public.categories")).rows.length,11);
+      assert.equal((await db.query("select * from public.stores")).rows.length,6);
+      await assert.rejects(db.query("insert into public.categories(name) values ('Unauthorized')"),{code:"42501"});
+      assert.equal((await db.query("select * from public.product_sets")).rows.length,0);
+      await db.exec("reset role");
+    });
+    await t.test("Admin can create products; normal users cannot",async()=>{
+      await db.exec(`set role authenticated; select set_config('request.jwt.claim.sub','${user}',false)`);
+      await assert.rejects(product("X1"),{code:"42501"});
+      await db.query("select set_config('request.jwt.claim.sub',$1,false)",[admin]);
+      await product("P1");
+      await product("D1",sets[1],"Draft");
+      await db.exec("reset role");
+    });
+    await t.test("public sees only published products and nonempty published sets",async()=>{
+      await db.exec("set role anon");
+      assert.deepEqual((await db.query("select id from public.products")).rows,[{id:"P1"}]);
+      assert.equal((await db.query("select id from public.product_sets")).rows.length,1);
+      await db.exec("reset role");
+      await db.exec(`set role authenticated; select set_config('request.jwt.claim.sub','${user}',false)`);
+      assert.equal((await db.query("update public.products set name='No' returning id")).rows.length,0);
+      assert.equal((await db.query("delete from public.products returning id")).rows.length,0);
+      await assert.rejects(db.query("update public.profiles set role='Admin' where id=$1",[user]),{code:"42501"});
+      await db.exec("reset role");
+    });
+    await t.test("same-set code uniqueness is case insensitive; other sets may reuse codes",async()=>{
+      await assert.rejects(product("P2",sets[0],"Published","p1"),{code:"23505"});
+      await product("P2",sets[1],"Published","p1");
+      await assert.rejects(db.query("insert into public.product_sets(category_id,set_number) values ($1,1)",[category]),{code:"23505"});
+    });
+    await t.test("eleventh product and moving to a full set fail, including drafts",async()=>{
+      for(let i=3;i<=11;i++) await product("P"+i,sets[0],"Draft");
+      await assert.rejects(product("P12"),{code:"23514"});
+      await assert.rejects(db.query("update public.products set set_id=$1 where id='D1'",[sets[0]]),{code:"23514"});
+      await db.query("update public.products set name='Edited' where id='P1'");
+      assert.equal((await db.query("select count(*)::int as n from public.products where set_id=$1",[sets[0]])).rows[0].n,10);
+    });
+    await t.test("hard deletion frees a slot and populated sets/categories cannot be accidentally removed",async()=>{
+      await db.exec(`set role authenticated; select set_config('request.jwt.claim.sub','${admin}',false)`);
+      await db.query("delete from public.products where id='P11'");
+      await product("P12");
+      await assert.rejects(db.query("delete from public.product_sets where id=$1",[sets[0]]),e=>["23001","23503"].includes(e.code));
+      await assert.rejects(db.query("delete from public.categories where id=$1",[category]),e=>["23001","23503"].includes(e.code));
+      await db.query("update public.categories set name='Tech Updated' where id=$1",[category]);
+      await db.query("delete from public.product_sets where id=$1",[sets[2]]);
+      await db.exec("reset role");
+    });
+    await t.test("actual image data is retained, arbitrary image codes rejected",async()=>{
+      const image="data:image/png;base64,iVBORw0KGgo=";
+      await db.query("update public.products set image=$1 where id='P1'",[image]);
+      assert.equal((await db.query("select image from public.products where id='P1'")).rows[0].image,image);
+      await assert.rejects(db.query("update public.products set image='T001' where id='P1'"),{code:"23514"});
+    });
+    await t.test("trusted backend can operate catalog without a Supabase user session",async()=>{
+      await db.exec("set role service_role");
+      await db.query("update public.products set status='Archived' where id='P1'");
+      assert.equal((await db.query("select status from public.products where id='P1'")).rows[0].status,"Archived");
+      await db.exec("reset role");
+    });
+    await t.test("catalog RPCs deny browsers, preserve edits atomically, detect conflicts and keep deletions",async()=>{
+      for (const role of ["anon","authenticated"]) {
+        await db.exec(`set role ${role}`);
+        await assert.rejects(db.query("select public.catalog_snapshot()"),{code:"42501"});
+        await assert.rejects(db.query("select public.catalog_apply('[]','[]','[]','[]','x')"),{code:"42501"});
+        await db.exec("reset role");
+      }
+      await db.exec("set role service_role");
+      const snapshot = async()=> (await db.query("select public.catalog_snapshot() as data")).rows[0].data;
+      const initial = await snapshot();
+      const changed = initial.products.map(p=>({...p,name:p.id === "P1" ? "RPC updated" : p.name}));
+      const write = async(products,categories,revision,deletedIds=[])=>db.query("select public.catalog_apply($1,$2,$3,'[]',$4) as data",[JSON.stringify(products),JSON.stringify(deletedIds),JSON.stringify(categories),revision]);
+      const saved = (await write(changed,initial.categories,initial.revision)).rows[0].data;
+      assert.notEqual(saved.revision,initial.revision);
+      assert.equal(saved.products.find(p=>p.id === "P1").name,"RPC updated");
+      await assert.rejects(write([],initial.categories,initial.revision),{code:"40001"});
+      const invalid = [...saved.products,{...saved.products[0],id:"Invalid",url:"javascript:bad"}];
+      await assert.rejects(write(invalid,saved.categories,saved.revision));
+      assert.deepEqual(await snapshot(),saved,"failed replacement rolls back all deleted products");
+      const after = (await write([],saved.categories,saved.revision,["P1"])).rows[0].data;
+      assert.ok(!after.products.some(p=>p.id === "P1"));
+      const kept = (await write([],after.categories,after.revision)).rows[0].data;
+      assert.equal(kept.products.length,after.products.length,"omitting rows must never delete them");
+      const empty = (await write([],kept.categories,kept.revision,kept.products.map(p=>p.id))).rows[0].data;
+      assert.equal(empty.products.length,0);
+      assert.equal((await snapshot()).persisted,true,"empty DB must never restore starter products");
+      await db.exec("reset role");
+    });
+  } finally { await db.close(); }
+});

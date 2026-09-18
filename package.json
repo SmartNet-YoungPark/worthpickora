@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "node --test tests/catalog.test.mjs tests/catalog-storage.test.mjs tests/catalog-workbook.test.mjs tests/admin-security.test.mjs tests/tap-activation.test.mjs",
+    "test:profiles": "node --test tests/profiles.test.mjs",
     "test:auth-routes": "node tests/admin-routes.test.mjs",
     "admin:setup": "node scripts/setup-admin.mjs"
   },
@@ -21,6 +22,7 @@
     "saxes": "^5.0.1"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

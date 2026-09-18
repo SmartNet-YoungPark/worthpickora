@@ -125,6 +125,17 @@ try {
   assert.ok(!deleted.categories.includes("Everyday Tech"));
   assert.equal(deleted.products[0].category, "Electronics & Tech");
   assert.equal((await categoryWrite(deleted.products, [...deleted.categories, "tech", "TECH"], deleted.revision)).status, 400);
+  const deleteOptions = { method: "DELETE", headers: putOptions.headers, body: JSON.stringify({ ids: [deleted.products[0].id], revision: deleted.revision }) };
+  assert.equal((await request("/api/catalog", { ...deleteOptions, headers: { Origin: origin, "Content-Type": "application/json" } })).status, 401);
+  assert.equal((await request("/api/catalog", { ...deleteOptions, headers: { ...deleteOptions.headers, Origin: "https://other.example" } })).status, 403);
+  const deletion = await request("/api/catalog", deleteOptions);
+  assert.equal(deletion.status, 200);
+  const deletionResult = await deletion.json();
+  assert.deepEqual(deletionResult.deleted, [deleted.products[0].id]);
+  assert.ok(!("products" in deletionResult), "deletion response never carries large images");
+  assert.equal((await request("/api/catalog", deleteOptions)).status, 409);
+  assert.ok(!(await (await request("/api/catalog?scope=admin", { headers: { Cookie: cookie } })).json()).products.some(product => product.id === deleted.products[0].id));
+  assert.equal((await request(`/api/products/${encodeURIComponent(deleted.products[0].id)}/image`)).status, 404);
   assert.equal((await request("/admin/products", { headers: { Cookie: `${SESSION_COOKIE}=forged` } })).status, 307);
   const expired = createSession(secret, passwordHash, Date.now() - SESSION_SECONDS * 1000 - 1000);
   assert.equal((await request("/api/admin/session", { headers: { Cookie: `${SESSION_COOKIE}=${expired}` } })).status, 401);

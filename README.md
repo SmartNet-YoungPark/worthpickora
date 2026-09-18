@@ -21,6 +21,11 @@ and restart the dev server. Keep the list limited to your actual development hos
 
 ## Administrator PIN
 
+The optional Supabase `profiles` schema and role-management setup are documented
+in [supabase/README.md](supabase/README.md). Its SQL migration supports `Admin`,
+`User`, and SQL `NULL`, and can be tested with `npm run test:profiles`. Applying
+this schema does not replace the existing PIN login with Supabase Auth.
+
 Run `npm run admin:setup` in an interactive terminal and enter a four-digit PIN twice. Exactly four ASCII digits are required; leading zeros are preserved. Entry is hidden. Only a salted scrypt hash and a random signing secret are stored in the git-ignored `.env.local`.
 
 To change the PIN, run `npm run admin:setup -- --reset`. This also rotates the signing secret and invalidates existing sessions. There is no default PIN. For hosting, set `ADMIN_PASSWORD_HASH` and `ADMIN_SESSION_SECRET` as private server variables, never `NEXT_PUBLIC_` variables. Production uses HTTPS-only cookies.
