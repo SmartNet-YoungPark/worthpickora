@@ -8,6 +8,7 @@ import ProductDescription from "./product-description";
 import MoreProductsButton from "./more-products-button";
 import { useCatalog } from "@/lib/use-catalog";
 import { CatalogSnapshot, productSets, validUrl } from "@/lib/catalog";
+import { groupProductSets } from "@/lib/set-groups";
 
 let savedFallback = "[]";
 function subscribeSaved(callback: () => void) {
@@ -114,11 +115,13 @@ export default function LandingPage({ admin, initialCatalog }: { admin: boolean;
         const matches = matchingProducts(cat.name);
         if (matches.length === 0) return null;
         const availableSets = productSets(matches, cat.name);
+        const grouped = availableSets.length >= 5;
         const requestedSet = expanded[cat.name];
         const selectedSet = requestedSet == null ? requestedSet : availableSets.includes(requestedSet) ? requestedSet : availableSets[0];
         return <section key={cat.name} className={`product-section ${cat.className}`} aria-label={`${cat.name} product sets`}>
-          <div className="section-bar"><h2>{cat.name} Products Set</h2><div className="set-tabs">{availableSets.map(number => <button key={number} className={(selectedSet || availableSets[0]) === number ? "active" : ""} onClick={() => {setExpanded(current => ({ ...current, [cat.name]: number }));setSlides({});}}>Set {String(number).padStart(2, "0")}</button>)}</div><span className="section-note">A few favorites, just for you</span></div>
-          {availableSets.map(number => {
+          <div className="section-bar"><h2>{cat.name} Products Set</h2>{!grouped && <div className="set-tabs">{availableSets.map(number => <button key={number} className={(selectedSet || availableSets[0]) === number ? "active" : ""} onClick={() => {setExpanded(current => ({ ...current, [cat.name]: number }));setSlides({});}}>Set {String(number).padStart(2, "0")}</button>)}</div>}<span className="section-note">{grouped ? `${availableSets.length} sets · Browse in groups of 5` : "A few favorites, just for you"}</span></div>
+          {groupProductSets(availableSets).map(group => {
+            const rows = group.map(number => {
             const open = filtering || selectedSet === number;
             const ordered = matches.filter(product => product.set === number);
             const setKey = JSON.stringify([cat.name, number]);
@@ -133,6 +136,13 @@ export default function LandingPage({ admin, initialCatalog }: { admin: boolean;
                 <div className="product-info"><div className="product-code-row"><h4>{product.code}</h4><ProductDescription description={product.description} name={product.name}/></div><p>{product.name}</p></div><a className="store-button" href={validUrl(product.url) ? product.url : undefined} target="_blank" rel="noopener noreferrer"><Icon name="external" size={18}/>View on Store</a>
               </article>)}</div>{!showingAll && <div className="mobile-dots" aria-hidden="true">{[0, 1, 2, 3, 4].map(dot => <span key={dot} className={(slides[setKey] || 0) === dot ? "active" : ""}/>)}</div>}<div className="set-caption"><span><span className="little-star">✦</span> {cat.description}</span><span>Find your next favorite <Icon name="arrow" size={14}/></span></div></>}
             </div>;
+            });
+            if (!grouped) return <div key={group[0]}>{rows}</div>;
+            const label = group.length === 1 ? `${cat.name} Set ${group[0]}` : `${cat.name} Set ${group[0]} - ${cat.name} Set ${group[group.length - 1]}`;
+            return <details key={group[0]} className="set-group" open={filtering ? true : undefined}>
+              <summary><span>{label}</span><span className="set-group-count">{group.length} {group.length === 1 ? "set" : "sets"}</span><Icon name="chevron" size={19}/></summary>
+              <div className="set-group-rows">{rows}</div>
+            </details>;
           })}
         </section>;
       })}

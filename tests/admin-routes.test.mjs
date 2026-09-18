@@ -166,6 +166,14 @@ try {
   const editLarge = await request("/api/catalog", { ...putOptions, body: JSON.stringify({ ...largeCatalog, products: largeCatalog.products.map(p => ({ ...p, name: `${p.name} edited` })) }) });
   assert.equal(editLarge.status, 200, await editLarge.clone().text());
   assert.deepEqual(Buffer.from(await (await request("/api/products/large-1/image")).arrayBuffer()), imageBytes, "metadata-only edits retain original image bytes");
+  const editedLargeCatalog = await editLarge.json();
+  const groupingResponse = await request("/api/catalog", { ...putOptions, body: JSON.stringify({ ...editedLargeCatalog, products: editedLargeCatalog.products.map((p,i) => ({...p,status:"Published",set:i%11+1})) }) });
+  assert.equal(groupingResponse.status,200);
+  const groupedHtml=(await (await request("/")).text()).replace(/<!--[\s\S]*?-->/g,"");
+  assert.equal((groupedHtml.match(/<details[^>]*class="set-group"/g)||[]).length,3);
+  assert.ok(groupedHtml.includes("Set 1 - "+deleted.categories[0].replaceAll("&","&amp;")+" Set 5"));
+  assert.ok(groupedHtml.includes("Set 6 - "+deleted.categories[0].replaceAll("&","&amp;")+" Set 10"));
+  assert.ok(!/<details[^>]*class="set-group"[^>]*open/.test(groupedHtml),"groups start collapsed");
   assert.equal((await request("/admin/products", { headers: { Cookie: `${SESSION_COOKIE}=forged` } })).status, 307);
   const expired = createSession(secret, passwordHash, Date.now() - SESSION_SECONDS * 1000 - 1000);
   assert.equal((await request("/api/admin/session", { headers: { Cookie: `${SESSION_COOKIE}=${expired}` } })).status, 401);

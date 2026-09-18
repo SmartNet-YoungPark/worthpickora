@@ -87,6 +87,20 @@ Public image routes still hide draft products. No additional environment keys
 are required for this migration.
 
 Verification:
+Performance migration `20260918012856_catalog_import_performance.sql` is applied.
+The server-only catalog_apply RPC has a 45-second function timeout instead of
+inheriting the API's 8-second default; other roles and functions are unchanged.
+Products store a generated image_digest. Catalog revisions hash metadata and
+that digest, avoiding repeated serialization of the full image catalog before
+writes. Clients should reload after this migration because the revision format
+changes. Existing products and images are preserved.
+
+Landing categories with at least five populated sets use collapsed native
+details groups of five rows. Labels reflect each group's first and last actual
+set numbers; gaps do not create empty rows. Search/favorites results expand
+groups automatically. Categories with fewer than five sets retain their tabs.
+
+- Set grouping: `node --test tests/set-groups.test.mjs`
 - Local: `node --test tests/catalog-schema.test.mjs tests/profiles.test.mjs tests/supabase-catalog-storage.test.mjs`
 - Large imports: `node --test tests/catalog-upload-client.test.mjs tests/catalog-uploads.test.mjs`
 - HTTP: `npm run build` then `npm run test:auth-routes`, including a 20-product,

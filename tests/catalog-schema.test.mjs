@@ -19,7 +19,7 @@ test("catalog schema, capacity, relations and authorization", async t => {
       grant usage on schema auth to anon,authenticated,service_role;
       grant execute on function auth.uid() to anon,authenticated,service_role;
     `);
-    for (const file of ["20260917000100_create_profiles.sql","20260918003102_create_catalog.sql","20260918004315_catalog_bridge.sql"]) {
+    for (const file of ["20260917000100_create_profiles.sql","20260918003102_create_catalog.sql","20260918004315_catalog_bridge.sql","20260918012856_catalog_import_performance.sql"]) {
       await db.exec(await readFile(new URL("../supabase/migrations/" + file, import.meta.url),"utf8"));
     }
     await db.query("insert into auth.users values ($1,'{}'),($2,'{}')",[admin,user]);
@@ -83,7 +83,12 @@ test("catalog schema, capacity, relations and authorization", async t => {
       const image="data:image/png;base64,iVBORw0KGgo=";
       await db.query("update public.products set image=$1 where id='P1'",[image]);
       assert.equal((await db.query("select image from public.products where id='P1'")).rows[0].image,image);
+      assert.equal((await db.query("select image_digest=md5(image) as valid from public.products where id='P1'")).rows[0].valid,true);
       await assert.rejects(db.query("update public.products set image='T001' where id='P1'"),{code:"23514"});
+    });
+    await t.test("only the save function receives the longer timeout",async()=>{
+      const {rows}=await db.query("select proconfig from pg_proc where oid='public.catalog_apply(jsonb,jsonb,jsonb,jsonb,text)'::regprocedure");
+      assert.ok(rows[0].proconfig.includes("statement_timeout=45s"));
     });
     await t.test("trusted backend can operate catalog without a Supabase user session",async()=>{
       await db.exec("set role service_role");
