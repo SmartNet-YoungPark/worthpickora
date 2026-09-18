@@ -61,7 +61,9 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
   const [preview, setPreview] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [pendingAction, setPendingAction] = useState<{ run: () => void } | null>(null);
-  const [pendingImport, setPendingImport] = useState<ReturnType<typeof prepareCsvImport> | null>(null);
+  const [pendingImport, setPendingImport] = useState<(ReturnType<typeof prepareCsvImport> & { revision: string }) | null>(null);
+  const [importError, setImportError] = useState("");
+  const importInFlight = useRef(false);
   const [pendingDelete, setPendingDelete] = useState<{ items: Product[]; revision: string } | null>(null);
   const [deleteError, setDeleteError] = useState("");
   const [moveOpen, setMoveOpen] = useState(false);
@@ -173,8 +175,22 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
   async function loadCsv(file?: File) {
     if (!file) return;
     if (file.size > 50 * 1024 * 1024) { setNotice({ message: "Choose an Excel or CSV file smaller than 50 MB, including images.", error: true }); return; }
-    try { const content = file.name.toLowerCase().endsWith(".xlsx") ? await (await import("@/lib/catalog-workbook")).workbookToCsv(await file.arrayBuffer()) : await file.text(); const next = prepareCsvImport(content, products, categoryNames); guard(() => setPendingImport(next)); }
+    try { const content = file.name.toLowerCase().endsWith(".xlsx") ? await (await import("@/lib/catalog-workbook")).workbookToCsv(await file.arrayBuffer()) : await file.text(); const next = prepareCsvImport(content, products, categoryNames); guard(() => { setImportError(""); setPendingImport({ ...next, revision }); }); }
     catch (problem) { setNotice({ message: problem instanceof Error ? problem.message : "Could not read the CSV file.", error: true }); }
+  }
+  async function confirmImport() {
+    if (!pendingImport || saving || loading || importInFlight.current) return;
+    setImportError("");
+    if (pendingImport.revision !== revision) {
+      setImportError("The catalog changed after you selected this file. Cancel and select the file again to review the latest products.");
+      return;
+    }
+    importInFlight.current = true;
+    try {
+      if (await persist(sortProductsBySetCode(pendingImport.products), `${pendingImport.imported} products imported. ${pendingImport.skipped.length} duplicate products skipped.`, categoryNames, setImportError)) {
+        setPendingImport(null); setDraft(null); setDirty(false); clearFilters(); setSort("set-code"); setPage(1);
+      }
+    } finally { importInFlight.current = false; }
   }
   function bulkStatus(nextStatus: ProductStatus) {
     guard(async () => {
@@ -240,7 +256,18 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
     {preview && editor && <Modal title="Product preview" onClose={() => setPreview(false)}><div className="admin-preview-card"><ProductImage product={editor}/><span>{editor.code}</span><h3>{editor.name || "Your product name"}</h3><ProductDescription description={editor.description} name={editor.name || "Your product name"} preview/><span className={`admin-status ${editor.status.toLowerCase().replaceAll(" ", "-")}`}>{editor.status}</span>{validUrl(editor.url) ? <a className="admin-button primary" href={editor.url} target="_blank" rel="noopener noreferrer"><Icon name="external" size={16}/>View on {editor.store}</a> : <p>Add a valid affiliate URL to preview the store link.</p>}</div></Modal>}
     {pendingAction && <Modal title="Unsaved changes" onClose={() => setPendingAction(null)}><p>You have changes in the product editor. Discard them to continue?</p><div className="admin-modal-actions"><button className="admin-button" onClick={() => setPendingAction(null)}>Keep editing</button><button className="admin-button primary" onClick={() => { const action = pendingAction.run; setPendingAction(null); setDirty(false); action(); }}>Discard changes</button></div></Modal>}
     {pendingDelete && <Modal title="Permanently delete products?" onClose={() => { if (!saving) setPendingDelete(null); }}><p>These products and their images will be removed from the catalog and Landing page. This cannot be undone.</p><ul className="admin-delete-list">{pendingDelete.items.map(product => <li key={product.id}><strong>{product.code} ? {product.name}</strong><small>{product.category} ? Set {product.set}</small></li>)}</ul>{deleteError && <p className="admin-notice admin-notice-error" role="alert">{deleteError}</p>}<div className="admin-modal-actions"><button className="admin-button" autoFocus disabled={saving} onClick={() => setPendingDelete(null)}>Cancel</button><button className="admin-button admin-delete-confirm" disabled={saving || loading} onClick={() => void deleteProducts()}><Icon name="trash" size={16}/>{saving ? "Deleting..." : `Delete ${pendingDelete.items.length} permanently`}</button></div></Modal>}
-    {pendingImport && <Modal title="Import your products" onClose={() => setPendingImport(null)}><p>Your catalog will contain <strong>{pendingImport.products.length} products</strong>. Duplicate codes in the same category and set are skipped. Matching codes in a different set update the existing product; new codes are added. Existing products not in the file will be kept.</p><p><strong>{pendingImport.imported}</strong> products to import.</p>{pendingImport.skipped.length > 0 && <div className="admin-notice admin-notice-warning" role="status"><div><strong>{pendingImport.skipped.length} duplicate product(s) skipped.</strong><ul className="admin-import-skipped">{pendingImport.skipped.map((message, index) => <li key={index}>{message}</li>)}</ul></div></div>}<p className="admin-modal-note">Images and publication status are included. Nothing is saved until you import.</p><div className="admin-modal-actions"><button className="admin-button" onClick={() => setPendingImport(null)}>Cancel</button><button className="admin-button primary" onClick={async () => { if (await persist(sortProductsBySetCode(pendingImport.products), `${pendingImport.imported} products imported. ${pendingImport.skipped.length} duplicate products skipped.`)) { setPendingImport(null); setDraft(null); setDirty(false); clearFilters(); setSort("set-code"); setPage(1); } }}>Import products</button></div></Modal>}
+    {pendingImport && <Modal title="Import your products" onClose={() => { if (!saving && !importInFlight.current) setPendingImport(null); }}>
+      <p>Your catalog will contain <strong>{pendingImport.products.length} products</strong>. Duplicate codes in the same category and set are skipped. Matching codes in a different set update the existing product; new codes are added. Existing products not in the file will be kept.</p>
+      <p><strong>{pendingImport.imported}</strong> products to import.</p>
+      {pendingImport.skipped.length > 0 && <div className="admin-notice admin-notice-warning" role="status"><div><strong>{pendingImport.skipped.length} duplicate product(s) skipped.</strong><ul className="admin-import-skipped">{pendingImport.skipped.map((message, index) => <li key={index}>{message}</li>)}</ul></div></div>}
+      <p className="admin-modal-note">Images and publication status are included. Nothing is saved until you import.</p>
+      {importError && <p className="admin-notice admin-notice-error" role="alert">{importError}</p>}
+      {saving && <p role="status" aria-live="polite">Saving products and images. Please keep this window open.</p>}
+      <div className="admin-modal-actions">
+        <button className="admin-button" disabled={saving} onClick={() => setPendingImport(null)}>Cancel</button>
+        <button className="admin-button primary" disabled={saving || loading} onClick={() => void confirmImport()}>{saving ? "Importing..." : "Import products"}</button>
+      </div>
+    </Modal>}
     {moveOpen && <Modal title="Move products to a set" onClose={() => setMoveOpen(false)}><p>Choose a category and set for {selectedProducts.length} selected products.</p><div className="admin-move-fields"><label>Category<select value={moveCategory} onChange={event => setMoveCategory(event.target.value as Category)}>{categoryNames.map(item => <option key={item}>{item}</option>)}</select></label><label>Product Set<SetPicker products={products} category={moveCategory} value={moveSet} onChange={setMoveSet}/></label></div><div className="admin-modal-actions"><button className="admin-button" onClick={() => setMoveOpen(false)}>Cancel</button><button className="admin-button primary" onClick={() => { setMoveOpen(false); guard(async () => { if (await persist(products.map(product => selected.includes(product.id) ? { ...product, category: moveCategory, set: moveSet, updated: new Date().toISOString() } : product), `${selectedProducts.length} products moved to ${moveCategory} Set ${String(moveSet).padStart(2, "0")}.`)) { setSelected([]); setDirty(false); } }); }}>Move products</button></div></Modal>}
   </div>;
 }
