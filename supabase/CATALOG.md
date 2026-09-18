@@ -87,6 +87,14 @@ Public image routes still hide draft products. No additional environment keys
 are required for this migration.
 
 Verification:
+Metadata write migration `20260918015358_catalog_metadata_writes.sql` is applied.
+All app catalog reads, including save/delete validation, use metadata only.
+The new service-only catalog_apply_metadata RPC preserves images when the image
+field is omitted; an explicit empty string removes an image. It returns compact
+metadata, with the same atomic revision check and explicit deletion rules.
+The adapter resolves unchanged authenticated image references to omitted fields.
+The old full snapshot/apply RPCs remain for compatibility with older deployments.
+
 Image read migration `20260918014410_catalog_image_reads.sql` is applied.
 Catalog lists use a metadata-only RPC; individual image requests read just the
 requested product by primary key instead of loading every embedded image.

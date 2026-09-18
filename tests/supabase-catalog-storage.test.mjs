@@ -31,10 +31,28 @@ test("Supabase adapter sends only explicit changed rows and deleted IDs", async(
   };
   const storage=createSupabaseCatalogStorage("https://example.supabase.co","sb_secret_test",transport);
   await storage.write([previous.products[0]],"old",previous.categories);
-  assert.equal(calls[1].url,"https://example.supabase.co/rest/v1/rpc/catalog_apply");
+  assert.equal(calls[1].url,"https://example.supabase.co/rest/v1/rpc/catalog_apply_metadata");
   assert.deepEqual(JSON.parse(calls[1].body),{p_upserts:[],p_delete_ids:["delete"],p_categories:["Tech"],p_remove_categories:[],p_revision:"old"});
   assert.equal(calls[0].headers.apikey,"sb_secret_test");
   assert.equal(calls[0].headers.Authorization,undefined);
+});
+test("publishing sends no unchanged image bytes and returns refreshed image references",async()=>{
+  const product={id:'one',name:'One',status:'Draft',image:'',image_embedded:true};
+  const calls=[];
+  const storage=createSupabaseCatalogStorage('https://example.supabase.co','sb_secret_test',async(url,options)=>{
+    const name=new URL(url).pathname.split('/').pop();calls.push(name);
+    if(name==='catalog_snapshot_metadata')return Response.json({products:[product],categories:['Tech'],revision:'old',persisted:true});
+    assert.equal(name,'catalog_apply_metadata');
+    const payload=JSON.parse(options.body);
+    assert.equal(payload.p_upserts[0].status,'Published');
+    assert.equal(Object.hasOwn(payload.p_upserts[0],'image'),false);
+    return Response.json({products:[{...product,status:'Published'}],categories:['Tech'],revision:'new',persisted:true});
+  });
+  const current=await storage.read();
+  const saved=await storage.write(current.products.map(p=>({...p,status:'Published'})),current.revision,current.categories);
+  assert.equal(saved.products[0].image,'/api/products/one/image?scope=admin&v=new');
+  assert.ok(!calls.includes('catalog_snapshot'));
+  assert.equal(saved.products[0].image_embedded,undefined);
 });
 test("Supabase adapter rejects stale snapshots before mutation",async()=>{
   let calls=0;
@@ -51,5 +69,5 @@ test("Supabase adapter does not leak raw provider error details",async()=>{
 });
 test("Supabase error reports operation and safe diagnostic code without provider data",async()=>{
   const storage=createSupabaseCatalogStorage("https://example.supabase.co","sb_secret_test",async()=>Response.json({code:"57014",message:"private query contents"},{status:500}));
-  await assert.rejects(storage.read(),error=>/timed out/.test(error.message)&&/catalog_snapshot: HTTP 500, code 57014/.test(error.message)&&!error.message.includes("private query contents"));
+  await assert.rejects(storage.read(),error=>/timed out/.test(error.message)&&/catalog_snapshot_metadata: HTTP 500, code 57014/.test(error.message)&&!error.message.includes("private query contents"));
 });

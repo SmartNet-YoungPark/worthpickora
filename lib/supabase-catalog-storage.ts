@@ -43,15 +43,16 @@ export function createSupabaseCatalogStorage(url: string, key: string, transport
     }
     return data as CatalogSnapshot;
   }
-  return {
-    read: () => rpc("catalog_snapshot", {}),
-    async readMetadata(): Promise<CatalogSnapshot> {
+  async function readMetadata(): Promise<CatalogSnapshot> {
       const snapshot = await rpc("catalog_snapshot_metadata", {});
       return { ...snapshot, products: snapshot.products.map(product => {
         const { image_embedded: embedded, ...fields } = product as Product & { image_embedded?: boolean };
         return { ...fields, image: embedded ? `/api/products/${encodeURIComponent(product.id)}/image?scope=admin&v=${encodeURIComponent(snapshot.revision)}` : product.image };
       }) };
-    },
+    }
+  return {
+    read: readMetadata,
+    readMetadata,
     async readImage(id: string): Promise<Pick<Product, "id" | "image" | "status"> | null> {
       const data = await rpcRaw("catalog_product_image", { p_id: id }) as Pick<Product, "id" | "image" | "status"> | null;
       if (data === null) return null;
@@ -59,18 +60,29 @@ export function createSupabaseCatalogStorage(url: string, key: string, transport
       return data;
     },
     async write(products: Product[], revision: string, categories?: string[]) {
-      const current = await rpc("catalog_snapshot", {});
+      const current = await readMetadata();
       if (current.revision !== revision) throw new CatalogConflict();
       const names = categories ?? current.categories;
       const previous = new Map(current.products.map(product => [product.id, product]));
       const ids = new Set(products.map(product => product.id));
-      return rpc("catalog_apply", {
-        p_upserts: products.filter(product => JSON.stringify(product) !== JSON.stringify(previous.get(product.id))),
+      const upserts = products.filter(product => JSON.stringify(product) !== JSON.stringify(previous.get(product.id))).map(product => {
+        if (!product.image?.startsWith("/api/products/")) return product;
+        if (previous.get(product.id)?.image !== product.image) throw new Error("Invalid image reference. Refresh before saving.");
+        const fields: Partial<Product> = { ...product };
+        delete fields.image; // Missing image means preserve the stored bytes inside the transaction.
+        return fields;
+      });
+      const saved = await rpc("catalog_apply_metadata", {
+        p_upserts: upserts,
         p_delete_ids: current.products.filter(product => !ids.has(product.id)).map(product => product.id),
         p_categories: names,
         p_remove_categories: current.categories.filter(name => !names.includes(name)),
         p_revision: revision,
       });
+      return { ...saved, products: saved.products.map(product => {
+        const { image_embedded: embedded, ...fields } = product as Product & { image_embedded?: boolean };
+        return { ...fields, image: embedded ? `/api/products/${encodeURIComponent(product.id)}/image?scope=admin&v=${encodeURIComponent(saved.revision)}` : product.image };
+      }) };
     },
   };
 }
