@@ -29,4 +29,7 @@ test("Supabase adapter does not leak raw provider error details",async()=>{
   const storage=createSupabaseCatalogStorage("https://example.supabase.co","sb_secret_test",async()=>Response.json({message:"sensitive provider details"},{status:403}));
   await assert.rejects(storage.read(),error=>error.code==="CATALOG_STORAGE"&&!error.message.includes("sensitive provider details"));
 });
-
+test("Supabase error reports operation and safe diagnostic code without provider data",async()=>{
+  const storage=createSupabaseCatalogStorage("https://example.supabase.co","sb_secret_test",async()=>Response.json({code:"57014",message:"private query contents"},{status:500}));
+  await assert.rejects(storage.read(),error=>/timed out/.test(error.message)&&/catalog_snapshot: HTTP 500, code 57014/.test(error.message)&&!error.message.includes("private query contents"));
+});

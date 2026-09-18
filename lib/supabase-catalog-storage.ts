@@ -14,6 +14,7 @@ export function createSupabaseCatalogStorage(url: string, key: string, transport
     const data = await response.json().catch(() => null);
     if (!response.ok) {
       if (data?.code === "40001") throw new CatalogConflict();
+      const providerCode = typeof data?.code === "string" && /^[A-Z0-9]{5,12}$/.test(data.code) ? data.code : "UNKNOWN";
       const message = response.status === 401 || response.status === 403
         ? "Supabase catalog access was denied. Check the server's Supabase secret key."
         : data?.code === "PGRST202"
@@ -22,8 +23,16 @@ export function createSupabaseCatalogStorage(url: string, key: string, transport
             ? "A duplicate product code or category was rejected. Refresh the catalog and try again."
             : data?.code === "23514"
               ? "A catalog constraint failed. Check product fields and the 10-product set limit."
-              : "Supabase could not save or load the catalog. No successful save was confirmed.";
-      throw Object.assign(new Error(message), { code: "CATALOG_STORAGE" }); // Never expose raw provider responses.
+              : data?.code === "57014"
+                ? "Supabase timed out while processing the catalog. Refresh to check the current catalog before retrying."
+                : data?.code === "23503"
+                  ? "Supabase could not find a referenced category, set, store, or brand. Refresh the catalog before retrying."
+                  : data?.code === "55P03" || data?.code === "40P01"
+                    ? "Another catalog operation is blocking this save. Please retry after it finishes."
+                    : response.status === 413
+                      ? "Supabase rejected the catalog payload size. The database request needs a smaller payload."
+                      : "Supabase could not save or load the catalog. No successful save was confirmed.";
+      throw Object.assign(new Error(`${message} [${name}: HTTP ${response.status}, code ${providerCode}]`), { code: "CATALOG_STORAGE" }); // Never expose raw provider responses.
     }
     if (!data || !Array.isArray(data.products) || !Array.isArray(data.categories) || typeof data.revision !== "string") {
       throw new Error("Supabase returned an invalid catalog response.");
