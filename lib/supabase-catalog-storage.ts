@@ -4,7 +4,7 @@ import { CatalogConflict } from "./catalog-storage.ts";
 // Only imported by server-catalog.ts (which enforces the server-only boundary).
 export function createSupabaseCatalogStorage(url: string, key: string, transport: typeof fetch = fetch) {
   const endpoint = new URL("/rest/v1/rpc/", url);
-  async function rpc(name: string, body: object): Promise<CatalogSnapshot> {
+  async function rpcRaw(name: string, body: object): Promise<unknown> {
     const headers: Record<string, string> = { apikey: key, "Content-Type": "application/json" };
     // Legacy service_role keys are JWTs; new sb_secret keys use apikey only.
     if (!key.startsWith("sb_secret_")) headers.Authorization = `Bearer ${key}`;
@@ -34,6 +34,10 @@ export function createSupabaseCatalogStorage(url: string, key: string, transport
                       : "Supabase could not save or load the catalog. No successful save was confirmed.";
       throw Object.assign(new Error(`${message} [${name}: HTTP ${response.status}, code ${providerCode}]`), { code: "CATALOG_STORAGE" }); // Never expose raw provider responses.
     }
+    return data;
+  }
+  async function rpc(name: string, body: object): Promise<CatalogSnapshot> {
+    const data = await rpcRaw(name, body) as CatalogSnapshot | null;
     if (!data || !Array.isArray(data.products) || !Array.isArray(data.categories) || typeof data.revision !== "string") {
       throw new Error("Supabase returned an invalid catalog response.");
     }
@@ -41,6 +45,19 @@ export function createSupabaseCatalogStorage(url: string, key: string, transport
   }
   return {
     read: () => rpc("catalog_snapshot", {}),
+    async readMetadata(): Promise<CatalogSnapshot> {
+      const snapshot = await rpc("catalog_snapshot_metadata", {});
+      return { ...snapshot, products: snapshot.products.map(product => {
+        const { image_embedded: embedded, ...fields } = product as Product & { image_embedded?: boolean };
+        return { ...fields, image: embedded ? `/api/products/${encodeURIComponent(product.id)}/image?scope=admin&v=${encodeURIComponent(snapshot.revision)}` : product.image };
+      }) };
+    },
+    async readImage(id: string): Promise<Pick<Product, "id" | "image" | "status"> | null> {
+      const data = await rpcRaw("catalog_product_image", { p_id: id }) as Pick<Product, "id" | "image" | "status"> | null;
+      if (data === null) return null;
+      if (data.id !== id || typeof data.image !== "string" || typeof data.status !== "string") throw new Error("Supabase returned an invalid image response.");
+      return data;
+    },
     async write(products: Product[], revision: string, categories?: string[]) {
       const current = await rpc("catalog_snapshot", {});
       if (current.revision !== revision) throw new CatalogConflict();

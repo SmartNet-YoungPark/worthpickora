@@ -2,6 +2,26 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createSupabaseCatalogStorage } from "../lib/supabase-catalog-storage.ts";
 
+test("image and metadata reads avoid fetching the full catalog",async()=>{
+  const calls=[];
+  const storage=createSupabaseCatalogStorage("https://example.supabase.co","sb_secret_test",async(url,options)=>{
+    const name=new URL(url).pathname.split('/').pop();
+    calls.push(name);
+    if(name==='catalog_snapshot_metadata') return Response.json({products:[{id:'draft',image:'',image_embedded:true,status:'Draft'},{id:'external',image:'https://example.com/image.png',image_embedded:false}],categories:['Tech'],revision:'rev',persisted:true});
+    assert.equal(name,'catalog_product_image');
+    const {p_id}=JSON.parse(options.body);
+    return Response.json(p_id==='missing'?null:{id:p_id,image:'data:image/png;base64,abc',status:'Draft'});
+  });
+  const metadata=await storage.readMetadata();
+  assert.equal(metadata.products[0].image,'/api/products/draft/image?scope=admin&v=rev');
+  assert.equal(metadata.products[0].status,'Draft');
+  assert.equal(metadata.products[0].image_embedded,undefined);
+  assert.equal(metadata.products[1].image,'https://example.com/image.png');
+  assert.equal((await storage.readImage('draft')).image,'data:image/png;base64,abc');
+  assert.equal(await storage.readImage('missing'),null);
+  assert.deepEqual(calls,['catalog_snapshot_metadata','catalog_product_image','catalog_product_image']);
+});
+
 test("Supabase adapter sends only explicit changed rows and deleted IDs", async()=>{
   const previous={products:[{id:"keep",name:"Keep"},{id:"delete",name:"Delete"}],categories:["Tech"],revision:"old",persisted:true};
   const calls=[];

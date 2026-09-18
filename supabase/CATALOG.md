@@ -87,6 +87,13 @@ Public image routes still hide draft products. No additional environment keys
 are required for this migration.
 
 Verification:
+Image read migration `20260918014410_catalog_image_reads.sql` is applied.
+Catalog lists use a metadata-only RPC; individual image requests read just the
+requested product by primary key instead of loading every embedded image.
+Both RPCs are restricted to service_role. The HTTP image route still checks
+publication status or the administrator session before returning bytes.
+Existing image bytes are unchanged; no re-import is needed.
+
 Performance migration `20260918012856_catalog_import_performance.sql` is applied.
 The server-only catalog_apply RPC has a 45-second function timeout instead of
 inheriting the API's 8-second default; other roles and functions are unchanged.

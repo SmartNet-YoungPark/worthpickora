@@ -1,7 +1,6 @@
 import { NextRequest } from "next/server";
 import { isAdmin } from "@/lib/admin-auth";
-import { catalogStorage, publicCatalog } from "@/lib/server-catalog";
-import { adminCatalogSnapshot } from "@/lib/catalog";
+import { adminCatalog, catalogStorage, publicCatalog } from "@/lib/server-catalog";
 import { saveCatalogPayload } from "@/lib/catalog-save";
 
 export const runtime = "nodejs";
@@ -11,7 +10,7 @@ const headers = { "Cache-Control": "no-store, private" };
 export async function GET(request: NextRequest) {
   const admin = request.nextUrl.searchParams.get("scope") === "admin";
   if (admin && !await isAdmin()) return Response.json({ error: "Sign in to view the administrator catalog." }, { status: 401, headers });
-  return Response.json(admin ? adminCatalogSnapshot(await catalogStorage.read()) : await publicCatalog(), { headers });
+  return Response.json(admin ? await adminCatalog() : await publicCatalog(), { headers });
 }
 
 export async function PUT(request: NextRequest) {

@@ -19,7 +19,7 @@ test("catalog schema, capacity, relations and authorization", async t => {
       grant usage on schema auth to anon,authenticated,service_role;
       grant execute on function auth.uid() to anon,authenticated,service_role;
     `);
-    for (const file of ["20260917000100_create_profiles.sql","20260918003102_create_catalog.sql","20260918004315_catalog_bridge.sql","20260918012856_catalog_import_performance.sql"]) {
+    for (const file of ["20260917000100_create_profiles.sql","20260918003102_create_catalog.sql","20260918004315_catalog_bridge.sql","20260918012856_catalog_import_performance.sql","20260918014410_catalog_image_reads.sql"]) {
       await db.exec(await readFile(new URL("../supabase/migrations/" + file, import.meta.url),"utf8"));
     }
     await db.query("insert into auth.users values ($1,'{}'),($2,'{}')",[admin,user]);
@@ -84,6 +84,14 @@ test("catalog schema, capacity, relations and authorization", async t => {
       await db.query("update public.products set image=$1 where id='P1'",[image]);
       assert.equal((await db.query("select image from public.products where id='P1'")).rows[0].image,image);
       assert.equal((await db.query("select image_digest=md5(image) as valid from public.products where id='P1'")).rows[0].valid,true);
+      const full=(await db.query("select public.catalog_snapshot() as data")).rows[0].data;
+      const metadata=(await db.query("select public.catalog_snapshot_metadata() as data")).rows[0].data;
+      assert.equal(metadata.revision,full.revision);
+      assert.equal(metadata.products.find(p=>p.id==='P1').image,'');
+      assert.equal(metadata.products.find(p=>p.id==='P1').image_embedded,true);
+      assert.ok(!JSON.stringify(metadata).includes('base64'));
+      assert.deepEqual((await db.query("select public.catalog_product_image('P1') as data")).rows[0].data,{id:'P1',image,status:'Published'});
+      assert.equal((await db.query("select public.catalog_product_image('missing') as data")).rows[0].data,null);
       await assert.rejects(db.query("update public.products set image='T001' where id='P1'"),{code:"23514"});
     });
     await t.test("only the save function receives the longer timeout",async()=>{
@@ -100,6 +108,8 @@ test("catalog schema, capacity, relations and authorization", async t => {
       for (const role of ["anon","authenticated"]) {
         await db.exec(`set role ${role}`);
         await assert.rejects(db.query("select public.catalog_snapshot()"),{code:"42501"});
+        await assert.rejects(db.query("select public.catalog_snapshot_metadata()"),{code:"42501"});
+        await assert.rejects(db.query("select public.catalog_product_image('P1')"),{code:"42501"});
         await assert.rejects(db.query("select public.catalog_apply('[]','[]','[]','[]','x')"),{code:"42501"});
         await db.exec("reset role");
       }

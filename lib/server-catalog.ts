@@ -1,6 +1,6 @@
 import "server-only";
 import { resolve } from "node:path";
-import { CATEGORIES, normalizeLegacyCategory, seedProducts, storefrontProducts } from "./catalog";
+import { adminCatalogSnapshot, CATEGORIES, normalizeLegacyCategory, seedProducts, storefrontProducts } from "./catalog";
 import { createCatalogStorage } from "./catalog-storage";
 import { createSupabaseCatalogStorage } from "./supabase-catalog-storage";
 
@@ -20,6 +20,12 @@ export const catalogStorage = supabaseUrl && supabaseKey
       },
     };
 export async function publicCatalog() {
-  const catalog = await catalogStorage.read();
+  const catalog = await adminCatalog();
   return { ...catalog, products: storefrontProducts(catalog.products, catalog.revision) };
+}
+export async function adminCatalog() {
+  return "readMetadata" in catalogStorage ? catalogStorage.readMetadata() : adminCatalogSnapshot(await catalogStorage.read());
+}
+export async function productImage(id: string) {
+  return "readImage" in catalogStorage ? catalogStorage.readImage(id) : (await catalogStorage.read()).products.find(product => product.id === id) ?? null;
 }
