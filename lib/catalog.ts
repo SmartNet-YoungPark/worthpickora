@@ -31,10 +31,19 @@ export type Product = {
 };
 export type CatalogSnapshot = { products: Product[]; categories: string[]; revision: string; persisted: boolean };
 
+export function adminImageUrl(id: string, revision: string) {
+  return `/api/products/${encodeURIComponent(id)}/image?scope=admin&v=${encodeURIComponent(revision)}`;
+}
+export function adminCatalogSnapshot(catalog: CatalogSnapshot): CatalogSnapshot {
+  return { ...catalog, products: catalog.products.map(product => ({ ...product,
+    image: product.image.startsWith("data:image/") || product.image.startsWith(`/api/products/${encodeURIComponent(product.id)}/image?scope=admin&v=`) ? adminImageUrl(product.id, catalog.revision) : product.image,
+  })) };
+}
+
 export function storefrontProducts(products: Product[], revision: string): Product[] {
   return products.filter(product => product.status === "Published").map(product => ({
     ...product,
-    image: product.image.startsWith("data:image/")
+    image: product.image.startsWith("data:image/") || product.image.startsWith(`/api/products/${encodeURIComponent(product.id)}/image?scope=admin&v=`)
       ? `/api/products/${encodeURIComponent(product.id)}/image?v=${encodeURIComponent(revision)}`
       : product.image,
   }));
@@ -102,7 +111,7 @@ export function validateProduct(product: Product, existing: Product[], categorie
   if (product.asin && !/^[a-z0-9]{10}$/i.test(product.asin)) return "An ASIN must contain exactly 10 letters or numbers.";
   if (product.photo !== null && ![0, 1, 2, 3, 4].includes(product.photo)) return "The product photo is invalid.";
   if (product.image.length > 8 * 1024 * 1024) return "The product image is too large.";
-  if (product.image && !/^data:image\/(jpeg|png|webp);base64,[a-z0-9+/=]+$/i.test(product.image) && !validUrl(product.image)) return "Use JPG, PNG, WebP image data or an http(s) image URL.";
+  if (product.image && !/^data:image\/(jpeg|png|webp);base64,[a-z0-9+/=]+$/i.test(product.image) && !validUrl(product.image) && !product.image.startsWith(`/api/products/${encodeURIComponent(product.id)}/image?scope=admin&v=`)) return "Use JPG, PNG, WebP image data or an http(s) image URL.";
   return "";
 }
 

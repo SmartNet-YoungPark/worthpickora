@@ -69,11 +69,28 @@ In Vercel Settings > Environment Variables, set SUPABASE_URL to
 https://kcafllbnlbomvmmllqsv.supabase.co and SUPABASE_SECRET_KEY to the project's
 secret API key for the intended Production/Preview environment. Keep
 ADMIN_PASSWORD_HASH and ADMIN_SESSION_SECRET. Redeploy the updated source.
-Large image imports still use the catalog PUT endpoint and are subject to
-the hosting provider's request size limit; this change specifically makes
-deletion independent of image payload size.
+Large saves now use /api/catalog/upload: payloads over 2 MiB are encoded as
+1 MiB byte parts, with each HTTP request under 2 MiB. The server stages the
+parts privately and validates/commits the catalog only after all parts arrive.
+Migration 20260918010903_catalog_uploads.sql has been applied remotely.
+The existing total catalog limit is 64 MiB including embedded images.
+Upload sessions expire after an hour; expired staging records are removed when
+a new upload starts, and completed/aborted uploads are removed immediately.
+Interrupted uploads never write products. RPC access is service_role only;
+every upload API request verifies the existing PIN session and same origin.
+Local development uses bounded temporary memory; Vercel uses Supabase staging.
+
+Administrator pages, GETs and save responses now use authenticated per-product
+image URLs instead of embedding all base64 image bytes in JSON/HTML. The server
+resolves unchanged image references before saving, preserving the original bytes.
+Public image routes still hide draft products. No additional environment keys
+are required for this migration.
 
 Verification:
 - Local: `node --test tests/catalog-schema.test.mjs tests/profiles.test.mjs tests/supabase-catalog-storage.test.mjs`
+- Large imports: `node --test tests/catalog-upload-client.test.mjs tests/catalog-uploads.test.mjs`
+- HTTP: `npm run build` then `npm run test:auth-routes`, including a 20-product,
+  image-bearing catalog over 4.5 MiB, small requests/responses, draft image
+  privacy, admin reload, and image preservation after subsequent edits.
 - Remote: all five tables have RLS; 10 policies; 11 categories and 6 stores;
   anonymous SELECT works and anonymous INSERT privilege is absent.

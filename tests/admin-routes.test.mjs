@@ -7,6 +7,7 @@ import { join } from "node:path";
 import { once } from "node:events";
 import { setTimeout as pause } from "node:timers/promises";
 import { createSession, hashPassword, SESSION_COOKIE, SESSION_SECONDS } from "../lib/admin-security.ts";
+import { sendCatalogPayload } from "../lib/catalog-upload-client.ts";
 
 // Uses an isolated production server and ephemeral credentials, never .env.local.
 const port = 3187;
@@ -114,7 +115,7 @@ try {
   const renamedHtml = await (await request("/")).text();
   assert.ok(renamedHtml.includes("Everyday Tech"));
   assert.equal(renamed.products[0].set, 27);
-  assert.equal(renamed.products[0].image, savedCatalog.products[0].image);
+  assert.deepEqual(Buffer.from(await (await request(renamed.products[0].image, { headers: { Cookie: cookie } })).arrayBuffer()), Buffer.from(updatedProducts[0].image.split(",")[1], "base64"));
   const deletedCategories = renamed.categories.filter(name => name !== "Everyday Tech");
   assert.equal((await categoryWrite(renamed.products, deletedCategories, renamed.revision)).status, 400, "cannot leave products in a deleted category");
   const movedProducts = renamed.products.map(product => product.category === "Everyday Tech" ? { ...product, category: "Electronics & Tech" } : product);
@@ -136,6 +137,35 @@ try {
   assert.equal((await request("/api/catalog", deleteOptions)).status, 409);
   assert.ok(!(await (await request("/api/catalog?scope=admin", { headers: { Cookie: cookie } })).json()).products.some(product => product.id === deleted.products[0].id));
   assert.equal((await request(`/api/products/${encodeURIComponent(deleted.products[0].id)}/image`)).status, 404);
+  // Reproduce an Excel catalog exceeding Vercel's 4.5 MB limit, without any
+  // individual browser request or catalog response exceeding that limit.
+  const imageBytes = Buffer.concat([Buffer.from(updatedProducts[0].image.split(",")[1], "base64"), Buffer.alloc(180000)]);
+  const largeProducts = Array.from({ length: 20 }, (_, i) => ({ ...updatedProducts[0], id: `large-${i}`, code: `L${String(i).padStart(3, "0")}`, name: `Excel 한글 ${i}`, category: deleted.categories[0], set: i < 10 ? 1 : 2, status: i === 0 ? "Draft" : "Published", image: `data:image/png;base64,${imageBytes.toString("base64")}` }));
+  const payload = JSON.stringify({ products: largeProducts, categories: deleted.categories, revision: deletionResult.revision });
+  assert.ok(Buffer.byteLength(payload) > 4.5 * 1024 * 1024);
+  const uploadTransport = (path, options) => {
+    assert.ok(Buffer.byteLength(options.body) < 2 * 1024 * 1024);
+    return request(path, { ...options, headers: { ...options.headers, Origin: origin, Cookie: cookie } });
+  };
+  assert.equal((await request("/api/catalog/upload", { method: "POST", headers: { Origin: origin, "Content-Type": "application/json" }, body: JSON.stringify({ action: "start", parts: 1, bytes: 2 }) })).status, 401);
+  const largeSaved = await sendCatalogPayload(payload, uploadTransport);
+  assert.equal(largeSaved.status, 200, await largeSaved.clone().text());
+  const largeText = await largeSaved.text();
+  assert.ok(largeText.length < 100000);
+  assert.ok(!largeText.includes("data:image/"));
+  const largeCatalog = JSON.parse(largeText);
+  assert.equal(largeCatalog.products.length, 20);
+  const adminImage = largeCatalog.products.find(p => p.id === "large-0").image;
+  assert.equal((await request(adminImage)).status, 401);
+  assert.equal((await request("/api/products/large-0/image")).status, 404);
+  assert.deepEqual(Buffer.from(await (await request(adminImage, { headers: { Cookie: cookie } })).arrayBuffer()), imageBytes);
+  const reloadedAdmin = await (await request("/api/catalog?scope=admin", { headers: { Cookie: cookie } })).text();
+  assert.ok(reloadedAdmin.length < 100000);
+  const adminHtml = await (await request("/admin/products", { headers: { Cookie: cookie } })).text();
+  assert.ok(!adminHtml.includes("data:image/"));
+  const editLarge = await request("/api/catalog", { ...putOptions, body: JSON.stringify({ ...largeCatalog, products: largeCatalog.products.map(p => ({ ...p, name: `${p.name} edited` })) }) });
+  assert.equal(editLarge.status, 200, await editLarge.clone().text());
+  assert.deepEqual(Buffer.from(await (await request("/api/products/large-1/image")).arrayBuffer()), imageBytes, "metadata-only edits retain original image bytes");
   assert.equal((await request("/admin/products", { headers: { Cookie: `${SESSION_COOKIE}=forged` } })).status, 307);
   const expired = createSession(secret, passwordHash, Date.now() - SESSION_SECONDS * 1000 - 1000);
   assert.equal((await request("/api/admin/session", { headers: { Cookie: `${SESSION_COOKIE}=${expired}` } })).status, 401);
@@ -144,7 +174,7 @@ try {
   const logout = await request("/api/admin/logout", { method: "POST", headers: { Origin: origin, Cookie: cookie } });
   assert.equal(logout.status, 303); assert.match(logout.headers.get("set-cookie"), /Max-Age=0/i);
   assert.equal((await request("/admin/products")).status, 307);
-  console.log("PASS: authentication; saved product name/image immediately visible on public landing page; draft privacy; write authorization; stale-write protection; invalid image rejection; logout.");
+  console.log("PASS: authentication; public image sync; draft privacy; write authorization; stale-write protection; deletion; 20-product import over 4.5 MiB using small requests; compact admin reload; original image preservation; logout.");
 } finally {
   const stopped = child.exitCode === null ? once(child, "close") : Promise.resolve();
   child.kill(); await stopped;

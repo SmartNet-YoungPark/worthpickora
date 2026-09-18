@@ -63,6 +63,7 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
   const [pendingAction, setPendingAction] = useState<{ run: () => void } | null>(null);
   const [pendingImport, setPendingImport] = useState<(ReturnType<typeof prepareCsvImport> & { revision: string }) | null>(null);
   const [importError, setImportError] = useState("");
+  const [importProgress, setImportProgress] = useState<number | null>(null);
   const importInFlight = useRef(false);
   const [pendingDelete, setPendingDelete] = useState<{ items: Product[]; revision: string } | null>(null);
   const [deleteError, setDeleteError] = useState("");
@@ -112,7 +113,7 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
     const capacityError = validateSetCapacity(next);
     if (capacityError) { setNotice({ message: capacityError, error: true }); onFailure?.(capacityError); return false; }
     setSaving(true);
-    try { await saveCatalog(next, revision, nextCategories); setNotice({ message, error: false }); return true; }
+    try { await saveCatalog(next, revision, nextCategories, setImportProgress); setNotice({ message, error: false }); return true; }
     catch (problem) { const message = problem instanceof Error ? problem.message : "Could not save. Check your connection and try again."; setNotice({ message, error: true }); onFailure?.(message); return false; }
     finally { setSaving(false); }
   }
@@ -186,6 +187,7 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
       return;
     }
     importInFlight.current = true;
+    setImportProgress(null);
     try {
       if (await persist(sortProductsBySetCode(pendingImport.products), `${pendingImport.imported} products imported. ${pendingImport.skipped.length} duplicate products skipped.`, categoryNames, setImportError)) {
         setPendingImport(null); setDraft(null); setDirty(false); clearFilters(); setSort("set-code"); setPage(1);
@@ -262,7 +264,7 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
       {pendingImport.skipped.length > 0 && <div className="admin-notice admin-notice-warning" role="status"><div><strong>{pendingImport.skipped.length} duplicate product(s) skipped.</strong><ul className="admin-import-skipped">{pendingImport.skipped.map((message, index) => <li key={index}>{message}</li>)}</ul></div></div>}
       <p className="admin-modal-note">Images and publication status are included. Nothing is saved until you import.</p>
       {importError && <p className="admin-notice admin-notice-error" role="alert">{importError}</p>}
-      {saving && <p role="status" aria-live="polite">Saving products and images. Please keep this window open.</p>}
+      {saving && <p role="status" aria-live="polite">{importProgress !== null && importProgress < 100 ? `Uploading images: ${importProgress}%` : "Saving products and images. Please keep this window open."}</p>}
       <div className="admin-modal-actions">
         <button className="admin-button" disabled={saving} onClick={() => setPendingImport(null)}>Cancel</button>
         <button className="admin-button primary" disabled={saving || loading} onClick={() => void confirmImport()}>{saving ? "Importing..." : "Import products"}</button>
