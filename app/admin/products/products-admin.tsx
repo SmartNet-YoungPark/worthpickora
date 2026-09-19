@@ -106,7 +106,7 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
   function closeEditor() { guard(() => { uploadVersion.current++; setUploading(false); setDraft(null); setDirty(false); setError(""); }); }
   function update(field: keyof Product, value: string | number | null) {
     if (!editor) return;
-    setDraft({ ...editor, [field]: value }); setDirty(true); setError("");
+    setDraft({ ...editor, [field]: value, ...(field === "category" && value !== editor.category ? { set: productSets(products, String(value))[0] } : {}) }); setDirty(true); setError("");
   }
   async function persist(next: Product[], message: string, nextCategories: string[] = categoryNames, onFailure?: (message: string) => void) {
     if (saving || loading) return false;
@@ -271,6 +271,6 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
         <button className="admin-button primary" disabled={saving || loading} onClick={() => void confirmImport()}>{saving ? "Importing..." : "Import products"}</button>
       </div>
     </Modal>}
-    {moveOpen && <Modal title="Move products to a set" onClose={() => setMoveOpen(false)}><p>Choose a category and set for {selectedProducts.length} selected products.</p><div className="admin-move-fields"><label>Category<select value={moveCategory} onChange={event => setMoveCategory(event.target.value as Category)}>{categoryNames.map(item => <option key={item}>{item}</option>)}</select></label><label>Product Set<SetPicker products={products} category={moveCategory} value={moveSet} onChange={setMoveSet}/></label></div><div className="admin-modal-actions"><button className="admin-button" onClick={() => setMoveOpen(false)}>Cancel</button><button className="admin-button primary" onClick={() => { setMoveOpen(false); guard(async () => { if (await persist(products.map(product => selected.includes(product.id) ? { ...product, category: moveCategory, set: moveSet, updated: new Date().toISOString() } : product), `${selectedProducts.length} products moved to ${moveCategory} Set ${String(moveSet).padStart(2, "0")}.`)) { setSelected([]); setDirty(false); } }); }}>Move products</button></div></Modal>}
+    {moveOpen && <Modal title="Move products to a set" onClose={() => setMoveOpen(false)}><p>Choose a category and set for {selectedProducts.length} selected products.</p><div className="admin-move-fields"><label>Category<select value={moveCategory} onChange={event => { setMoveCategory(event.target.value as Category); setMoveSet(productSets(products, event.target.value)[0]); }}>{categoryNames.map(item => <option key={item}>{item}</option>)}</select></label><label>Product Set<SetPicker products={products} category={moveCategory} value={moveSet} onChange={setMoveSet}/></label></div><div className="admin-modal-actions"><button className="admin-button" onClick={() => setMoveOpen(false)}>Cancel</button><button className="admin-button primary" onClick={() => { setMoveOpen(false); guard(async () => { if (await persist(products.map(product => selected.includes(product.id) ? { ...product, category: moveCategory, set: moveSet, updated: new Date().toISOString() } : product), `${selectedProducts.length} products moved to ${moveCategory} Set ${String(moveSet).padStart(2, "0")}.`)) { setSelected([]); setDirty(false); } }); }}>Move products</button></div></Modal>}
   </div>;
 }

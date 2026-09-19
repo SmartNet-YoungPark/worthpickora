@@ -187,7 +187,10 @@ try {
   assert.equal((await request('/admin/analytics')).status,307);
   assert.equal((await request('/admin/analytics',authed)).status,200);
   assert.equal((await request('/go/large-1',authed)).status,302,'administrator visits still redirect');
-  assert.equal((await (await request(analyticsPath,authed)).json()).rows.length,0,'admin click excluded');
+  const emptyAnalytics=await (await request(analyticsPath,authed)).json();
+  assert.equal(emptyAnalytics.rows.length,0,'admin click excluded');
+  assert.ok(emptyAnalytics.stores.includes('Etsy'),'stores without clicks are available');
+  assert.ok(emptyAnalytics.categories.includes('Books & Stationery'),'custom categories without clicks are available');
   for(let i=0;i<2;i++){const click=await request('/go/large-1');assert.equal(click.status,302);assert.equal(click.headers.get('location'),largeProducts[1].url);}
   await request('/go/large-1',{headers:{Purpose:'prefetch'}});
   await request('/go/large-1',{method:'HEAD'});

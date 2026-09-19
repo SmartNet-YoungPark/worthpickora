@@ -1,6 +1,7 @@
 "use client";
 import {useEffect,useMemo,useState} from "react";
 import Link from "next/link";
+import {STORES} from "@/lib/catalog";
 import {groupKey,rankClicks,seriesClicks,shiftDate,torontoDate,validRange,type ClickRow,type GroupBy,type Period} from "@/lib/click-analytics";
 
 export default function ClickAnalytics(){
@@ -8,6 +9,8 @@ export default function ClickAnalytics(){
   const [start,setStart]=useState(()=>shiftDate(torontoDate(),-29));
   const [range,setRange]=useState({start,end});
   const [rows,setRows]=useState<ClickRow[]>([]);
+  const [stores,setStores]=useState<string[]>([...STORES]);
+  const [categories,setCategories]=useState<string[]>([]);
   const [error,setError]=useState("");const [busy,setBusy]=useState(true);
   const [refresh,setRefresh]=useState(0);
   const [store,setStore]=useState("");const [category,setCategory]=useState("");const [product,setProduct]=useState("");
@@ -16,12 +19,12 @@ export default function ClickAnalytics(){
   useEffect(()=>{
     const controller=new AbortController();
     fetch("/api/admin/analytics?"+new URLSearchParams(range),{cache:"no-store",signal:controller.signal})
-      .then(async response=>{const data=await response.json();if(!response.ok)throw new Error(data.error);setRows(data.rows);setError("");})
+      .then(async response=>{const data=await response.json();if(!response.ok)throw new Error(data.error);setRows(data.rows);setStores(data.stores);setCategories(data.categories);setError("");})
       .catch(problem=>{if(problem.name!=="AbortError")setError(problem.message||"Could not load analytics.");})
       .finally(()=>{if(!controller.signal.aborted)setBusy(false);});
     return ()=>controller.abort();
   },[range,refresh]);
-  const options=(key:"store_name"|"category_name")=>[...new Set(rows.map(row=>row[key]))].sort();
+  const options=(key:"store_name"|"category_name")=>key==="store_name"?stores:categories;
   const productOptions=[...new Map(rows.map(row=>[row.product_id,row])).values()];
   const filtered=useMemo(()=>rows.filter(row=>(!store||row.store_name===store)&&(!category||row.category_name===category)&&(!product||row.product_id===product)),[rows,store,category,product]);
   const current=filtered.filter(row=>row.click_date>=range.start&&row.click_date<=range.end);
