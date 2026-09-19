@@ -10,6 +10,7 @@ import { createSession, hashPassword, SESSION_COOKIE, SESSION_SECONDS } from "..
 import { sendCatalogPayload } from "../lib/catalog-upload-client.ts";
 import { optimizeProductImage } from "../lib/optimize-product-image.ts";
 import sharp from "sharp";
+import {torontoDate} from "../lib/click-analytics.ts";
 
 // Uses an isolated production server and ephemeral credentials, never .env.local.
 const port = 3187;
@@ -181,6 +182,18 @@ try {
   assert.match(groupedHtml, /aria-expanded="true"><h3>.*?Set 11<\/h3>/, "last populated set starts expanded");
   assert.equal((await request("/admin/products", { headers: { Cookie: `${SESSION_COOKIE}=forged` } })).status, 307);
   const expired = createSession(secret, passwordHash, Date.now() - SESSION_SECONDS * 1000 - 1000);
+  const analyticsPath='/api/admin/analytics?start='+torontoDate()+'&end='+torontoDate();
+  assert.equal((await request(analyticsPath)).status,401);
+  assert.equal((await request('/admin/analytics')).status,307);
+  assert.equal((await request('/admin/analytics',authed)).status,200);
+  assert.equal((await request('/go/large-1',authed)).status,302,'administrator visits still redirect');
+  assert.equal((await (await request(analyticsPath,authed)).json()).rows.length,0,'admin click excluded');
+  for(let i=0;i<2;i++){const click=await request('/go/large-1');assert.equal(click.status,302);assert.equal(click.headers.get('location'),largeProducts[1].url);}
+  await request('/go/large-1',{headers:{Purpose:'prefetch'}});
+  await request('/go/large-1',{method:'HEAD'});
+  const clicks=(await (await request(analyticsPath,authed)).json()).rows;
+  assert.equal(clicks.length,1);assert.equal(clicks[0].clicks,2);assert.equal(clicks[0].product_id,'large-1');
+  assert.equal((await request('/go/missing')).status,404);
   assert.equal((await request("/api/admin/session", { headers: { Cookie: `${SESSION_COOKIE}=${expired}` } })).status, 401);
   assert.equal((await request("/api/admin/logout")).status, 405);
   assert.equal((await post("/api/admin/logout", "", "https://other.example")).status, 403);
@@ -191,5 +204,5 @@ try {
 } finally {
   const stopped = child.exitCode === null ? once(child, "close") : Promise.resolve();
   child.kill(); await stopped;
-  await unlink(catalogFile).catch(() => {}); await rmdir(testDirectory);
+  await unlink(catalogFile).catch(() => {}); await unlink(catalogFile+'.clicks.json').catch(()=>{}); await rmdir(testDirectory);
 }

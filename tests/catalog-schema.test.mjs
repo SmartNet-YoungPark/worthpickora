@@ -19,7 +19,7 @@ test("catalog schema, capacity, relations and authorization", async t => {
       grant usage on schema auth to anon,authenticated,service_role;
       grant execute on function auth.uid() to anon,authenticated,service_role;
     `);
-    for (const file of ["20260917000100_create_profiles.sql","20260918003102_create_catalog.sql","20260918004315_catalog_bridge.sql","20260918012856_catalog_import_performance.sql","20260918014410_catalog_image_reads.sql","20260918015358_catalog_metadata_writes.sql"]) {
+    for (const file of ["20260917000100_create_profiles.sql","20260918003102_create_catalog.sql","20260918004315_catalog_bridge.sql","20260918012856_catalog_import_performance.sql","20260918014410_catalog_image_reads.sql","20260918015358_catalog_metadata_writes.sql","20260919010000_product_click_analytics.sql"]) {
       await db.exec(await readFile(new URL("../supabase/migrations/" + file, import.meta.url),"utf8"));
     }
     await db.query("insert into auth.users values ($1,'{}'),($2,'{}')",[admin,user]);
@@ -111,6 +111,27 @@ test("catalog schema, capacity, relations and authorization", async t => {
       const cleared=await write({...fields,image:''},published.revision);
       assert.equal((await db.query("select image from public.products where id='P1'")).rows[0].image,'');
       await write({...fields,image:original},cleared.revision);
+    });
+    await t.test("daily clicks accumulate, test clicks and drafts are excluded, and browser roles cannot forge analytics",async()=>{
+      const click=async(id,count)=>(await db.query('select public.product_click_outbound($1,$2) as url',[id,count])).rows[0].url;
+      assert.equal(await click('P1',true),'https://example.com/product');
+      await click('P1',true);await click('P1',false);
+      assert.equal(await click('D1',true),null);
+      const rows=(await db.query('select * from public.product_click_daily')).rows;
+      assert.equal(rows.length,1);assert.equal(Number(rows[0].clicks),2);
+      assert.equal(rows[0].set_name,'Tech Updated Set 1');
+      assert.equal(rows[0].store_name,'Amazon');
+      for(const role of ['anon','authenticated']){
+        await db.exec('set role '+role);
+        await assert.rejects(click('P1',true),{code:'42501'});
+        await assert.rejects(db.query('select * from public.product_click_daily'),{code:'42501'});
+        await assert.rejects(db.query("select public.product_click_report(current_date,current_date)"),{code:'42501'});
+        await db.exec('reset role');
+      }
+      await db.exec('set role service_role');
+      const report=(await db.query("select public.product_click_report(current_date-1,current_date+1) as data")).rows[0].data;
+      assert.equal(report.length,1);assert.equal(report[0].clicks,2);
+      await db.exec('reset role');
     });
     await t.test("only the save function receives the longer timeout",async()=>{
       const {rows}=await db.query("select proconfig from pg_proc where oid='public.catalog_apply(jsonb,jsonb,jsonb,jsonb,text)'::regprocedure");

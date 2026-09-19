@@ -1,0 +1,41 @@
+import "server-only";
+import {readFile,writeFile,mkdir,rename} from "node:fs/promises";
+import {dirname,resolve} from "node:path";
+import {randomUUID} from "node:crypto";
+import {catalogStorage} from "./server-catalog";
+import {torontoDate,type ClickRow} from "./click-analytics";
+const url=process.env.SUPABASE_URL||process.env.NEXT_PUBLIC_SUPABASE_URL;
+const key=process.env.SUPABASE_SECRET_KEY||process.env.SUPABASE_SERVICE_ROLE_KEY;
+async function rpc(name:string,body:object){
+  const headers:Record<string,string>={apikey:key!,"Content-Type":"application/json"};
+  if(!key!.startsWith("sb_secret_"))headers.Authorization="Bearer "+key;
+  const response=await fetch(new URL("/rest/v1/rpc/"+name,url),{method:"POST",headers,body:JSON.stringify(body),cache:"no-store"});
+  if(!response.ok)throw new Error("Click analytics is unavailable. Apply the product_click_analytics migration and check the server connection.");
+  return response.json();
+}
+const file=process.env.ANALYTICS_DATA_FILE||(process.env.CATALOG_DATA_FILE?process.env.CATALOG_DATA_FILE+".clicks.json":resolve(".data","clicks.json"));
+const globalState=globalThis as typeof globalThis & {clickWriteQueue?:Promise<unknown>};
+async function readLocal():Promise<ClickRow[]>{
+  try{return JSON.parse(await readFile(file,"utf8"));}catch(error){if((error as NodeJS.ErrnoException).code==="ENOENT")return [];throw error;}
+}
+export async function outboundClick(id:string,count:boolean):Promise<string|null>{
+  if(url&&key)return rpc("product_click_outbound",{p_id:id,p_count:count});
+  if(process.env.VERCEL)throw new Error("Configure Supabase to record product clicks.");
+  const product=(await catalogStorage.read()).products.find(p=>p.id===id&&p.status==="Published");
+  if(!product)return null;
+  if(count){
+    const operation=(globalState.clickWriteQueue||Promise.resolve()).then(async()=>{
+      const rows=await readLocal();const date=torontoDate();
+      const row=rows.find(r=>r.product_id===id&&r.click_date===date);
+      if(row)row.clicks++;else rows.push({click_date:date,product_id:id,product_code:product.code,product_name:product.name,category_name:product.category,set_name:product.category+" Set "+product.set,store_name:product.store,clicks:1});
+      await mkdir(dirname(file),{recursive:true});const temp=file+"."+randomUUID()+".tmp";await writeFile(temp,JSON.stringify(rows),{mode:0o600});await rename(temp,file);
+    });globalState.clickWriteQueue=operation.catch(()=>{});await operation;
+  }
+  return product.url;
+}
+export async function clickReport(start:string,end:string):Promise<ClickRow[]>{
+  if(url&&key)return rpc("product_click_report",{p_start:start,p_end:end});
+  if(process.env.VERCEL)throw new Error("Configure Supabase to read click analytics.");
+  await globalState.clickWriteQueue;return (await readLocal()).filter(row=>row.click_date>=start&&row.click_date<=end);
+}
+
