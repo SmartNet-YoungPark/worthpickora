@@ -76,6 +76,14 @@
 .admin-table tr.selected { background: #fff4ee; }
 .admin-image-cell { width: 65px; }
 .admin-table .admin-name-heading { text-align: center; }
+.admin-main, .admin-table-wrap { min-width: 0; max-width: 100%; }
+@media (max-width: 650px) {
+  .admin-title-row, .admin-title-line, .admin-breadcrumb, .admin-page-navigation { flex-wrap: wrap; }
+  .admin-top-actions .admin-button { flex: 1 1 140px; }
+  .admin-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .admin-modal { max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); overflow-y: auto; }
+  .admin-editor { max-width: 100%; }
+}
 .admin-image-cell button { padding: 0; }
 .admin-product-cell { display: flex; align-items: center; text-align: left; width: 210px; min-height: 44px; padding: 0; }
 .admin-product-cell strong { display: block; font-size: 11px; color: #303c53; font-weight: 600; white-space: normal; overflow-wrap: anywhere; }
