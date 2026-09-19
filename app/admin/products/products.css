@@ -70,8 +70,10 @@
 .admin-table th:first-child { border-radius: 8px 0 0 0; }
 .admin-table td { padding: 12px 10px; border-top: 1px solid #edf0f5; color: #8590a4; height: 83px; }
 .admin-table th:first-child, .admin-table td:first-child { width: 34px; padding-left: 14px; padding-right: 6px; }
-.admin-table tbody tr { transition: background .15s; }
-.admin-table tbody tr:hover { background: #fafcff; }
+.admin-table tbody tr { background: var(--row-background, #fff); transition: background .15s; }
+.admin-table tbody tr:nth-child(odd) { --row-background: #ffffff; }
+.admin-table tbody tr:nth-child(even) { --row-background: #f0f6f3; }
+.admin-table tbody tr:hover { background: #e7f0eb; }
 .admin-table tr.editing { background: #fffaf8; }
 .admin-table tr.selected { background: #fff4ee; }
 .admin-image-cell { width: 65px; }
@@ -85,7 +87,7 @@
   .admin-editor { max-width: 100%; }
 }
 .admin-image-cell button { padding: 0; }
-.admin-product-cell { display: flex; align-items: center; text-align: left; width: 210px; min-height: 44px; padding: 0; }
+.admin-product-cell { display: flex; justify-content: flex-start; align-items: center; text-align: left; width: 210px; min-height: 44px; padding: 0; }
 .admin-product-cell strong { display: block; font-size: 11px; color: #303c53; font-weight: 600; white-space: normal; overflow-wrap: anywhere; }
 .admin-thumbnail { display: flex; position: relative; align-items: center; justify-content: center; width: 45px; height: 52px; background: #f8fafc; flex-shrink: 0; overflow: hidden; border-radius: 6px; }
 .admin-thumbnail .product-photo { position: absolute; transform: scale(.34); max-width: none; margin: 0; flex-shrink: 0; }
