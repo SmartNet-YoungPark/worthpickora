@@ -196,6 +196,16 @@ try {
   await request('/go/large-1',{method:'HEAD'});
   const clicks=(await (await request(analyticsPath,authed)).json()).rows;
   assert.equal(clicks.length,1);assert.equal(clicks[0].clicks,2);assert.equal(clicks[0].product_id,'large-1');
+  const youtubeVisit=await request('/?utm_source=youtube');
+  const sourceCookie=youtubeVisit.headers.get('set-cookie').split(';')[0];
+  assert.ok(sourceCookie.includes('YouTube'));
+  for(let i=0;i<2;i++)await request('/go/large-1',{headers:{Cookie:sourceCookie,'User-Agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) Mobile'}});
+  await request('/go/large-1?utm_source=tiktok',{headers:{'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}});
+  await request('/go/large-1',{headers:{Cookie:cookie+'; '+sourceCookie,'User-Agent':'Mozilla/5.0 (iPhone) Mobile'}});
+  const attributed=(await(await request(analyticsPath,authed)).json()).rows;
+  assert.equal(attributed.find(r=>r.source==='YouTube'&&r.device==='Mobile').clicks,2);
+  assert.equal(attributed.find(r=>r.source==='TikTok'&&r.device==='PC').clicks,1);
+  assert.equal(attributed.reduce((sum,r)=>sum+r.clicks,0),5);
   assert.equal((await request('/go/missing')).status,404);
   assert.equal((await request("/api/admin/session", { headers: { Cookie: `${SESSION_COOKIE}=${expired}` } })).status, 401);
   assert.equal((await request("/api/admin/logout")).status, 405);

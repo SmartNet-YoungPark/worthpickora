@@ -3,6 +3,7 @@ import {isAdmin} from "@/lib/admin-auth";
 import {outboundClick} from "@/lib/server-click-analytics";
 import {validUrl} from "@/lib/catalog";
 import {catalogStorage} from "@/lib/server-catalog";
+import {SOURCE_COOKIE,visitSource,deviceType} from "@/lib/click-attribution";
 export const dynamic="force-dynamic";
 export const runtime="nodejs";
 export async function GET(request:NextRequest,{params}:{params:Promise<{id:string}>}){
@@ -11,7 +12,9 @@ export async function GET(request:NextRequest,{params}:{params:Promise<{id:strin
   const preview=/prefetch|prerender/i.test((request.headers.get("purpose")||"")+" "+(request.headers.get("sec-purpose")||"")) || request.headers.has("next-router-prefetch");
   const bot=/bot|crawler|spider|preview|facebookexternalhit|headless/i.test(request.headers.get("user-agent")||"");
   try{
-    const destination=await outboundClick(id,!preview&&!bot&&!await isAdmin());
+    const source=visitSource(request.nextUrl,request.headers.get("referer")||"",request.cookies.get(SOURCE_COOKIE)?.value);
+    const device=deviceType(request.headers.get("user-agent")||"",request.headers.get("sec-ch-ua-mobile"));
+    const destination=await outboundClick(id,!preview&&!bot&&!await isAdmin(),source,device);
     if(!destination||!validUrl(destination))return new Response("Product unavailable",{status:404,headers});
     return new Response(null,{status:302,headers:{...headers,Location:destination}});
   }catch{

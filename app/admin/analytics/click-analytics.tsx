@@ -2,6 +2,7 @@
 import {useEffect,useMemo,useState} from "react";
 import Link from "next/link";
 import {STORES} from "@/lib/catalog";
+import {CLICK_SOURCES,CLICK_DEVICES} from "@/lib/click-attribution";
 import {groupKey,rankClicks,seriesClicks,shiftDate,torontoDate,validRange,type ClickRow,type GroupBy,type Period} from "@/lib/click-analytics";
 
 export default function ClickAnalytics(){
@@ -14,6 +15,7 @@ export default function ClickAnalytics(){
   const [error,setError]=useState("");const [busy,setBusy]=useState(true);
   const [refresh,setRefresh]=useState(0);
   const [store,setStore]=useState("");const [category,setCategory]=useState("");const [product,setProduct]=useState("");
+  const [source,setSource]=useState("");const [device,setDevice]=useState("");
   const [by,setBy]=useState<GroupBy>("product");const [period,setPeriod]=useState<Period>("day");
   const [selected,setSelected]=useState("");const [limit,setLimit]=useState(50);
   useEffect(()=>{
@@ -26,7 +28,7 @@ export default function ClickAnalytics(){
   },[range,refresh]);
   const options=(key:"store_name"|"category_name")=>key==="store_name"?stores:categories;
   const productOptions=[...new Map(rows.map(row=>[row.product_id,row])).values()];
-  const filtered=useMemo(()=>rows.filter(row=>(!store||row.store_name===store)&&(!category||row.category_name===category)&&(!product||row.product_id===product)),[rows,store,category,product]);
+  const filtered=useMemo(()=>rows.filter(row=>(!store||row.store_name===store)&&(!category||row.category_name===category)&&(!product||row.product_id===product)&&(!source||(row.source||"Unknown")===source)&&(!device||(row.device||"Unknown")===device)),[rows,store,category,product,source,device]);
   const current=filtered.filter(row=>row.click_date>=range.start&&row.click_date<=range.end);
   const previous=filtered.filter(row=>row.click_date<range.start);
   const total=current.reduce((sum,row)=>sum+Number(row.clicks),0);
@@ -44,6 +46,7 @@ export default function ClickAnalytics(){
   return <main className="analytics-page">
     <header><div><p className="analytics-eyebrow">WORTHPICKORA ADMIN</p><h1>Click analytics</h1><p>Store visits from product images and View on Store buttons. Toronto time.</p></div><nav><Link href="/admin/products">Manage products</Link><Link href="/">Landing page</Link></nav></header>
     <p className="analytics-exclusion">Your clicks are excluded while signed in as administrator in this browser. These are click totals, not unique customers or sales.</p>
+    <details className="analytics-exclusion"><summary>About source and device tracking</summary><p>Source uses utm_source or the referring website, retained for 30 minutes in this browser. Share links ending in ?utm_source=youtube or ?utm_source=tiktok for clearer attribution. Without this information, visits are Direct / Unknown. Device is estimated from browser headers; some tablets may appear as PC. Earlier records remain Unknown.</p></details>
     <form className="analytics-filters" onSubmit={event=>{event.preventDefault();if(!validRange(start,end)){setError("Choose a valid range of up to 366 days.");return;}setBusy(true);setSelected("");setLimit(50);setRange({start,end});setRefresh(value=>value+1);}}>
       <label>From<input type="date" value={start} onChange={e=>setStart(e.target.value)} required/></label>
       <label>Through<input type="date" value={end} onChange={e=>setEnd(e.target.value)} required/></label>
@@ -51,7 +54,9 @@ export default function ClickAnalytics(){
       <label>Store<select value={store} onChange={e=>{setStore(e.target.value);setSelected("");setLimit(50);}}><option value="">All stores</option>{options("store_name").map(name=><option key={name}>{name}</option>)}</select></label>
       <label>Category<select value={category} onChange={e=>{setCategory(e.target.value);setSelected("");setLimit(50);}}><option value="">All categories</option>{options("category_name").map(name=><option key={name}>{name}</option>)}</select></label>
       <label>Product<select value={product} onChange={e=>{setProduct(e.target.value);setSelected("");setLimit(50);}}><option value="">All products</option>{productOptions.map(row=><option key={row.product_id} value={row.product_id}>{row.product_code} · {row.product_name}</option>)}</select></label>
-      <label>Rank by<select value={by} onChange={e=>{setBy(e.target.value as GroupBy);setSelected("");setLimit(50);}}><option value="product">Product</option><option value="store">Store</option><option value="category">Category</option></select></label>
+      <label>Rank by<select value={by} onChange={e=>{setBy(e.target.value as GroupBy);setSelected("");setLimit(50);}}><option value="product">Product</option><option value="store">Store</option><option value="category">Category</option><option value="source">Source</option><option value="device">Device</option></select></label>
+      <label>Source<select value={source} onChange={e=>{setSource(e.target.value);setSelected("");setLimit(50);}}><option value="">All sources</option>{CLICK_SOURCES.map(name=><option key={name}>{name}</option>)}</select></label>
+      <label>Device<select value={device} onChange={e=>{setDevice(e.target.value);setSelected("");setLimit(50);}}><option value="">All devices</option>{CLICK_DEVICES.map(name=><option key={name}>{name}</option>)}</select></label>
       <label>Trend interval<select value={period} onChange={e=>setPeriod(e.target.value as Period)}><option value="day">Daily</option><option value="week">Weekly (Monday)</option><option value="month">Monthly</option></select></label>
     </form>
     {error&&<p className="analytics-error" role="alert">{error}</p>}
@@ -61,7 +66,7 @@ export default function ClickAnalytics(){
     </section><section className="analytics-panel analytics-detail" aria-label="Selected click records"><h2>{active?.label||"Click details"}</h2><p>{active?active.clicks.toLocaleString()+" clicks · "+detail.length+" daily records":"Select a ranked item"}</p>
       {active&&<><svg className="analytics-line" viewBox="0 0 600 185" role="img" aria-label={active.label+" click trend"}><line x1="20" y1="150" x2="580" y2="150" stroke="#dbe5df"/><polyline points={points} fill="none" stroke="#28724e" strokeWidth="3"/>{trend.map((point,index)=><circle key={point.date} cx={20+index*560/Math.max(1,trend.length-1)} cy={150-point.clicks/max*125} r="3" fill="#28724e"><title>{point.date+": "+point.clicks+" clicks"}</title></circle>)}<text x="20" y="178">{trend[0]?.date}</text><text x="580" y="178" textAnchor="end">{trend.at(-1)?.date}</text><text x="20" y="15">{max} clicks</text></svg>
       <details><summary>View {period} totals</summary><div className="analytics-periods">{trend.map(point=><span key={point.date}>{point.date}: <b>{point.clicks}</b></span>)}</div></details>
-      <div className="analytics-table-scroll"><table><thead><tr><th>Date</th><th>Set</th><th>Product / ID</th><th>Store</th><th>Clicks</th></tr></thead><tbody>{detail.slice(0,limit).map(row=><tr key={row.click_date+row.product_id}><td>{row.click_date}</td><td>{row.set_name}</td><td>{row.product_name}<small>{row.product_code} · {row.product_id}</small></td><td>{row.store_name}</td><td>{row.clicks}</td></tr>)}</tbody></table></div>{detail.length>limit&&<button className="analytics-load-more" onClick={()=>setLimit(value=>value+50)}>Show more records ({limit} of {detail.length})</button>}</>}
+      <div className="analytics-table-scroll"><table><thead><tr><th>Date</th><th>Set</th><th>Product / ID</th><th>Store</th><th>Source</th><th>Device</th><th>Clicks</th></tr></thead><tbody>{detail.slice(0,limit).map(row=><tr key={JSON.stringify([row.click_date,row.product_id,row.source,row.device])}><td>{row.click_date}</td><td>{row.set_name}</td><td>{row.product_name}<small>{row.product_code} · {row.product_id}</small></td><td>{row.store_name}</td><td>{row.source||"Unknown"}</td><td>{row.device||"Unknown"}</td><td>{row.clicks}</td></tr>)}</tbody></table></div>{detail.length>limit&&<button className="analytics-load-more" onClick={()=>setLimit(value=>value+50)}>Show more records ({limit} of {detail.length})</button>}</>}
     </section></div>
     <section className="analytics-insights"><h2>Trend & current activity</h2><p><strong>{total.toLocaleString()} clicks</strong> from {range.start} through {range.end}. {comparison}</p>{ranking[0]&&<p>Leading {by}: <strong>{ranking[0].label}</strong>, {ranking[0].clicks} clicks ({(ranking[0].clicks/total*100).toFixed(1)}% of the filtered total).</p>}{peak?.clicks>0&&<p>Busiest {period}: {peak.date}, {peak.clicks} clicks.</p>}<p>{range.end>=torontoDate()?"Today is still in progress. ":""}Weeks and months at the edges of the selected range may be partial. Reports start when tracking is enabled; earlier clicks cannot be recovered.</p></section></>}
   </main>;

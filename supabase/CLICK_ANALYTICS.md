@@ -1,5 +1,26 @@
 # Product click analytics
 
+## Source and device upgrade
+
+After the original migration, apply `migrations/20260920010000_click_source_device.sql`.
+This adds source/device dimensions without removing any counts. Historical rows
+remain Unknown. The daily key now includes date, product, source and device;
+product totals still sum across these dimensions. The old RPC remains compatible.
+Until the new migration is applied, new app code falls back to the old counting
+RPC only when the attributed function is missing, preserving totals.
+
+Source is inferred from `utm_source` (preferred) or the external Referer header.
+The landing page keeps only the normalized source label in an HttpOnly, SameSite
+cookie for 30 minutes. It stores no visitor identifier, URL, query text or IP.
+Examples: `/?utm_source=youtube` and `/?utm_source=tiktok`. Internal navigation
+preserves the label; a new external referral or campaign updates it. Referrer
+suppression and in-app browsers may require tagged links. Unattributed new visits
+are Direct / Unknown. Device is inferred from User-Agent/client hints as PC,
+Mobile, Tablet or Unknown; desktop-mode tablets can look like PC.
+
+The dashboard includes Source and Device filters, ranking groups and record
+columns. Administrator sessions, previews and common crawlers remain excluded.
+
 Apply `migrations/20260919010000_product_click_analytics.sql` in the existing
 project's Supabase SQL Editor before relying on production analytics. This is
 additive: it does not change catalog records. Existing server Supabase environment

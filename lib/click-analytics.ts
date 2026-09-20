@@ -1,5 +1,5 @@
-export type ClickRow = {click_date:string;product_id:string;product_code:string;product_name:string;category_name:string;set_name:string;store_name:string;clicks:number};
-export type GroupBy = "product" | "store" | "category";
+export type ClickRow = {click_date:string;product_id:string;product_code:string;product_name:string;category_name:string;set_name:string;store_name:string;clicks:number;source?:string;device?:string};
+export type GroupBy = "product" | "store" | "category" | "source" | "device";
 export type Period = "day" | "week" | "month";
 export function torontoDate(now=new Date()) {
   return new Intl.DateTimeFormat("en-CA",{timeZone:"America/Toronto",year:"numeric",month:"2-digit",day:"2-digit"}).format(now);
@@ -15,7 +15,7 @@ export function bucketDate(date:string,period:Period) {
   if(period==="day")return date;
   const day=new Date(date+"T12:00:00Z").getUTCDay();return shiftDate(date,-((day+6)%7));
 }
-export function groupKey(row:ClickRow,by:GroupBy) {return by==="product"?row.product_id:by==="store"?row.store_name:row.category_name;}
+export function groupKey(row:ClickRow,by:GroupBy) {return by==="product"?row.product_id:by==="store"?row.store_name:by==="source"?row.source||"Unknown":by==="device"?row.device||"Unknown":row.category_name;}
 export function rankClicks(rows:ClickRow[],by:GroupBy) {
   const groups=new Map<string,{key:string;label:string;clicks:number}>();
   for(const row of rows){const key=groupKey(row,by);const previous=groups.get(key);groups.set(key,{key,label:by==="product"?row.product_name+" ("+row.product_code+")":key,clicks:(previous?.clicks||0)+Number(row.clicks)});}
@@ -27,4 +27,3 @@ export function seriesClicks(rows:ClickRow[],start:string,end:string,period:Peri
   for(const row of rows){const key=bucketDate(row.click_date,period);sums.set(key,(sums.get(key)||0)+Number(row.clicks));}
   return [...sums].map(([date,clicks])=>({date,clicks}));
 }
-

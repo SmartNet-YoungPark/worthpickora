@@ -133,6 +133,17 @@ test("catalog schema, capacity, relations and authorization", async t => {
       assert.equal(report.length,1);assert.equal(report[0].clicks,2);
       await db.exec('reset role');
     });
+    await t.test("source migration preserves totals and splits new clicks by source and device",async()=>{
+      await db.exec(await readFile(new URL('../supabase/migrations/20260920010000_click_source_device.sql',import.meta.url),'utf8'));
+      const old=(await db.query('select * from public.product_click_daily')).rows[0];
+      assert.equal(Number(old.clicks),2);assert.equal(old.source,'Unknown');assert.equal(old.device,'Unknown');
+      const click=(source,device,count=true)=>db.query('select public.product_click_outbound_attributed($1,$2,$3,$4)',['P1',count,source,device]);
+      await click('YouTube','Mobile');await click('YouTube','Mobile');await click('TikTok','PC');await click('TikTok','PC',false);
+      const rows=(await db.query('select source,device,clicks from public.product_click_daily')).rows;
+      assert.equal(rows.length,3);assert.equal(Number(rows.find(r=>r.source==='YouTube').clicks),2);
+      assert.equal(rows.reduce((sum,r)=>sum+Number(r.clicks),0),5);
+      await db.exec('set role anon');await assert.rejects(click('YouTube','PC'),{code:'42501'});await db.exec('reset role');
+    });
     await t.test("only the save function receives the longer timeout",async()=>{
       const {rows}=await db.query("select proconfig from pg_proc where oid='public.catalog_apply(jsonb,jsonb,jsonb,jsonb,text)'::regprocedure");
       assert.ok(rows[0].proconfig.includes("statement_timeout=45s"));
