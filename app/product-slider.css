@@ -94,15 +94,15 @@
 .slide-product-name{margin:2px 8px}
 .slide-card-top,.slide-product-name{flex-shrink:0}
 .slide-image-link{position:relative;flex:1 1 0;min-width:0;min-height:0}
-.slide-product-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.slide-product-image{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center}
 .slider-arrow-left{left:0}.slider-arrow-right{right:0}
 @media(max-width:760px){
   .product-slider-track{gap:6px}
-  .product-slider-track .slide-card{--card-size:72%;--product-label-size:12px}
-  .slide-card-top{min-height:32px;padding:2px 6px 0}
+  .product-slider-track .slide-card{--card-size:36%;--product-label-size:10px}
+  .slide-card-top{min-height:26px;padding:0 2px}
   .slide-product-name{margin:1px 4px 2px}
   .slide-product-image{object-fit:contain}
 }
 /* Leave the next card visible as a swipe cue at each mobile width. */
-@media(min-width:480px) and (max-width:639px){.product-slider-track .slide-card{--card-size:44%}}
-@media(min-width:640px) and (max-width:760px){.product-slider-track .slide-card{--card-size:30%}}
+@media(min-width:480px) and (max-width:639px){.product-slider-track .slide-card{--card-size:22%}}
+@media(min-width:640px) and (max-width:760px){.product-slider-track .slide-card{--card-size:15%}}
