@@ -16,28 +16,7 @@ export default function ProductSlider({name,products,saved,onSave,tone}:{name:st
   const id="slider-"+encodeURIComponent(name);
   useEffect(()=>{
     const element=track.current;if(!element)return;
-    const measure=()=>{
-      const mobile=window.innerWidth<=760;
-      const fraction=window.innerWidth<480?.36:window.innerWidth<640?.22:.15;
-      for(const card of element.querySelectorAll<HTMLElement>(".slide-card")){
-        const photo=card.querySelector<HTMLImageElement>("img.slide-product-image");
-        const heading=card.querySelector<HTMLElement>(".slide-card-top");
-        const label=card.querySelector<HTMLElement>(".slide-product-name");
-        if(!photo?.naturalWidth||!heading||!label){
-          card.style.removeProperty("--image-card-width");
-          card.style.removeProperty("--image-card-height");
-          continue;
-        }
-        // Preserve the image's original contained size; remove only side gutters.
-        const side=mobile?element.clientWidth*fraction:(element.clientWidth-32)/5;
-        const labelStyle=getComputedStyle(label);
-        const imageHeight=Math.max(1,side-2-heading.getBoundingClientRect().height-label.getBoundingClientRect().height-parseFloat(labelStyle.marginTop)-parseFloat(labelStyle.marginBottom));
-        const imageWidth=Math.min(side-2,imageHeight*photo.naturalWidth/photo.naturalHeight);
-        card.style.setProperty("--image-card-width",`${imageWidth+2}px`);
-        card.style.setProperty("--image-card-height",`${side}px`);
-      }
-      setEdges({start:element.scrollLeft<2,end:element.scrollLeft+element.clientWidth>=element.scrollWidth-2});
-    };
+    const measure=()=>setEdges({start:element.scrollLeft<2,end:element.scrollLeft+element.clientWidth>=element.scrollWidth-2});
     measure();const observer=new ResizeObserver(measure);observer.observe(element);
     element.addEventListener("scroll",measure,{passive:true});
     element.addEventListener("load",measure,true);
