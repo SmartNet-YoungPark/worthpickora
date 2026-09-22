@@ -37,12 +37,12 @@ export default function ClickAnalytics(){
   const active=ranking.find(item=>item.key===selected)||ranking[0];
   const detail=current.filter(row=>active&&groupKey(row,by)===active.key).sort((a,b)=>b.click_date.localeCompare(a.click_date)||b.clicks-a.clicks);
   const trend=seriesClicks(detail,range.start,range.end,period);
-  const periodProducts=new Map<string,Map<string,{id:string;code:string;name:string;clicks:number}>>();
+  const periodProducts=new Map<string,Map<string,{id:string;code:string;name:string;clicks:number;stores:string[]}>>();
   for(const row of detail){
     const date=bucketDate(row.click_date,period);
     const products=periodProducts.get(date)||new Map();
     const previous=products.get(row.product_id);
-    products.set(row.product_id,{id:row.product_id,code:row.product_code,name:row.product_name,clicks:(previous?.clicks||0)+Number(row.clicks)});
+    products.set(row.product_id,{id:row.product_id,code:row.product_code,name:row.product_name,clicks:(previous?.clicks||0)+Number(row.clicks),stores:[...new Set<string>([...(previous?.stores||[]),row.store_name])]});
     periodProducts.set(date,products);
   }
   const max=Math.max(1,...trend.map(point=>point.clicks));
@@ -74,7 +74,7 @@ export default function ClickAnalytics(){
     </section><section className="analytics-panel analytics-detail" aria-label="Selected click records"><h2>{active?.label||"Click details"}</h2><p>{active?active.clicks.toLocaleString()+" clicks · "+detail.length+" daily records":"Select a ranked item"}</p>
       {active&&<><svg className="analytics-line" viewBox="0 0 600 185" role="img" aria-label={active.label+" click trend"}><line x1="20" y1="150" x2="580" y2="150" stroke="#dbe5df"/><polyline points={points} fill="none" stroke="#28724e" strokeWidth="3"/>{trend.map((point,index)=><circle key={point.date} cx={20+index*560/Math.max(1,trend.length-1)} cy={150-point.clicks/max*125} r="3" fill="#28724e"><title>{point.date+": "+point.clicks+" clicks"}</title></circle>)}<text x="20" y="178">{trend[0]?.date}</text><text x="580" y="178" textAnchor="end">{trend.at(-1)?.date}</text><text x="20" y="15">{max} clicks</text></svg>
       <details><summary>View {period} totals</summary><div className="analytics-periods">{trend.map(point=><div className="analytics-period-record" key={point.date}><strong>{point.date}: {point.clicks} clicks</strong>{[...(periodProducts.get(point.date)?.values()||[])].map(item=><p key={item.id}><b>{item.code}</b> · {item.name} — {item.clicks}<small>ID: {item.id}</small></p>)}</div>)}</div></details>
-      <div className="analytics-table-scroll"><table><thead><tr><th>Date</th><th>Set</th><th>Product / ID</th><th>Store</th><th>Source</th><th>Device</th><th>Clicks</th></tr></thead><tbody>{detail.slice(0,limit).map(row=><tr key={JSON.stringify([row.click_date,row.product_id,row.source,row.device])}><td>{row.click_date}</td><td>{row.set_name}</td><td><b>{row.product_code}</b> · {row.product_name}<small>ID: {row.product_id}</small></td><td>{row.store_name}</td><td>{row.source||"Unknown"}</td><td>{row.device||"Unknown"}</td><td>{row.clicks}</td></tr>)}</tbody></table></div>{detail.length>limit&&<button className="analytics-load-more" onClick={()=>setLimit(value=>value+50)}>Show more records ({limit} of {detail.length})</button>}</>}
+      <div className="analytics-table-scroll"><table><thead><tr><th>Date</th><th>Set</th><th>ID</th><th>Product</th><th className="analytics-click-count">Clicks</th><th>Store</th><th>Source</th><th>Device</th></tr></thead><tbody>{detail.slice(0,limit).map(row=><tr key={JSON.stringify([row.click_date,row.product_id,row.source,row.device])}><td>{row.click_date}</td><td>{row.set_name}</td><td><b>{row.product_code}</b> · {row.product_name}<small>ID: {row.product_id}</small></td><td>{row.store_name}</td><td>{row.source||"Unknown"}</td><td>{row.device||"Unknown"}</td><td>{row.clicks}</td></tr>)}</tbody></table></div>{detail.length>limit&&<button className="analytics-load-more" onClick={()=>setLimit(value=>value+50)}>Show more records ({limit} of {detail.length})</button>}</>}
     </section></div>
     <section className="analytics-insights"><h2>Trend & current activity</h2><p><strong>{total.toLocaleString()} clicks</strong> from {range.start} through {range.end}. {comparison}</p>{ranking[0]&&<p>Leading {by}: <strong>{ranking[0].label}</strong>, {ranking[0].clicks} clicks ({(ranking[0].clicks/total*100).toFixed(1)}% of the filtered total).</p>}{peak?.clicks>0&&<p>Busiest {period}: {peak.date}, {peak.clicks} clicks.</p>}<p>{range.end>=torontoDate()?"Today is still in progress. ":""}Weeks and months at the edges of the selected range may be partial. Reports start when tracking is enabled; earlier clicks cannot be recovered.</p></section></>}
   </main>;

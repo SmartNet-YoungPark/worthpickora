@@ -3,3 +3,6 @@
 .analytics-period-record{width:100%;padding:10px 0;border-bottom:1px solid #dce6df;overflow-wrap:anywhere}
 .analytics-period-record p{margin-top:5px}
 .analytics-period-record small{display:block;color:#819087;font-size:10px}
+.analytics-period-record table{margin-top:8px}
+.analytics-page .analytics-product-id{min-width:100px;max-width:180px;white-space:normal}
+.analytics-page .analytics-click-count{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
