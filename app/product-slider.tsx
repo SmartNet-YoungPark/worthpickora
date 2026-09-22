@@ -16,16 +16,41 @@ export default function ProductSlider({name,products,saved,onSave,tone}:{name:st
   const id="slider-"+encodeURIComponent(name);
   useEffect(()=>{
     const element=track.current;if(!element)return;
-    const measure=()=>setEdges({start:element.scrollLeft<2,end:element.scrollLeft+element.clientWidth>=element.scrollWidth-2});
+    const measure=()=>{
+      const mobile=window.innerWidth<=760;
+      const fraction=window.innerWidth<480?.36:window.innerWidth<640?.22:.15;
+      for(const card of element.querySelectorAll<HTMLElement>(".slide-card")){
+        const photo=card.querySelector<HTMLImageElement>("img.slide-product-image");
+        const heading=card.querySelector<HTMLElement>(".slide-card-top");
+        const label=card.querySelector<HTMLElement>(".slide-product-name");
+        if(!mobile||!photo?.naturalWidth||!heading||!label){
+          card.style.removeProperty("--mobile-image-card-width");
+          card.style.removeProperty("--mobile-image-card-height");
+          continue;
+        }
+        // Preserve the image's original contained size; remove only side gutters.
+        const side=element.clientWidth*fraction;
+        const labelStyle=getComputedStyle(label);
+        const imageHeight=Math.max(1,side-2-heading.offsetHeight-label.offsetHeight-parseFloat(labelStyle.marginTop)-parseFloat(labelStyle.marginBottom));
+        const imageWidth=Math.min(side-2,imageHeight*photo.naturalWidth/photo.naturalHeight);
+        card.style.setProperty("--mobile-image-card-width",`${imageWidth+2}px`);
+        card.style.setProperty("--mobile-image-card-height",`${side}px`);
+      }
+      setEdges({start:element.scrollLeft<2,end:element.scrollLeft+element.clientWidth>=element.scrollWidth-2});
+    };
     measure();const observer=new ResizeObserver(measure);observer.observe(element);
     element.addEventListener("scroll",measure,{passive:true});
-    return()=>{observer.disconnect();element.removeEventListener("scroll",measure);};
+    element.addEventListener("load",measure,true);
+    window.addEventListener("resize",measure);
+    return()=>{observer.disconnect();element.removeEventListener("scroll",measure);element.removeEventListener("load",measure,true);window.removeEventListener("resize",measure);};
   },[products]);
   function slide(direction:number){
     const element=track.current;if(!element)return;
-    const card=element.querySelector<HTMLElement>(".slide-card");
-    const gap=parseFloat(getComputedStyle(element).columnGap)||0;
-    element.scrollBy({left:direction*((card?.offsetWidth||220)+gap),behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
+    const cards=[...element.querySelectorAll<HTMLElement>(".slide-card")];
+    const origin=cards[0]?.offsetLeft||0;
+    const stops=cards.map(card=>card.offsetLeft-origin);
+    const target=direction>0?stops.find(left=>left>element.scrollLeft+2):stops.reverse().find(left=>left<element.scrollLeft-2);
+    element.scrollTo({left:target??(direction>0?element.scrollWidth:0),behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
   }
   const palette=["#eee7c9","#ffe4cf","#e3efdf","#e8e3f6","#fbe1e5","#dceef2"];
   return <div className="product-set-slider" data-product-set style={{"--set-background":palette[tone%palette.length]} as CSSProperties}>

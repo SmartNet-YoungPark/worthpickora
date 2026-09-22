@@ -98,7 +98,7 @@
 .slider-arrow-left{left:0}.slider-arrow-right{right:0}
 @media(max-width:760px){
   .product-slider-track{gap:6px}
-  .product-slider-track .slide-card{--card-size:36%;--product-label-size:10px}
+  .product-slider-track .slide-card{--card-size:36%;--product-label-size:10px;flex-basis:var(--mobile-image-card-width,var(--card-size));width:var(--mobile-image-card-width,var(--card-size));height:var(--mobile-image-card-height,auto)}
   .slide-card-top{min-height:26px;padding:0 2px}
   .slide-product-name{margin:1px 4px 2px}
   .slide-product-image{object-fit:contain}
