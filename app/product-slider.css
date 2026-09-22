@@ -133,3 +133,7 @@
 .slide-product-name{background:#fff;color:#25312c;border-radius:3px}
 .set-direction-nav{background:#fff5bd;border-color:#e6d897}
 .slider-arrow{background:#ffe5ed;border-color:#ebc6d2}
+@media(max-width:760px){
+  .slide-card-top{background:#fff}
+  .slide-product-code{background:transparent}
+}
