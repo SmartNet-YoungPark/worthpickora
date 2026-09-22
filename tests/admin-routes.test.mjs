@@ -42,7 +42,7 @@ try {
   assert.equal(denied.status, 307); assert.ok(denied.headers.get("location").endsWith("/admin/login"));
   assert.equal((await request("/api/admin/session")).status, 401);
   const publicHome = await (await request("/")).text();
-  assert.ok(publicHome.includes("Admin Login")); assert.ok(!publicHome.includes("Manage products"));
+  assert.match(publicHome, /class="landing-admin-button"[^>]*href="\/admin\/login"[^>]*>admin<\/a>/); assert.ok(!publicHome.includes("Manage products"));
   assert.equal((await post("/api/admin/login", password, "https://other.example")).status, 403);
   const wrong = await post("/api/admin/login", "wrong-password");
   assert.ok(wrong.headers.get("location").includes("error=invalid")); assert.equal(wrong.headers.get("set-cookie"), null);
@@ -61,7 +61,7 @@ try {
   const admin = await request("/admin/products", authed);
   assert.equal(admin.status, 200); assert.ok((await admin.text()).includes("Landing Page"));
   const home = await (await request("/", authed)).text();
-  assert.ok(home.includes("Admin Page")); assert.ok(home.includes("Manage products"));
+  assert.match(home, /class="landing-admin-button"[^>]*href="\/admin\/products"[^>]*>admin<\/a>/); assert.ok(home.includes("Manage products"));
   assert.equal((await request("/api/catalog?scope=admin")).status, 401);
   const initialCatalog = await (await request("/api/catalog?scope=admin", authed)).json();
   const updatedProducts = structuredClone(initialCatalog.products);

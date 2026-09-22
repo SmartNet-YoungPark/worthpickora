@@ -90,7 +90,7 @@ export default function LandingPage({ admin, initialCatalog }: { admin: boolean;
     <header className="header">
       <Link href="/" className="wordmark site-brand" aria-label="WorthPickora home"><SiteLogo/><span className="site-brand-text">Worth<span>Pickora</span>.</span></Link>
       <div className="header-tagline"><span className="eyebrow">THE EVERYDAY, A LITTLE BETTER</span><h1>Find more of what’s <span>worth it.</span></h1></div>
-      <div className="landing-header-actions"><button className={`saved-button ${savedOnly ? "selected" : ""}`} onClick={() => setSavedOnly(!savedOnly)} aria-pressed={savedOnly}><Icon name="heart"/><span>Saved Items</span><b>{saved.length}</b></button><Link className="landing-admin-button" href={admin ? "/admin/products" : "/admin/login"}><Icon name="external" size={16}/>{admin ? "Admin Page" : "Admin Login"}</Link></div>
+      <div className="landing-header-actions"><Link className="landing-admin-button" href={admin ? "/admin/products" : "/admin/login"}>admin</Link></div>
     </header>
     <main>
       {catalogError && <p className="catalog-sync-notice" role="status">Latest products could not be loaded. Reconnecting automatically.</p>}
@@ -98,6 +98,7 @@ export default function LandingPage({ admin, initialCatalog }: { admin: boolean;
       <nav className="categories" aria-label="Product categories">{categories.map(item => <button key={item.name} onClick={() => selectCategory(item.name)} className={`${item.className} ${activeCategory === item.name ? "active" : ""}`} aria-pressed={activeCategory === item.name}><Icon name={item.icon} size={26}/><span>{item.name}</span><Icon name="chevron" size={15}/></button>)}</nav>
       <div className="collection-heading"><span><span className="little-star">✦</span> {savedOnly ? "Your little collection of good finds" : "Curated finds, made for your everyday"}</span><span>HANDPICKED, NOT OVERWHELMING</span></div>
       {filtering && <div className="filter-status"><span>{savedOnly ? "Saved items" : "Search results"}{query && ` for “${query}”`}</span><button onClick={() => {setQuery("");setSavedOnly(false);}}>Clear filters <Icon name="close" size={14}/></button></div>}
+      <div className="set-list-toolbar"><button className={`saved-button ${savedOnly ? "selected" : ""}`} onClick={() => setSavedOnly(!savedOnly)} aria-pressed={savedOnly}><Icon name="heart"/><span>Saved Items</span><b>{saved.length}</b></button></div>
       {visibleCategories.map(cat => {
         const matches = matchingProducts(cat.name);
         if (!matches.length) return null;
