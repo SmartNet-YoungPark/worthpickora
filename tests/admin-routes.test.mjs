@@ -176,7 +176,7 @@ try {
   const groupedHtml=(await (await request("/")).text()).replace(/<!--[\s\S]*?-->/g,"");
   assert.equal((groupedHtml.match(/data-product-set="true"/g)||[]).length,11,'every populated set has an open slider');
   assert.equal((groupedHtml.match(/class="slide-card product-card"/g)||[]).length,20,'all published cards are present');
-  assert.ok(groupedHtml.includes('click product images'));
+  assert.ok(!groupedHtml.includes('click-images-hint'));
   assert.ok(!groupedHtml.includes('class="store-button"'));
   assert.ok(!groupedHtml.includes('class="set-group"'));
   assert.match(groupedHtml, /<h3>[^<]*Set 11<\/h3>/);

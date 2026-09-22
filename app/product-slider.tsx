@@ -29,7 +29,7 @@ export default function ProductSlider({name,products,saved,onSave,tone}:{name:st
   }
   const palette=["#eee7c9","#ffe4cf","#e3efdf","#e8e3f6","#fbe1e5","#dceef2"];
   return <div className="product-set-slider" data-product-set style={{"--set-background":palette[tone%palette.length]} as CSSProperties}>
-    <div className="slider-set-heading"><h3>{name}</h3><span className="click-images-hint" role="img" aria-label="click product images" title="Click a product image to visit the store"><svg width="27" height="27" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="2" y="2" width="18" height="16" rx="3"/><circle cx="7" cy="7" r="1.5"/><path d="m4 15 5-5 4 4 3-3M14 12l3 14 3-5 5-2-11-7Zm7-3 2-2m-8 1V5m8 9h3"/></svg></span><small>{items.length} products</small></div>
+    <div className="slider-set-heading"><h3>{name}</h3><small>{items.length} products</small></div>
     <div className="slider-viewport">
       <div className="product-slider-track" id={id} ref={track} tabIndex={0} role="region" aria-label={name+" products; swipe left or right"}>
         {items.map(product=><article className="slide-card product-card" key={product.id}>
