@@ -84,3 +84,16 @@
   .slider-arrow{top:50%;bottom:auto;transform:translateY(-50%);width:28px;min-height:46px}
 }
 @media(max-width:360px){.slide-product-code{font-size:8px}}
+
+/* Keep cards square and scale the complete image into the remaining space. */
+.slider-set-heading{padding-bottom:2px}
+.product-slider-track{align-items:flex-start;padding-top:0}
+.product-slider-track .slide-card{--card-size:min(clamp(210px,23vw,260px),266.25px);flex:0 0 var(--card-size);width:var(--card-size);height:auto;aspect-ratio:1;box-sizing:border-box}
+.slide-card-top,.slide-product-name{flex-shrink:0}
+.slide-image-link{position:relative}
+.slide-product-image{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+@media(max-width:760px){
+  .product-slider-track .slide-card{--card-size:min(calc((100% - 18px)/3.5),clamp(157.5px,36vw,202.5px))}
+  .slide-card-top{min-height:26px;padding-top:0}
+  .slide-product-name{margin:1px 4px 2px}
+}
