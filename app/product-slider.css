@@ -94,7 +94,7 @@
 .slide-product-name{margin:2px 8px}
 .slide-card-top,.slide-product-name{flex-shrink:0}
 .slide-image-link{position:relative;flex:1 1 0;min-width:0;min-height:0}
-.slide-product-image{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.slide-product-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
 .slider-arrow-left{left:0}.slider-arrow-right{right:0}
 @media(max-width:760px){
   .product-slider-track .slide-card{--card-size:calc(100% / 3.5);--product-label-size:9px}
