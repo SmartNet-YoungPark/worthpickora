@@ -31,7 +31,7 @@ export default function ProductSlider({name,products,saved,onSave,tone}:{name:st
     const target=direction>0?stops.find(left=>left>element.scrollLeft+2):stops.reverse().find(left=>left<element.scrollLeft-2);
     element.scrollTo({left:target??(direction>0?element.scrollWidth:0),behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
   }
-  const palette=["#eee7c9","#ffe4cf","#e3efdf","#e8e3f6","#fbe1e5","#dceef2"];
+  const palette=["#254d39","#853d19","#254b78","#603c83","#893850","#155c65"];
   return <div className="product-set-slider" data-product-set style={{"--set-background":palette[tone%palette.length]} as CSSProperties}>
     <div className="slider-set-heading"><h3>{name}</h3><small>{items.length} products</small></div>
     <div className="slider-viewport">
