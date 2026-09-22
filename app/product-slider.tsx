@@ -2,6 +2,7 @@
 import {useEffect,useRef,useState,type CSSProperties} from "react";
 import Image from "next/image";
 import ProductDescription from "./product-description";
+import BrandMark from "./brand-mark";
 import {type Product,validUrl} from "@/lib/catalog";
 import "./product-slider.css";
 
@@ -23,7 +24,8 @@ export default function ProductSlider({name,products,saved,onSave,tone}:{name:st
   function slide(direction:number){
     const element=track.current;if(!element)return;
     const card=element.querySelector<HTMLElement>(".slide-card");
-    element.scrollBy({left:direction*((card?.offsetWidth||220)+14),behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
+    const gap=parseFloat(getComputedStyle(element).columnGap)||0;
+    element.scrollBy({left:direction*((card?.offsetWidth||220)+gap),behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
   }
   const palette=["#eee7c9","#ffe4cf","#e3efdf","#e8e3f6","#fbe1e5","#dceef2"];
   return <div className="product-set-slider" data-product-set style={{"--set-background":palette[tone%palette.length]} as CSSProperties}>
@@ -31,12 +33,11 @@ export default function ProductSlider({name,products,saved,onSave,tone}:{name:st
     <div className="slider-viewport">
       <div className="product-slider-track" id={id} ref={track} tabIndex={0} role="region" aria-label={name+" products; swipe left or right"}>
         {items.map(product=><article className="slide-card product-card" key={product.id}>
-          <div className="slide-card-top"><strong className="slide-product-code">{product.code}</strong><div className="slide-card-actions"><ProductDescription description={product.description} name={product.name}/><button className={saved.includes(product.id)?"slide-save is-saved":"slide-save"} onClick={()=>onSave(product.id)} aria-label={(saved.includes(product.id)?"Unsave ":"Save ")+product.name} aria-pressed={saved.includes(product.id)}>{saved.includes(product.id)?"♥":"♡"}</button></div></div>
+          <div className="slide-card-top"><strong className="slide-product-code">{product.code}</strong><div className="slide-card-actions"><ProductDescription description={product.description} name={product.name}/><BrandMark brand={product.store}/><button className={saved.includes(product.id)?"slide-save is-saved":"slide-save"} onClick={()=>onSave(product.id)} aria-label={(saved.includes(product.id)?"Unsave ":"Save ")+product.name} aria-pressed={saved.includes(product.id)}>{saved.includes(product.id)?"♥":"♡"}</button></div></div>
           <h4 className="slide-product-name">{product.name}</h4>
           <a className="slide-image-link" href={validUrl(product.url)?`/go/${encodeURIComponent(product.id)}`:undefined} target="_blank" rel="noopener noreferrer sponsored" aria-label={`View ${product.name} on ${product.store} (opens in a new tab)`}>
             {product.image?<Image src={product.image} alt={product.name} width={400} height={400} unoptimized className="slide-product-image"/>:product.photo!==null?<div className={`product-photo photo-${product.photo}`} role="img" aria-label={product.name}/>:<span className="slide-image-placeholder">Explore on {product.store} ↗</span>}
           </a>
-          <span className="slide-store">{product.store}</span>
         </article>)}
       </div>
       <button className="slider-arrow slider-arrow-left" onClick={()=>slide(-1)} disabled={edges.start} aria-controls={id} aria-label={"Previous products in "+name}><Arrow direction="left"/></button>

@@ -18,7 +18,7 @@ export function bucketDate(date:string,period:Period) {
 export function groupKey(row:ClickRow,by:GroupBy) {return by==="product"?row.product_id:by==="store"?row.store_name:by==="source"?row.source||"Unknown":by==="device"?row.device||"Unknown":row.category_name;}
 export function rankClicks(rows:ClickRow[],by:GroupBy) {
   const groups=new Map<string,{key:string;label:string;clicks:number}>();
-  for(const row of rows){const key=groupKey(row,by);const previous=groups.get(key);groups.set(key,{key,label:by==="product"?row.product_name+" ("+row.product_code+")":key,clicks:(previous?.clicks||0)+Number(row.clicks)});}
+  for(const row of rows){const key=groupKey(row,by);const previous=groups.get(key);groups.set(key,{key,label:by==="product"?row.product_code+" · "+row.product_name:key,clicks:(previous?.clicks||0)+Number(row.clicks)});}
   return [...groups.values()].sort((a,b)=>b.clicks-a.clicks||a.label.localeCompare(b.label)).slice(0,10);
 }
 export function seriesClicks(rows:ClickRow[],start:string,end:string,period:Period) {
