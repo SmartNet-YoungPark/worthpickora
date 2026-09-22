@@ -32,7 +32,8 @@ export default function ProductSlider({name,products,saved,onSave,tone}:{name:st
     element.scrollTo({left:target??(direction>0?element.scrollWidth:0),behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
   }
   const palette=["#254d39","#853d19","#254b78","#603c83","#893850","#155c65"];
-  return <div className="product-set-slider" data-product-set style={{"--set-background":palette[tone%palette.length]} as CSSProperties}>
+  const isTech=items[0]?.category==="Tech";
+  return <div className="product-set-slider" data-product-set style={{"--set-background":isTech?`hsl(${(tone*137.508+205)%360} 65% 90%)`:palette[tone%palette.length],"--set-title-color":isTech?"#243b45":"#fff"} as CSSProperties}>
     <div className="slider-set-heading"><h3>{name}</h3><small>{items.length} products</small></div>
     <div className="slider-viewport">
       <div className="product-slider-track" id={id} ref={track} tabIndex={0} role="region" aria-label={name+" products; swipe left or right"}>
