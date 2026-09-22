@@ -1,14 +1,11 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import SiteLogo from "./site-logo";
-import ProductDescription from "./product-description";
-import MoreProductsButton from "./more-products-button";
+import ProductSlider, { SetNavigation } from "./product-slider";
 import { useCatalog } from "@/lib/use-catalog";
-import { CatalogSnapshot, productSets, validUrl } from "@/lib/catalog";
-import { groupProductSets } from "@/lib/set-groups";
+import { CatalogSnapshot, productSets } from "@/lib/catalog";
 
 let savedFallback = "[]";
 function subscribeSaved(callback: () => void) {
@@ -72,24 +69,11 @@ export default function LandingPage({ admin, initialCatalog }: { admin: boolean;
   try { const value: unknown = JSON.parse(savedSnapshot); if (Array.isArray(value)) saved = value.filter((item): item is string => typeof item === "string"); } catch { /* Ignore malformed stored data. */ }
   const [savedOnly, setSavedOnly] = useState(false);
   const [moreBrands, setMoreBrands] = useState(false);
-  const [expanded, setExpanded] = useState<Record<string, number | null>>({});
-  const [showAll, setShowAll] = useState<Record<string, boolean>>({});
-  const [slides, setSlides] = useState<Record<string, number>>({});
   const searchRef = useRef<HTMLInputElement>(null);
-  const collapsedSet = useRef<{ heading: HTMLElement; gridId: string } | null>(null);
-  useLayoutEffect(() => {
-    const target = collapsedSet.current;
-    collapsedSet.current = null;
-    if (!target || !target.heading.isConnected) return;
-    // Collapsing the tall mobile grid can move the page's scroll anchor past
-    // the set heading. Restore it after layout, with the toggle still visible.
-    document.getElementById(target.gridId)?.scrollTo({ left: 0, behavior: "instant" });
-    window.scrollTo({ top: Math.max(0, window.scrollY + target.heading.getBoundingClientRect().top - 16), behavior: "instant" });
-  }, [showAll]);
   function toggleSave(id: string) {
     writeSaved(saved.includes(id) ? saved.filter(item => item !== id) : [...saved, id]);
   }
-  function selectCategory(name: string) { setCategory(name); setExpanded(current => ({ ...current, [name]: current[name] || 1 })); setSlides({}); }
+  function selectCategory(name: string) { setCategory(name); }
   const filtering = !!query || savedOnly;
   const activeCategory = categoryNames.includes(category) ? category : categoryNames[0];
   const visibleCategories = filtering ? categories : [...categories.filter(item => item.name === activeCategory), ...categories.filter(item => item.name !== activeCategory)];
@@ -113,43 +97,16 @@ export default function LandingPage({ admin, initialCatalog }: { admin: boolean;
       {filtering && <div className="filter-status"><span>{savedOnly ? "Saved items" : "Search results"}{query && ` for “${query}”`}</span><button onClick={() => {setQuery("");setSavedOnly(false);}}>Clear filters <Icon name="close" size={14}/></button></div>}
       {visibleCategories.map(cat => {
         const matches = matchingProducts(cat.name);
-        if (matches.length === 0) return null;
-        const availableSets = productSets(matches, cat.name);
-        const grouped = availableSets.length >= 5;
-        const requestedSet = expanded[cat.name];
-        const lastSet = availableSets[availableSets.length - 1];
-        const selectedSet = requestedSet === null ? null : requestedSet !== undefined && availableSets.includes(requestedSet) ? requestedSet : lastSet;
-        return <section key={cat.name} className={`product-section ${cat.className}`} aria-label={`${cat.name} product sets`}>
-          <div className="section-bar"><h2>{cat.name} Products Set</h2>{!grouped && <div className="set-tabs">{availableSets.map(number => <button key={number} className={(selectedSet || availableSets[0]) === number ? "active" : ""} onClick={() => {setExpanded(current => ({ ...current, [cat.name]: number }));setSlides({});}}>Set {String(number).padStart(2, "0")}</button>)}</div>}<span className="section-note">{grouped ? `${availableSets.length} sets · Browse in groups of 5` : "A few favorites, just for you"}</span></div>
-          {groupProductSets(availableSets).map(group => {
-            const rows = group.map(number => {
-            const open = filtering || selectedSet === number;
-            const ordered = matches.filter(product => product.set === number);
-            const setKey = JSON.stringify([cat.name, number]);
-            const showingAll = !!showAll[setKey] || filtering;
-            const products = showingAll ? ordered : ordered.slice(0, 5);
-            const gridId = `products-${encodeURIComponent(cat.name)}-${number}`;
-            return <div className={`product-set ${open ? "open" : ""}`} key={number}>
-              <div className="set-heading"><button className="set-toggle" onClick={() => setExpanded(current => ({ ...current, [cat.name]: open ? null : number }))} aria-expanded={open}><h3>{cat.name} Set {String(number).padStart(2, "0")}</h3>{!open && <span>{ordered.length} products</span>}</button>{open ? <div className="set-details"><span>Showing {products.length} of {ordered.length}</span>{ordered.length > 5 && !filtering && <MoreProductsButton expanded={!!showAll[setKey]} controls={gridId} onToggle={button => { if (showAll[setKey] && window.matchMedia("(max-width: 760px)").matches) { const heading = button.closest<HTMLElement>(".set-heading"); if (heading) collapsedSet.current = { heading, gridId }; } setShowAll(current => ({ ...current, [setKey]: !current[setKey] })); setSlides(current => ({ ...current, [setKey]: 0 })); }}/>}</div> : <button className="expand-button" onClick={() => setExpanded(current => ({ ...current, [cat.name]: number }))} aria-label={`Expand ${cat.name} set ${number}`}><Icon name="plus"/></button>}</div>
-              {open && <><div id={gridId} className={`product-grid${showingAll ? " product-grid-expanded" : ""}`} onScroll={event => { const element = event.currentTarget; const slide = Math.round(element.scrollLeft / (element.scrollWidth - element.clientWidth || 1) * 4); setSlides(current => current[setKey] === slide ? current : { ...current, [setKey]: slide }); }}>{products.length === 0 && <p className="catalog-empty-set">New finds are on their way. Explore another set or store.</p>}{products.map(product => <article className="product-card" key={product.id}>
-                <div className="card-top"><button className={`heart-button ${saved.includes(product.id) ? "is-saved" : ""}`} onClick={() => toggleSave(product.id)} aria-label={`${saved.includes(product.id) ? "Unsave" : "Save"} ${product.name}`} aria-pressed={saved.includes(product.id)}><Icon name="heart" size={23}/></button><BrandMark brand={product.store}/></div>
-                <a className="product-image-link" href={validUrl(product.url) ? `/go/${encodeURIComponent(product.id)}` : undefined} target="_blank" rel="noopener noreferrer sponsored" aria-label={`View ${product.name} on ${product.store} (opens in a new tab)`}>{product.image ? <Image className="catalog-uploaded-photo" src={product.image} alt={product.name} width={150} height={132} unoptimized/> : product.photo !== null ? <div className={`product-photo photo-${product.photo}`} role="img" aria-label={product.name}/> : <div className="product-illustration"><Icon name={cat.icon} size={68}/><span>THE {cat.name.toUpperCase()} EDIT</span></div>}</a>
-                <div className="product-info"><div className="product-code-row"><h4>{product.code}</h4><ProductDescription description={product.description} name={product.name}/></div><p>{product.name}</p></div><a className="store-button" href={validUrl(product.url) ? `/go/${encodeURIComponent(product.id)}` : undefined} target="_blank" rel="noopener noreferrer"><Icon name="external" size={18}/>View on Store</a>
-              </article>)}</div>{!showingAll && <div className="mobile-dots" aria-hidden="true">{[0, 1, 2, 3, 4].map(dot => <span key={dot} className={(slides[setKey] || 0) === dot ? "active" : ""}/>)}</div>}<div className="set-caption"><span><span className="little-star">✦</span> {cat.description}</span><span>Find your next favorite <Icon name="arrow" size={14}/></span></div></>}
-            </div>;
-            });
-            if (!grouped) return <div key={group[0]}>{rows}</div>;
-            const label = group.length === 1 ? `${cat.name} Set ${group[0]}` : `${cat.name} Set ${group[0]} - ${cat.name} Set ${group[group.length - 1]}`;
-            return <details key={group[0]} className="set-group" open={filtering || group.includes(lastSet) ? true : undefined}>
-              <summary><span>{label}</span><span className="set-group-count">{group.length} {group.length === 1 ? "set" : "sets"}</span><Icon name="chevron" size={19}/></summary>
-              <div className="set-group-rows">{rows}</div>
-            </details>;
-          })}
+        if (!matches.length) return null;
+        return <section key={cat.name} className="slider-category" aria-label={cat.name+" product sets"}>
+          <h2 className="slider-category-title">{cat.name}</h2>
+          {productSets(matches,cat.name).map(number=><ProductSlider key={number} name={cat.name+" Set "+String(number).padStart(2,"0")} products={matches.filter(product=>product.set===number)} saved={saved} onSave={toggleSave} tone={categoryNames.indexOf(cat.name)+number-1}/>)}
         </section>;
       })}
       {filtering && !categories.some(cat => matchingProducts(cat.name).length) && <div className="empty-state"><Icon name={savedOnly ? "heart" : "search"} size={36}/><h2>{savedOnly ? "Your favorites start here." : "No finds just yet."}</h2><p>{savedOnly ? "Tap the heart on anything you love to keep it here." : "Try a product name, code, or a different search."}</p><button onClick={() => {setSavedOnly(false);setQuery("");}}>Explore the collection <Icon name="arrow" size={18}/></button></div>}
       <div className="closing-note"><span>✦</span><p>Small choices.<br/><em>Big happiness.</em></p><span>✦</span></div>
     </main>
+    <SetNavigation/>
     <footer><Link href="/" className="wordmark">Worth<span>Pickora</span>.</Link><p>A little less searching. A little more finding.</p><span>© {new Date().getFullYear()} WorthPickora</span>{admin && <Link href="/admin/products" className="catalog-admin-link">Manage products</Link>}<small>Curated inspiration · Store links open retailer search results.</small></footer>
     <nav className="mobile-nav" aria-label="Mobile navigation"><button className={!savedOnly ? "active" : ""} onClick={() => {setSavedOnly(false);setQuery("");window.scrollTo({ top: 0, behavior: "smooth" });}}><Icon name="home"/>Home</button><button onClick={() => {searchRef.current?.focus();window.scrollTo({ top: 0, behavior: "smooth" });}}><Icon name="search"/>Search</button><button className={savedOnly ? "active" : ""} onClick={() => setSavedOnly(!savedOnly)}><Icon name="heart"/>Saved{saved.length > 0 && <b>{saved.length}</b>}</button></nav>
   </div>;
