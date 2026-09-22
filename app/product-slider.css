@@ -113,3 +113,14 @@
   .slide-image-link{display:block;overflow:visible}
   .slide-product-image{max-width:100%;max-height:100%;transform:none;object-fit:contain}
 }
+
+/* Scale the icon artwork to each card, keeping separate button hit areas. */
+.product-slider-track .slide-card{container-type:inline-size}
+.slide-card-actions{gap:clamp(0px,1cqw,2px)}
+.slide-card-actions .brand-mark{width:clamp(12px,9cqw,20px);height:clamp(14px,10cqw,22px);font-size:clamp(12px,10cqw,20px);flex-shrink:0}
+.slide-card-actions .best-buy,.slide-card-actions .temu{font-size:clamp(4px,3.6cqw,7px)}
+.slide-card-actions .amazon{padding-bottom:4px}
+.slide-card-actions .amazon:after{width:80%;height:4px;left:10%;border-bottom-width:2px}
+.slide-card-actions .product-description-trigger{width:clamp(18px,12cqw,26px);height:26px;min-width:0;padding:0}
+.slide-card-actions .product-description-trigger span{width:clamp(10px,8cqw,16px);height:clamp(10px,8cqw,16px);font-size:clamp(7px,5cqw,10px)}
+.slide-save{width:clamp(18px,12cqw,26px);min-width:0;min-height:26px;font-size:clamp(14px,11cqw,22px);line-height:1;padding:0}
