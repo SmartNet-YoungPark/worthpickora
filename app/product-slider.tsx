@@ -23,18 +23,18 @@ export default function ProductSlider({name,products,saved,onSave,tone}:{name:st
         const photo=card.querySelector<HTMLImageElement>("img.slide-product-image");
         const heading=card.querySelector<HTMLElement>(".slide-card-top");
         const label=card.querySelector<HTMLElement>(".slide-product-name");
-        if(!mobile||!photo?.naturalWidth||!heading||!label){
-          card.style.removeProperty("--mobile-image-card-width");
-          card.style.removeProperty("--mobile-image-card-height");
+        if(!photo?.naturalWidth||!heading||!label){
+          card.style.removeProperty("--image-card-width");
+          card.style.removeProperty("--image-card-height");
           continue;
         }
         // Preserve the image's original contained size; remove only side gutters.
-        const side=element.clientWidth*fraction;
+        const side=mobile?element.clientWidth*fraction:(element.clientWidth-32)/5;
         const labelStyle=getComputedStyle(label);
-        const imageHeight=Math.max(1,side-2-heading.offsetHeight-label.offsetHeight-parseFloat(labelStyle.marginTop)-parseFloat(labelStyle.marginBottom));
+        const imageHeight=Math.max(1,side-2-heading.getBoundingClientRect().height-label.getBoundingClientRect().height-parseFloat(labelStyle.marginTop)-parseFloat(labelStyle.marginBottom));
         const imageWidth=Math.min(side-2,imageHeight*photo.naturalWidth/photo.naturalHeight);
-        card.style.setProperty("--mobile-image-card-width",`${imageWidth+2}px`);
-        card.style.setProperty("--mobile-image-card-height",`${side}px`);
+        card.style.setProperty("--image-card-width",`${imageWidth+2}px`);
+        card.style.setProperty("--image-card-height",`${side}px`);
       }
       setEdges({start:element.scrollLeft<2,end:element.scrollLeft+element.clientWidth>=element.scrollWidth-2});
     };
