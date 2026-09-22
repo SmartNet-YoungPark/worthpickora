@@ -97,9 +97,12 @@
 .slide-product-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
 .slider-arrow-left{left:0}.slider-arrow-right{right:0}
 @media(max-width:760px){
-  .product-slider-track{gap:4px}
-  .product-slider-track .slide-card{--card-size:calc((100% - 12px) / 3.5);--product-label-size:9px}
-  .slide-card-top{min-height:26px;padding-top:0}
+  .product-slider-track{gap:6px}
+  .product-slider-track .slide-card{--card-size:72%;--product-label-size:12px}
+  .slide-card-top{min-height:32px;padding:2px 6px 0}
   .slide-product-name{margin:1px 4px 2px}
+  .slide-product-image{object-fit:contain}
 }
-@media(max-width:360px){.product-slider-track .slide-card{--product-label-size:8px}}
+/* Leave the next card visible as a swipe cue at each mobile width. */
+@media(min-width:480px) and (max-width:639px){.product-slider-track .slide-card{--card-size:44%}}
+@media(min-width:640px) and (max-width:760px){.product-slider-track .slide-card{--card-size:30%}}
