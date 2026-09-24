@@ -2,7 +2,7 @@ import ExcelJS from "exceljs";
 import { readCellImages } from "./catalog-cell-images.ts";
 import type { Product } from "./catalog";
 
-const fields = ["image", "code", "name", "description", "category", "set", "store", "brand", "asin", "url", "status"] as const;
+const fields = ["image", "code", "name", "description", "category", "set", "store", "brand", "asin", "url", "status", "options"] as const;
 
 export async function exportProductWorkbook(products: Product[]) {
   const workbook = new ExcelJS.Workbook();

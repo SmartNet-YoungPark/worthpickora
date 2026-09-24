@@ -9,6 +9,11 @@ import { importCsv, seedProducts } from "../lib/catalog.ts";
 const image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jL1sAAAAASUVORK5CYII=";
 
 const cellFixture = () => readFile(new URL("./fixtures/in-cell-images.xlsx", import.meta.url));
+test("product options survive Excel export and import",async()=>{
+  const product={...seedProducts[0],options:'Color: white, black\nSize: Large',image,photo:null};
+  const [restored]=importCsv(await workbookToCsv(await exportProductWorkbook([product])),[]);
+  assert.equal(restored.options,product.options);
+});
 
 test("Excel re-import rejects an existing code in the same set", async () => {
   const product = { ...seedProducts[0], image, photo: null };

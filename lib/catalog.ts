@@ -18,6 +18,7 @@ export type Product = {
   name: string;
   code: string;
   description: string;
+  options?: string;
   category: Category;
   set: number;
   store: string;
@@ -98,6 +99,7 @@ export function validUrl(value: string) {
   try { return ["https:", "http:"].includes(new URL(value).protocol); } catch { return false; }
 }
 export function validateProduct(product: Product, existing: Product[], categories: readonly string[] = CATEGORIES) {
+  if(product?.options!==undefined&&(typeof product.options!=="string"||product.options.length>500))return "Product options must be text of up to 500 characters.";
   if (!product || ["id", "name", "code", "description", "category", "store", "brand", "asin", "url", "image", "status", "updated"].some(field => typeof product[field as keyof Product] !== "string")) return "The product contains missing or invalid fields.";
   if (!product.id || !Number.isFinite(Date.parse(product.updated))) return "The product ID or updated date is invalid.";
   if (!product.name.trim()) return "Enter a product name.";
@@ -115,7 +117,7 @@ export function validateProduct(product: Product, existing: Product[], categorie
   return "";
 }
 
-const CSV_FIELDS = ["name", "code", "description", "category", "set", "store", "brand", "asin", "url", "status", "image"] as const;
+const CSV_FIELDS = ["name", "code", "description", "category", "set", "store", "brand", "asin", "url", "status", "image", "options"] as const;
 // Quoted fields can contain commas, newlines, and escaped quotes.
 export function parseCsv(text: string): string[][] {
   const rows: string[][] = [];
@@ -173,6 +175,7 @@ export function prepareCsvImport(text: string, existing: Product[], categories: 
     seen.add(code);
     const product: Product = {
       id: previous?.id || crypto.randomUUID(), name: data.name, code, description: data.description || "",
+      options: fields.includes("options") ? data.options : previous?.options || "",
       category, store: data.store, set, brand: data.brand || "", asin: data.asin || "",
       url: data.url, image: fields.includes("image") ? data.image : previous?.image || "",
       photo: fields.includes("photo") ? data.photo && /^[0-4]$/.test(data.photo) ? Number(data.photo) : null : data.image ? null : previous?.photo ?? null,

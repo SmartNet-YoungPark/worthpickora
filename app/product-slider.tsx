@@ -2,8 +2,9 @@
 import {useEffect,useRef,useState,type CSSProperties} from "react";
 import Image from "next/image";
 import ProductDescription from "./product-description";
+import ProductOverview from "./product-overview";
 import BrandMark from "./brand-mark";
-import {type Product,validUrl} from "@/lib/catalog";
+import {type Product} from "@/lib/catalog";
 import "./product-slider.css";
 
 function Arrow({direction}:{direction:"left"|"right"|"up"|"down"}){
@@ -12,7 +13,9 @@ function Arrow({direction}:{direction:"left"|"right"|"up"|"down"}){
 export default function ProductSlider({name,products,saved,onSave,tone}:{name:string;products:Product[];saved:string[];onSave:(id:string)=>void;tone:number}){
   const track=useRef<HTMLDivElement>(null);
   const [edges,setEdges]=useState({start:true,end:true});
+  const [overviewId,setOverviewId]=useState<string|null>(null);
   const items=products.slice(0,10);
+  const overview=items.find(product=>product.id===overviewId);
   const id="slider-"+encodeURIComponent(name);
   useEffect(()=>{
     const element=track.current;if(!element)return;
@@ -40,14 +43,15 @@ export default function ProductSlider({name,products,saved,onSave,tone}:{name:st
         {items.map(product=><article className="slide-card product-card" key={product.id}>
           <div className="slide-card-top"><strong className="slide-product-code" title={product.code}>{product.code}</strong><div className="slide-card-actions"><BrandMark brand={product.store}/><ProductDescription description={product.description} name={product.name}/><button className={saved.includes(product.id)?"slide-save is-saved":"slide-save"} onClick={()=>onSave(product.id)} aria-label={(saved.includes(product.id)?"Unsave ":"Save ")+product.name} aria-pressed={saved.includes(product.id)}>{saved.includes(product.id)?"♥":"♡"}</button></div></div>
           <h4 className="slide-product-name" title={product.name}>{product.name}</h4>
-          <a className="slide-image-link" href={validUrl(product.url)?`/go/${encodeURIComponent(product.id)}`:undefined} target="_blank" rel="noopener noreferrer sponsored" aria-label={`View ${product.name} on ${product.store} (opens in a new tab)`}>
+          <button type="button" className="slide-image-link" onClick={()=>setOverviewId(product.id)} aria-haspopup="dialog" aria-label={`View details for ${product.name}`}>
             {product.image?<Image src={product.image} alt={product.name} width={400} height={400} unoptimized className="slide-product-image"/>:product.photo!==null?<svg className="slide-product-image" viewBox="0 0 150 132" preserveAspectRatio="xMidYMid meet" role="img" aria-label={product.name}><svg width="150" height="132" viewBox={`${[126,327,526,727,925][product.photo]??126} ${product.photo===0?461:460} 150 132`} overflow="hidden"><image href="/products-reference.png" width="1536" height="1024"/></svg></svg>:<span className="slide-image-placeholder">Explore on {product.store} ↗</span>}
-          </a>
+          </button>
         </article>)}
       </div>
       <button className="slider-arrow slider-arrow-left" onClick={()=>slide(-1)} disabled={edges.start} aria-controls={id} aria-label={"Previous products in "+name}><Arrow direction="left"/></button>
       <button className="slider-arrow slider-arrow-right" onClick={()=>slide(1)} disabled={edges.end} aria-controls={id} aria-label={"Next products in "+name}><Arrow direction="right"/></button>
     </div>
+    {overview&&<ProductOverview product={overview} onClose={()=>setOverviewId(null)}/>}
   </div>;
 }
 

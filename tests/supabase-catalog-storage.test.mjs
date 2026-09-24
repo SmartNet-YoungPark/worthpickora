@@ -1,6 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createSupabaseCatalogStorage } from "../lib/supabase-catalog-storage.ts";
+test('missing options migration blocks writes instead of silently discarding options',async()=>{
+  let calls=0;
+  const storage=createSupabaseCatalogStorage('https://example.supabase.co','sb_secret_test',async()=>{calls++;return Response.json({products:[],categories:['Tech'],revision:'old',persisted:true});});
+  await assert.rejects(storage.write([{id:'one',options:'Color: Black'}],'old',['Tech']),/20260924040000_product_options.sql/);
+  assert.equal(calls,1);
+});
 
 test("image and metadata reads avoid fetching the full catalog",async()=>{
   const calls=[];
