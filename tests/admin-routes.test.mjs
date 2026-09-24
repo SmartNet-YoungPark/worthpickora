@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { randomBytes, randomInt } from "node:crypto";
-import { mkdtemp, rmdir, unlink } from "node:fs/promises";
+import { mkdtemp, rmdir, unlink, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { once } from "node:events";
@@ -58,6 +58,34 @@ try {
   const cookie = setCookie.split(";")[0];
   const authed = { headers: { Cookie: cookie } };
   assert.equal((await request("/api/admin/session", authed)).status, 200);
+  // App guides never enter product analytics and all settings writes require admin + origin.
+  assert.match(publicHome, /Store app guide/);
+  assert.ok(!publicHome.includes("Check new-customer offers"));
+  assert.equal((await request('/admin/store-apps')).status,307);
+  const saveOffer = (offer, confirmed, headers={Origin:origin,Cookie:cookie}) => request('/api/admin/store-apps',{method:'POST',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({offer,confirmed})});
+  assert.equal((await saveOffer('',false,{Origin:origin})).status,401);
+  assert.equal((await saveOffer('',false,{Origin:'https://other.example',Cookie:cookie})).status,403);
+  assert.equal((await saveOffer('https://temu.com.evil.example/campaign',true)).status,400);
+  assert.equal((await saveOffer('https://www.temu.com/campaign',false)).status,400);
+  const offer='https://www.temu.com/campaign?affiliate=test&campaign=example';
+  assert.equal((await saveOffer(offer,true)).status,200);
+  assert.match(await (await request('/')).text(),/Check new-customer offers/);
+  const appRedirect=await request('/store-app/amazon-ios');
+  assert.equal(appRedirect.status,302);assert.equal(appRedirect.headers.get('x-app-click-recorded'),'true');
+  assert.equal(appRedirect.headers.get('location'),'https://apps.apple.com/us/app/amazon-shopping/id297606951');
+  await request('/store-app/amazon-ios');
+  assert.equal((await request('/store-app/amazon-ios',authed)).headers.get('x-app-click-recorded'),'false');
+  await request('/store-app/amazon-ios',{headers:{Purpose:'prefetch'}});
+  await request('/store-app/amazon-ios',{headers:{'User-Agent':'ExampleBot'}});
+  await request('/store-app/amazon-ios',{method:'HEAD'});
+  assert.equal((await request('/store-app/temu-offer',authed)).headers.get('location'),offer);
+  assert.equal((await request('/store-app/invalid')).status,404);
+  const appState=JSON.parse(await readFile(catalogFile+'.store-apps.json','utf8'));
+  assert.equal(appState.rows.length,1);assert.equal(appState.rows[0].clicks,2);
+  assert.equal((await request('/admin/store-apps',authed)).status,200);
+  assert.equal((await saveOffer('',false)).status,200);
+  assert.equal((await request('/store-app/temu-offer')).status,404);
+  assert.ok(!(await (await request('/')).text()).includes('Check new-customer offers'));
   const admin = await request("/admin/products", authed);
   assert.equal(admin.status, 200); assert.ok((await admin.text()).includes("Landing Page"));
   const home = await (await request("/", authed)).text();
@@ -218,5 +246,5 @@ try {
 } finally {
   const stopped = child.exitCode === null ? once(child, "close") : Promise.resolve();
   child.kill(); await stopped;
-  await unlink(catalogFile).catch(() => {}); await unlink(catalogFile+'.clicks.json').catch(()=>{}); await rmdir(testDirectory);
+  await unlink(catalogFile).catch(() => {}); await unlink(catalogFile+'.clicks.json').catch(()=>{}); await unlink(catalogFile+'.store-apps.json').catch(()=>{}); await rmdir(testDirectory);
 }

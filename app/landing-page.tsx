@@ -3,6 +3,7 @@
 import { useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import SiteLogo from "./site-logo";
+import StoreAppGuide from "./store-app-guide";
 import BrandMark from "./brand-mark";
 import ProductSlider, { SetNavigation } from "./product-slider";
 import { useCatalog } from "@/lib/use-catalog";
@@ -63,7 +64,7 @@ function categoryAppearance(name: string, index: number): { name: string; icon: 
 }
 const brands = ["Amazon", "Walmart", "Best Buy", "Temu", "Target", "Etsy"];
 
-export default function LandingPage({ admin, initialCatalog }: { admin: boolean; initialCatalog: CatalogSnapshot }) {
+export default function LandingPage({ admin, initialCatalog, storeOffer = "" }: { admin: boolean; initialCatalog: CatalogSnapshot; storeOffer?: string }) {
   const { products: catalog, categories: categoryNames, error: catalogError } = useCatalog(initialCatalog);
   const categories = categoryNames.map(categoryAppearance);
   const [brand, setBrand] = useState("");
@@ -94,6 +95,7 @@ export default function LandingPage({ admin, initialCatalog }: { admin: boolean;
     <main>
       {catalogError && <p className="catalog-sync-notice" role="status">Latest products could not be loaded. Reconnecting automatically.</p>}
       <section className="brand-section" aria-label="Shop by brand"><div className="brand-search-heading"><h2>Shop by Brand</h2><label className="search-box"><Icon name="search" size={21}/><input ref={searchRef} value={query} onChange={event => setQuery(event.target.value)} placeholder="Search product code, name or brand" aria-label="Search products"/>{query && <button aria-label="Clear search" onClick={() => setQuery("")}><Icon name="close" size={16}/></button>}<span className="search-hint">Explore a little</span></label></div><div className="brand-list">{brands.map(item => <button key={item} className={`brand-button ${brand === item ? "active" : ""}`} onClick={() => setBrand(brand === item ? "" : item)} aria-pressed={brand === item}><BrandMark brand={item}/><span>{item}</span>{brand === item && <span className="brand-selected-dot"/>}</button>)}</div></section>
+      <StoreAppGuide offer={storeOffer}/>
       <nav className="categories" aria-label="Product categories">{categories.map(item => <button key={item.name} onClick={() => selectCategory(item.name)} className={`${item.className} ${activeCategory === item.name ? "active" : ""}`} aria-pressed={activeCategory === item.name}><Icon name={item.icon} size={26}/><span>{item.name}</span><Icon name="chevron" size={15}/></button>)}</nav>
       {filtering && <div className="filter-status"><span>{savedOnly ? "Saved items" : "Search results"}{query && ` for “${query}”`}</span><button onClick={() => {setQuery("");setSavedOnly(false);}}>Clear filters <Icon name="close" size={14}/></button></div>}
       <div className="set-list-toolbar"><div className="header-tagline"><span className="eyebrow">THE EVERYDAY, A LITTLE BETTER</span><h1>Find more of what’s <span>worth it.</span></h1></div><button className={`saved-button ${savedOnly ? "selected" : ""}`} onClick={() => setSavedOnly(!savedOnly)} aria-pressed={savedOnly}><Icon name="heart"/><span>Saved Items</span><b>{saved.length}</b></button></div>
@@ -109,7 +111,7 @@ export default function LandingPage({ admin, initialCatalog }: { admin: boolean;
       <div className="closing-note"><span>✦</span><p>Small choices.<br/><em>Big happiness.</em></p><span>✦</span></div>
     </main>
     <SetNavigation/>
-    <footer><Link href="/" className="wordmark">Worth<span>Pickora</span>.</Link><p>A little less searching. A little more finding.</p><span>© {new Date().getFullYear()} WorthPickora</span>{admin && <Link href="/admin/products" className="catalog-admin-link">Manage products</Link>}<small>Curated inspiration · Store links open retailer search results.</small></footer>
+    <footer><Link href="/" className="wordmark">Worth<span>Pickora</span>.</Link><p>A little less searching. A little more finding.</p><span>© {new Date().getFullYear()} WorthPickora</span>{admin && <Link href="/admin/products" className="catalog-admin-link">Manage products</Link>}<small>We may earn a commission from qualifying purchases through affiliate links. As an Amazon Associate I earn from qualifying purchases.</small></footer>
     <nav className="mobile-nav" aria-label="Mobile navigation"><button className={!savedOnly ? "active" : ""} onClick={() => {setSavedOnly(false);setQuery("");window.scrollTo({ top: 0, behavior: "smooth" });}}><Icon name="home"/>Home</button><button onClick={() => {searchRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });searchRef.current?.focus({ preventScroll: true });}}><Icon name="search"/>Search</button><button className={savedOnly ? "active" : ""} onClick={() => setSavedOnly(!savedOnly)}><Icon name="heart"/>Saved{saved.length > 0 && <b>{saved.length}</b>}</button></nav>
   </div>;
 }
