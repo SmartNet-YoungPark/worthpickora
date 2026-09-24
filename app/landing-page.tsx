@@ -4,6 +4,7 @@ import { useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import SiteLogo from "./site-logo";
 import StoreAppGuide from "./store-app-guide";
+import SiteMessage from "./site-message";
 import BrandMark from "./brand-mark";
 import ProductSlider, { SetNavigation } from "./product-slider";
 import { useCatalog } from "@/lib/use-catalog";
@@ -64,7 +65,7 @@ function categoryAppearance(name: string, index: number): { name: string; icon: 
 }
 const brands = ["Amazon", "Walmart", "Best Buy", "Temu", "Target", "Etsy"];
 
-export default function LandingPage({ admin, initialCatalog, storeOffer = "" }: { admin: boolean; initialCatalog: CatalogSnapshot; storeOffer?: string }) {
+export default function LandingPage({ admin, initialCatalog, storeOffer = "", bannerMessage = "" }: { admin: boolean; initialCatalog: CatalogSnapshot; storeOffer?: string; bannerMessage?: string }) {
   const { products: catalog, categories: categoryNames, error: catalogError } = useCatalog(initialCatalog);
   const categories = categoryNames.map(categoryAppearance);
   const [brand, setBrand] = useState("");
@@ -93,6 +94,7 @@ export default function LandingPage({ admin, initialCatalog, storeOffer = "" }: 
       <div className="landing-header-actions"><Link className="landing-admin-button" href={admin ? "/admin/products" : "/admin/login"}>admin</Link></div>
     </header>
     <main>
+      <SiteMessage message={bannerMessage}/>
       {catalogError && <p className="catalog-sync-notice" role="status">Latest products could not be loaded. Reconnecting automatically.</p>}
       <section className="brand-section" aria-label="Shop by brand"><div className="brand-search-heading"><h2>Shop by Brand</h2><label className="search-box"><Icon name="search" size={21}/><input ref={searchRef} value={query} onChange={event => setQuery(event.target.value)} placeholder="Search product code, name or brand" aria-label="Search products"/>{query && <button aria-label="Clear search" onClick={() => setQuery("")}><Icon name="close" size={16}/></button>}<span className="search-hint">Explore a little</span></label></div><div className="brand-list">{brands.map(item => <button key={item} className={`brand-button ${brand === item ? "active" : ""}`} onClick={() => setBrand(brand === item ? "" : item)} aria-pressed={brand === item}><BrandMark brand={item}/><span>{item}</span>{brand === item && <span className="brand-selected-dot"/>}</button>)}</div></section>
       <StoreAppGuide offer={storeOffer}/>

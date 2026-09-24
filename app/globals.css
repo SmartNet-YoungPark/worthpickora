@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+.site-message{position:relative;display:flex;align-items:center;gap:18px;overflow:hidden;padding:22px 28px;margin:4px 0 20px;border:1px solid #d6e4d8;border-radius:18px;background:linear-gradient(115deg,#edf6ed 0%,#f9f8ed 65%,#fceadb 100%);color:#204b38;box-shadow:0 5px 20px #234b3810}
+.site-message>div{position:relative;z-index:1;min-width:0;flex:1}.site-message-spark{font-size:32px;color:#b17b3f;flex-shrink:0}.site-message-label{font-size:10px;font-weight:800;letter-spacing:1.8px;color:#64836e}.site-message p{white-space:pre-wrap;overflow-wrap:anywhere;font-size:clamp(15px,1.7vw,22px);font-weight:600;line-height:1.6;margin:6px 0 0;color:#204b38}.site-message-decoration{font-size:90px;line-height:1;color:#bf95582b;position:absolute;right:12px;bottom:-15px;pointer-events:none}.banner-settings textarea{display:block;width:100%;resize:vertical;padding:12px;border:1px solid #afc5b6;border-radius:9px;font:inherit}.banner-settings>small{display:block;margin-top:6px;color:#687d70}.banner-settings .site-message{margin:12px 0 20px}.banner-settings>h2{margin-top:20px}
+@media(max-width:600px){.site-message{padding:14px 16px;gap:10px;border-radius:13px;margin-bottom:12px}.site-message-spark{font-size:24px}.site-message-label{font-size:8px;letter-spacing:1px}.site-message p{font-size:14px}.banner-settings textarea{font-size:16px}}
+
 .store-app-guide{margin:0 0 12px;border:1px solid #dae5e8;border-radius:12px;background:#f5f9f8;color:#263e48;font-size:13px}
 .store-app-guide summary{cursor:pointer;padding:10px 14px;font-weight:700;min-height:44px}
 .store-app-guide summary small{font-weight:400;margin-left:8px;color:#586777}

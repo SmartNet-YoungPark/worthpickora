@@ -4,7 +4,7 @@ import { dirname, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
 import { torontoDate } from "./click-analytics";
 export type AppClick = { click_date: string; link_id: string; clicks: number };
-type State = { offer: string; rows: AppClick[] };
+type State = { offer: string; rows: AppClick[]; banner?: string };
 const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
 const file = process.env.CATALOG_DATA_FILE ? process.env.CATALOG_DATA_FILE + ".store-apps.json" : resolve(".data/store-apps.json");
@@ -35,6 +35,14 @@ async function updateLocal(change: (state: State) => void) {
 export async function readStoreOffer(): Promise<string> {
   if (url && key) return (await database("store_app_settings?id=eq.1&select=temu_offer_url"))[0]?.temu_offer_url || "";
   return (await local()).offer;
+}
+export async function readSiteBanner(): Promise<string> {
+  if(url&&key)return (await database("site_banner?id=eq.1&select=message"))[0]?.message || "";
+  return (await local()).banner || "";
+}
+export async function saveSiteBanner(message:string) {
+  if(url&&key){await database("site_banner","POST",{id:1,message});return;}
+  await updateLocal(state=>{state.banner=message;});
 }
 export async function saveStoreOffer(offer: string) {
   if (url && key) { await database("store_app_settings", "POST", { id: 1, temu_offer_url: offer }); return; }

@@ -3,7 +3,7 @@ import {useEffect,useMemo,useState} from "react";
 import Link from "next/link";
 import {STORES} from "@/lib/catalog";
 import {CLICK_SOURCES,CLICK_DEVICES} from "@/lib/click-attribution";
-import {bucketDate,groupKey,rankClicks,seriesClicks,shiftDate,torontoDate,validRange,type ClickRow,type GroupBy,type Period} from "@/lib/click-analytics";
+import {bucketDate,groupKey,rankClicks,seriesClicks,shiftDate,torontoDate,validRange,calendarRange,PERIODS,PERIOD_LABELS,type ClickRow,type GroupBy,type Period} from "@/lib/click-analytics";
 
 export default function ClickAnalytics(){
   const [end,setEnd]=useState(()=>torontoDate());
@@ -18,6 +18,19 @@ export default function ClickAnalytics(){
   const [source,setSource]=useState("");const [device,setDevice]=useState("");
   const [by,setBy]=useState<GroupBy>("product");const [period,setPeriod]=useState<Period>("day");
   const [selected,setSelected]=useState("");const [limit,setLimit]=useState(50);
+  const [deletion,setDeletion]=useState<({period:Period;date:string;start:string;end:string})|null>(null);
+  const [deleting,setDeleting]=useState(false);const [deleteError,setDeleteError]=useState("");const [deleteNotice,setDeleteNotice]=useState("");
+  async function confirmDeletion(){
+    if(!deletion||deleting)return;
+    setDeleting(true);setDeleteError("");setDeleteNotice("");
+    try{
+      const response=await fetch("/api/admin/analytics",{method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({...deletion,confirmed:true})});
+      const result=await response.json();if(!response.ok)throw new Error(result.error||"Could not delete analytics.");
+      setDeletion(null);setDeleteNotice(`Deleted ${result.clicks} clicks (${result.records} records), ${result.start} through ${result.end}.`);
+      setBusy(true);setSelected("");setLimit(50);setRefresh(value=>value+1);
+    }catch(problem){setDeleteError((problem instanceof Error?problem.message:"Deletion could not be confirmed.")+" Refresh analytics to check current data before retrying.");}
+    finally{setDeleting(false);}
+  }
   useEffect(()=>{
     const controller=new AbortController();
     fetch("/api/admin/analytics?"+new URLSearchParams(range),{cache:"no-store",signal:controller.signal})
@@ -70,9 +83,14 @@ export default function ClickAnalytics(){
       <label>Rank by<select value={by} onChange={e=>{setBy(e.target.value as GroupBy);setSelected("");setLimit(50);}}><option value="product">Product</option><option value="store">Store</option><option value="category">Category</option><option value="source">Source</option><option value="device">Device</option></select></label>
       <label>Source<select value={source} onChange={e=>{setSource(e.target.value);setSelected("");setLimit(50);}}><option value="">All sources</option>{CLICK_SOURCES.map(name=><option key={name}>{name}</option>)}</select></label>
       <label>Device<select value={device} onChange={e=>{setDevice(e.target.value);setSelected("");setLimit(50);}}><option value="">All devices</option>{CLICK_DEVICES.map(name=><option key={name}>{name}</option>)}</select></label>
-      <label>Trend interval<select value={period} onChange={e=>setPeriod(e.target.value as Period)}><option value="day">Daily</option><option value="week">Weekly (Monday)</option><option value="month">Monthly</option></select></label>
     </form>
-    <p className="analytics-applied-range" role="status">{busy?"Loading selected dates…":`Reporting period: ${range.start} through ${range.end} (Toronto time).`} Dates apply automatically. Daily / Weekly / Monthly changes the chart grouping only.</p>
+    <div className="analytics-tools"><div className="analytics-small-buttons" role="group" aria-label="Trend interval"><strong>Trend interval</strong>{PERIODS.map(value=><button key={value} type="button" aria-pressed={period===value} onClick={()=>{setPeriod(value);setLimit(50);}}>{PERIOD_LABELS[value]}</button>)}</div>
+      <div className="analytics-small-buttons analytics-delete-buttons" role="group" aria-label="Delete product click statistics"><strong>Delete statistics</strong>{PERIODS.map(value=><button key={value} type="button" disabled={busy||deleting||!validRange(end,end)} onClick={()=>{setDeleteError("");setDeleteNotice("");setDeletion({period:value,date:end,...calendarRange(end,value)});}}>Delete {PERIOD_LABELS[value]}</button>)}</div>
+      <p>Delete uses the calendar day / week / month / year containing the Through date ({end || "choose a date"}). Weeks begin Monday. All product click records in that period are included, regardless of filters. Products and app-guide statistics are kept.</p>
+    </div>
+    {deletion&&<section className="analytics-delete-confirm" role="alertdialog" aria-labelledby="analytics-delete-title" aria-describedby="analytics-delete-description"><h2 id="analytics-delete-title">Permanently delete {PERIOD_LABELS[deletion.period].toLowerCase()} statistics?</h2><p id="analytics-delete-description"><strong>{deletion.start} through {deletion.end} (Toronto time)</strong><br/>All products, stores, categories, sources and devices in this period. This may extend beyond the displayed report. This cannot be undone.</p><div><button type="button" disabled={deleting} onClick={()=>{setDeletion(null);setDeleteError("");}}>Cancel</button><button type="button" disabled={deleting} onClick={()=>void confirmDeletion()}>{deleting?"Deleting…":"Delete permanently"}</button></div>{deleteError&&<p className="analytics-error" role="alert">{deleteError}</p>}</section>}
+    {deleteNotice&&<p className="analytics-delete-notice" role="status">{deleteNotice}</p>}
+    <p className="analytics-applied-range" role="status">{busy?"Loading selected dates…":`Reporting period: ${range.start} through ${range.end} (Toronto time).`} Dates apply automatically. Daily / Weekly / Monthly / Yearly changes the chart grouping only. Current interval: {PERIOD_LABELS[period]}.</p>
     {error&&<p className="analytics-error" role="alert">{error}</p>}
     {!error&&!busy&&<><section className="analytics-stats"><div><span>Total clicks</span><strong>{total.toLocaleString()}</strong></div><div><span>Products clicked</span><strong>{new Set(current.filter(row=>Number(row.clicks)>0).map(row=>row.product_id)).size}</strong><small>Different products clicked in this date range</small></div><div><span>Previous equal period</span><strong>{prior.toLocaleString()}</strong></div></section>
     <div className="analytics-charts"><section className="analytics-panel"><h2>Top 10 · {by}</h2><p>Hover, focus, or tap a bar to view its records.</p>{!ranking.length&&<p className="analytics-empty">No customer clicks for these filters yet.</p>}
@@ -104,6 +122,6 @@ export default function ClickAnalytics(){
         </tr>)}</tbody>
       </table></div>{detail.length>limit&&<button className="analytics-load-more" onClick={()=>setLimit(value=>value+50)}>Show more records ({limit} of {detail.length})</button>}</>}
     </section></div>
-    <section className="analytics-insights"><h2>Trend & current activity</h2><p><strong>{total.toLocaleString()} clicks</strong> from {range.start} through {range.end}. {comparison}</p>{ranking[0]&&<p>Leading {by}: <strong>{ranking[0].label}</strong>, {ranking[0].clicks} clicks ({(ranking[0].clicks/total*100).toFixed(1)}% of the filtered total).</p>}{peak?.clicks>0&&<p>Busiest {period}: {peak.date}, {peak.clicks} clicks.</p>}<p>{range.end>=torontoDate()?"Today is still in progress. ":""}Weeks and months at the edges of the selected range may be partial. Reports start when tracking is enabled; earlier clicks cannot be recovered.</p></section></>}
+    <section className="analytics-insights"><h2>Trend & current activity</h2><p><strong>{total.toLocaleString()} clicks</strong> from {range.start} through {range.end}. {comparison}</p>{ranking[0]&&<p>Leading {by}: <strong>{ranking[0].label}</strong>, {ranking[0].clicks} clicks ({(ranking[0].clicks/total*100).toFixed(1)}% of the filtered total).</p>}{peak?.clicks>0&&<p>Busiest {period}: {peak.date}, {peak.clicks} clicks.</p>}<p>{range.end>=torontoDate()?"Today is still in progress. ":""}Weeks, months and years at the edges of the selected range may be partial. Reports start when tracking is enabled; deleted clicks cannot be recovered.</p></section></>}
   </main>;
 }

@@ -1,7 +1,7 @@
 import {NextRequest} from "next/server";
 import {isAdmin} from "@/lib/admin-auth";
-import {clickReport} from "@/lib/server-click-analytics";
-import {validRange,shiftDate} from "@/lib/click-analytics";
+import {clickReport,deleteClickReport} from "@/lib/server-click-analytics";
+import {validRange,shiftDate,calendarRange,PERIODS,type Period} from "@/lib/click-analytics";
 import {adminCatalog} from "@/lib/server-catalog";
 import {STORES} from "@/lib/catalog";
 export const dynamic="force-dynamic";
@@ -18,4 +18,16 @@ export async function GET(request:NextRequest){
     return Response.json({rows,stores,categories,timezone:"America/Toronto"},{headers});
   }
   catch(error){return Response.json({error:error instanceof Error?error.message:"Could not load analytics."},{status:503,headers});}
+}
+export async function DELETE(request:NextRequest){
+  const headers={"Cache-Control":"no-store, private"};
+  if(request.headers.get("origin")!==request.nextUrl.origin)return Response.json({error:"Forbidden"},{status:403,headers});
+  if(!await isAdmin())return Response.json({error:"Sign in to delete analytics."},{status:401,headers});
+  let body;
+  try{body=await request.json();}catch{return Response.json({error:"Invalid request."},{status:400,headers});}
+  if(!body||!PERIODS.includes(body.period)||typeof body.date!=="string"||!validRange(body.date,body.date)||body.confirmed!==true)return Response.json({error:"Choose a valid date and interval and confirm deletion."},{status:400,headers});
+  const range=calendarRange(body.date,body.period as Period);
+  if(body.start!==range.start||body.end!==range.end)return Response.json({error:"Deletion dates changed. Review the period and confirm again."},{status:400,headers});
+  try{return Response.json({...await deleteClickReport(range.start,range.end),...range},{headers});}
+  catch(error){return Response.json({error:error instanceof Error?error.message:"Deletion failed. Refresh analytics to check current data before retrying."},{status:503,headers});}
 }

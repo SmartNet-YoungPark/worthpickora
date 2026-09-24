@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { randomBytes, randomInt } from "node:crypto";
-import { mkdtemp, rmdir, unlink, readFile } from "node:fs/promises";
+import { mkdtemp, rmdir, unlink, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { once } from "node:events";
@@ -10,7 +10,7 @@ import { createSession, hashPassword, SESSION_COOKIE, SESSION_SECONDS } from "..
 import { sendCatalogPayload } from "../lib/catalog-upload-client.ts";
 import { optimizeProductImage } from "../lib/optimize-product-image.ts";
 import sharp from "sharp";
-import {torontoDate} from "../lib/click-analytics.ts";
+import {torontoDate,calendarRange,shiftDate} from "../lib/click-analytics.ts";
 
 // Uses an isolated production server and ephemeral credentials, never .env.local.
 const port = 3187;
@@ -58,6 +58,19 @@ try {
   const cookie = setCookie.split(";")[0];
   const authed = { headers: { Cookie: cookie } };
   assert.equal((await request("/api/admin/session", authed)).status, 200);
+  assert.equal((await request('/admin/banner')).status,307);
+  const saveBanner=(message,headers={Origin:origin,Cookie:cookie})=>request('/api/admin/banner',{method:'POST',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({message})});
+  assert.equal((await saveBanner('test',{Origin:origin})).status,401);
+  assert.equal((await saveBanner('test',{Origin:'https://other.example',Cookie:cookie})).status,403);
+  assert.equal((await saveBanner('x'.repeat(501))).status,400);
+  assert.equal((await saveBanner('Welcome, curious shoppers!\n<script>alert(1)</script>')).status,200);
+  const bannerHome=await (await request('/')).text();
+  assert.match(bannerHome,/class="site-message"/);assert.match(bannerHome,/Welcome, curious shoppers!/);
+  assert.ok(!bannerHome.includes('<script>alert(1)</script>'));
+  assert.ok(bannerHome.indexOf('class="site-message"')<bannerHome.indexOf('class="brand-section"'));
+  assert.equal((await request('/admin/banner',authed)).status,200);
+  assert.equal((await saveBanner('  \n ')).status,200);
+  assert.ok(!(await (await request('/')).text()).includes('class="site-message"'));
   // App guides never enter product analytics and all settings writes require admin + origin.
   assert.match(publicHome, /Store app guide/);
   assert.ok(!publicHome.includes("Check new-customer offers"));
@@ -236,6 +249,27 @@ try {
   assert.equal(attributed.find(r=>r.source==='TikTok'&&r.device==='PC').clicks,1);
   assert.equal(attributed.reduce((sum,r)=>sum+r.clicks,0),5);
   assert.equal((await request('/go/missing')).status,404);
+  const deletionBody={date:'2024-02-29',period:'day',...calendarRange('2024-02-29','day'),confirmed:true};
+  const deleteStats=(body,headers={Origin:origin,Cookie:cookie})=>request('/api/admin/analytics',{method:'DELETE',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  assert.equal((await deleteStats(deletionBody,{Origin:origin})).status,401);
+  assert.equal((await deleteStats(deletionBody,{Origin:'https://other.example',Cookie:cookie})).status,403);
+  assert.equal((await deleteStats({...deletionBody,confirmed:false})).status,400);
+  assert.equal((await deleteStats({...deletionBody,end:'2024-03-01'})).status,400);
+  assert.equal((await deleteStats({...deletionBody,period:'all'})).status,400);
+  const catalogBeforeDelete=await readFile(catalogFile,'utf8'),appBeforeDelete=await readFile(catalogFile+'.store-apps.json','utf8');
+  for(const period of ['day','week','month','year']){
+    const date='2024-02-29',range=calendarRange(date,period);
+    const dates=[shiftDate(range.start,-1),range.start,range.end,shiftDate(range.end,1)];
+    const fixtures=dates.map((click_date,i)=>({...attributed[0],product_id:'fixture-'+i,click_date,clicks:i+1}));
+    await writeFile(catalogFile+'.clicks.json',JSON.stringify(fixtures));
+    const response=await deleteStats({date,period,...range,confirmed:true});assert.equal(response.status,200);
+    const result=await response.json();assert.equal(result.records,2);assert.equal(result.clicks,5);
+    const kept=JSON.parse(await readFile(catalogFile+'.clicks.json','utf8'));
+    assert.deepEqual(kept.map(row=>row.product_id),['fixture-0','fixture-3']);
+    assert.equal((await (await deleteStats({date,period,...range,confirmed:true})).json()).records,0);
+  }
+  assert.equal(await readFile(catalogFile,'utf8'),catalogBeforeDelete);
+  assert.equal(await readFile(catalogFile+'.store-apps.json','utf8'),appBeforeDelete);
   assert.equal((await request("/api/admin/session", { headers: { Cookie: `${SESSION_COOKIE}=${expired}` } })).status, 401);
   assert.equal((await request("/api/admin/logout")).status, 405);
   assert.equal((await post("/api/admin/logout", "", "https://other.example")).status, 403);

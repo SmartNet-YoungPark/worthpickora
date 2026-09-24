@@ -32,6 +32,31 @@ function harness(rows){
   return {values,render(){state=0;const tree=exports.default();return {tree,html:renderToStaticMarkup(tree)};}};
 }
 
+test('compact controls select yearly trends and preview deletion without deleting',()=>{
+  const page=harness([]);
+  const find=(node,predicate)=>{
+    if(!node||typeof node!=='object')return;
+    if(predicate(node))return node;
+    for(const child of React.Children.toArray(node.props?.children)){const match=find(child,predicate);if(match)return match;}
+  };
+  let tree=page.render().tree;
+  const trends=find(tree,node=>node.props?.['aria-label']==='Trend interval');
+  find(trends,node=>node.type==='button'&&node.props.children==='Yearly').props.onClick();
+  assert.match(page.render().html,/Current interval: Yearly/);
+  tree=page.render().tree;
+  const deletion=find(tree,node=>node.props?.['aria-label']==='Delete product click statistics');
+  find(deletion,node=>node.type==='button'&&React.Children.toArray(node.props.children).join('')==='Delete Monthly').props.onClick();
+  const html=page.render().html;
+  const range=analytics.calendarRange(analytics.torontoDate(),'month');
+  assert.ok(html.includes(range.start+' through '+range.end));
+  assert.match(html,/This cannot be undone/);
+  assert.match(html,/Delete permanently/);
+  assert.equal(page.values.get(19),false);
+  tree=page.render().tree;
+  find(tree,node=>node.type==='button'&&node.props.children==='Cancel').props.onClick();
+  assert.ok(!page.render().html.includes('role="alertdialog"'));
+});
+
 test('rendered analytics headers match separate ID, product, clicks and store cells',()=>{
   const row={click_date:analytics.torontoDate(),product_id:'product-1',product_code:'T001',product_name:'Sample product',set_name:'Tech Set 01',category_name:'Tech',store_name:'Amazon',source:'YouTube',device:'Mobile',clicks:7};
   const {html}=harness([row]).render();

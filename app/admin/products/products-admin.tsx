@@ -212,6 +212,7 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
       <p className="admin-nav-label second">QUICK LINKS</p>
       <Link href="/admin/analytics" className="admin-button"><Icon name="chart"/>Click analytics</Link>
       <Link href="/admin/store-apps" className="admin-button"><Icon name="external"/>Store apps &amp; offers</Link>
+      <Link href="/admin/banner" className="admin-button"><Icon name="external"/>Landing banner</Link>
       <nav aria-label="Quick links"><Link href="/" target="_blank"><Icon name="external"/>View storefront</Link><button disabled={exporting || loading} onClick={() => void exportProducts(products)}><Icon name="download"/>Excel with Images</button><button disabled={exporting || loading} onClick={() => void exportProducts(products, "csv")}><Icon name="download"/>Export CSV (text)</button></nav>
       <div className="sidebar-bottom"><div className="admin-motto"><span>♛</span><p>Good Products.<br/>A Brighter Today.<i/></p></div><div className="admin-profile"><span>WP</span><div>Your workspace<small>Shared product catalog</small></div><span className="workspace-dot"/></div></div>
     </aside>
