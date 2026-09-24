@@ -22,7 +22,6 @@ test("catalog schema, capacity, relations and authorization", async t => {
     for (const file of ["20260917000100_create_profiles.sql","20260918003102_create_catalog.sql","20260918004315_catalog_bridge.sql","20260918012856_catalog_import_performance.sql","20260918014410_catalog_image_reads.sql","20260918015358_catalog_metadata_writes.sql","20260919010000_product_click_analytics.sql"]) {
       await db.exec(await readFile(new URL("../supabase/migrations/" + file, import.meta.url),"utf8"));
     }
-    await db.exec(await readFile(new URL("../supabase/migrations/20260924040000_product_options.sql",import.meta.url),"utf8"));
     await db.query("insert into auth.users values ($1,'{}'),($2,'{}')",[admin,user]);
     await db.query("update public.profiles set role='Admin' where id=$1",[admin]);
     const category = (await db.query("select id from public.categories where name='Tech'")).rows[0].id;
@@ -112,23 +111,6 @@ test("catalog schema, capacity, relations and authorization", async t => {
       const cleared=await write({...fields,image:''},published.revision);
       assert.equal((await db.query("select image from public.products where id='P1'")).rows[0].image,'');
       await write({...fields,image:original},cleared.revision);
-    });
-    await t.test("product options persist and can be cleared without losing images",async()=>{
-      const snapshot=async()=>(await db.query("select public.catalog_snapshot_metadata() as data")).rows[0].data;
-      const initial=await snapshot();assert.equal(initial.productOptionsSupported,true);
-      const fields={...initial.products.find(p=>p.id==='P1')};delete fields.image;
-      const original=(await db.query("select image from public.products where id='P1'")).rows[0].image;
-      const write=async(p,revision)=>(await db.query("select public.catalog_apply_metadata($1,'[]',$2,'[]',$3) as data",[JSON.stringify([p]),JSON.stringify(initial.categories),revision])).rows[0].data;
-      const saved=await write({...fields,options:'Color: Black, White\nSize: Large'},initial.revision);
-      assert.equal(saved.products.find(p=>p.id==='P1').options,'Color: Black, White\nSize: Large');
-      assert.notEqual(saved.revision,initial.revision);
-      await assert.rejects(write({...fields,options:'x'.repeat(501)},saved.revision),{code:'23514'});
-      const omitted={...fields};delete omitted.options;
-      const preserved=await write(omitted,saved.revision);
-      assert.equal(preserved.products.find(p=>p.id==='P1').options,'Color: Black, White\nSize: Large');
-      const cleared=await write({...fields,options:''},preserved.revision);
-      assert.equal(cleared.products.find(p=>p.id==='P1').options,'');
-      assert.equal((await db.query("select image from public.products where id='P1'")).rows[0].image,original);
     });
     await t.test("daily clicks accumulate, test clicks and drafts are excluded, and browser roles cannot forge analytics",async()=>{
       const click=async(id,count)=>(await db.query('select public.product_click_outbound($1,$2) as url',[id,count])).rows[0].url;

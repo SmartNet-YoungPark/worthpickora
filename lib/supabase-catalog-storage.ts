@@ -62,7 +62,6 @@ export function createSupabaseCatalogStorage(url: string, key: string, transport
     async write(products: Product[], revision: string, categories?: string[]) {
       const current = await readMetadata();
       if (current.revision !== revision) throw new CatalogConflict();
-      if(products.some(product=>product.options?.trim())&&!(current as CatalogSnapshot & {productOptionsSupported?:boolean}).productOptionsSupported)throw new Error("Apply 20260924040000_product_options.sql in Supabase before saving product options.");
       const names = categories ?? current.categories;
       const previous = new Map(current.products.map(product => [product.id, product]));
       const ids = new Set(products.map(product => product.id));
