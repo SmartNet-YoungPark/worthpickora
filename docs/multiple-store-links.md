@@ -3,11 +3,12 @@
 Admin → Store apps & offers → Add link accepts a store name, link title,
 HTTPS URL (including affiliate parameters) and a short description. Multiple
 links may belong to the same store. Up to 50 custom links can be saved together.
-The six existing store suggestions are available, and other store names may
-also be entered. Remove a row and Save all links to remove it publicly.
+Store names are selected from a dropdown containing the six standard stores
+and any previously saved custom store names. Remove a row and Save all links to remove it publicly.
 
 The landing page displays Store apps & offers below Shop by Brand, expanded by
-default and collapsible. Store cards show larger headings, clickable link titles,
+default and collapsible. Each store starts collapsed; selecting its name expands its links.
+Store cards show larger headings, clickable link titles,
 destination hostnames and one-line descriptions. Full tracking URLs are retained
 in the redirect destination, not rendered as long, wrapping URL strings. Existing
 official app links remain present. Legacy Temu offers are carried forward until
