@@ -6,8 +6,10 @@ links may belong to the same store. Up to 50 custom links can be saved together.
 Store names are selected from a dropdown containing the six standard stores
 and any previously saved custom store names. Remove a row and Save all links to remove it publicly.
 
-The landing page displays Store apps & offers below Shop by Brand, expanded by
-default and collapsible. Each store starts collapsed; selecting its name expands its links.
+The landing page displays Store apps & offers below Shop by Brand, with a single horizontal row of store buttons. All promotion panels start hidden.
+Selecting a store reveals its promotion links; selecting it again closes the panel.
+Selecting another store switches panels. Official app links are in a separate
+collapsed section within each panel. The button row scrolls horizontally on narrow screens.
 Store cards show larger headings, clickable link titles,
 destination hostnames and one-line descriptions. Full tracking URLs are retained
 in the redirect destination, not rendered as long, wrapping URL strings. Existing
