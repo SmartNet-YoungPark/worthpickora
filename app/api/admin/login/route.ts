@@ -8,7 +8,7 @@ const allowAttempt = limiterGlobal.adminLoginLimiter ??= createLoginLimiter();
 export async function POST(request: NextRequest) {
   if (request.headers.get("origin") !== request.nextUrl.origin) return new NextResponse("Forbidden", { status: 403 });
   const fail = (error: string) => NextResponse.redirect(new URL(`/admin/login?error=${error}`, request.url), 303);
-  const config = adminConfig();
+  const config = await adminConfig();
   if (!config.configured) return fail("unavailable");
   if (!allowAttempt()) return fail("limited");
   if (Number(request.headers.get("content-length") || 0) > 4096) return fail("invalid");

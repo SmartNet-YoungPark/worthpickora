@@ -34,7 +34,7 @@ async function download(products: Product[], format: "xlsx" | "csv") {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 const nav: { label: string; icon: AdminIconName }[] = [{ label: "Dashboard", icon: "grid" }, { label: "Products", icon: "box" }, { label: "Product Sets", icon: "layers" }, { label: "Categories", icon: "folder" }, { label: "Brands", icon: "tag" }, { label: "Stores", icon: "store" }];
-const PAGE_SIZE = 8;
+const PAGE_SIZE = 20;
 const dateFormat = new Intl.DateTimeFormat("en-US", { month: "short", day: "2-digit", year: "numeric", timeZone: "UTC" });
 
 export default function ProductsAdmin({ initialCatalog }: { initialCatalog: CatalogSnapshot }) {
@@ -51,7 +51,7 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
   const [status, setStatus] = useState("");
   const [moreFilters, setMoreFilters] = useState(false);
   const [hasImage, setHasImage] = useState(false);
-  const [sort, setSort] = useState("catalog");
+  const [sort, setSort] = useState("code");
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState<string[]>([]);
   const [draft, setDraft] = useState<Product | null>(null);
@@ -85,6 +85,7 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
   const editor = draft && !dirty ? products.find(product => product.id === draft.id) || draft : draft;
   const distinctBrands = Array.from(new Set(products.map(product => product.brand).filter(Boolean))).sort();
   const filtered = products.filter(product => `${product.code} ${product.name} ${product.asin} ${product.url} ${product.brand}`.toLowerCase().includes(query.toLowerCase()) && (!category || product.category === category) && (!setFilter || product.set === Number(setFilter)) && (!store || product.store === store) && (!brand || product.brand === brand) && (!status || product.status === status) && (!hasImage || product.image || product.photo !== null));
+  if (sort === "code") filtered.sort((a,b)=>a.code.localeCompare(b.code,"en",{numeric:true,sensitivity:"base"}) || compareSetCode(a,b) || a.id.localeCompare(b.id));
   if (sort === "set-code") filtered.sort(compareSetCode);
   if (sort === "name") filtered.sort((a, b) => a.name.localeCompare(b.name));
   if (sort === "updated") filtered.sort((a, b) => b.updated.localeCompare(a.updated));
@@ -190,7 +191,7 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
     setImportProgress(null);
     try {
       if (await persist(sortProductsBySetCode(pendingImport.products), `${pendingImport.imported} products imported. ${pendingImport.skipped.length} duplicate products skipped.`, categoryNames, setImportError)) {
-        setPendingImport(null); setDraft(null); setDirty(false); clearFilters(); setSort("set-code"); setPage(1);
+        setPendingImport(null); setDraft(null); setDirty(false); clearFilters(); setSort("code"); setPage(1);
       }
     } finally { importInFlight.current = false; }
   }
@@ -213,6 +214,7 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
       <Link href="/admin/analytics" className="admin-button"><Icon name="chart"/>Click analytics</Link>
       <Link href="/admin/store-apps" className="admin-button"><Icon name="external"/>Store apps &amp; offers</Link>
       <Link href="/admin/banner" className="admin-button"><Icon name="external"/>Landing banner</Link>
+      <Link href="/admin/password" className="admin-button"><Icon name="external"/>Change PIN</Link>
       <nav aria-label="Quick links"><Link href="/" target="_blank"><Icon name="external"/>View storefront</Link><button disabled={exporting || loading} onClick={() => void exportProducts(products)}><Icon name="download"/>Excel with Images</button><button disabled={exporting || loading} onClick={() => void exportProducts(products, "csv")}><Icon name="download"/>Export CSV (text)</button></nav>
       <div className="sidebar-bottom"><div className="admin-motto"><span>♛</span><p>Good Products.<br/>A Brighter Today.<i/></p></div><div className="admin-profile"><span>WP</span><div>Your workspace<small>Shared product catalog</small></div><span className="workspace-dot"/></div></div>
     </aside>
@@ -234,7 +236,7 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
           <button className={`admin-button ${moreFilters ? "filter-active" : ""}`} onClick={() => setMoreFilters(!moreFilters)} aria-expanded={moreFilters}><Icon name="filter" size={16}/>More Filters</button>
           {filtersActive && <button className="admin-clear" onClick={clearFilters}>Reset</button>}
           <span className="admin-result-count">{filtered.length} results</span>
-        </div>{moreFilters && <div className="admin-extra-filters"><label><input type="checkbox" checked={hasImage} onChange={event => filterChange(() => setHasImage(event.target.checked))}/>With product image</label><label>Sort by <select value={sort} onChange={event => { setSort(event.target.value); setPage(1); }}><option value="catalog">Catalog order</option><option value="set-code">Set ? Code</option><option value="updated">Recently updated</option><option value="name">Product name</option></select></label></div>}</div>
+        </div>{moreFilters && <div className="admin-extra-filters"><label><input type="checkbox" checked={hasImage} onChange={event => filterChange(() => setHasImage(event.target.checked))}/>With product image</label><label>Sort by <select value={sort} onChange={event => { setSort(event.target.value); setPage(1); }}><option value="code">Product code</option><option value="catalog">Catalog order</option><option value="set-code">Set ? Code</option><option value="updated">Recently updated</option><option value="name">Product name</option></select></label></div>}</div>
         {selectedProducts.length > 0 && <div className="admin-bulk"><strong>{selectedProducts.length} selected</strong><button onClick={() => { setMoveCategory(categoryNames.includes(moveCategory) ? moveCategory : categoryNames[0]); setMoveOpen(true); }}><Icon name="folder" size={16}/>Move to Set</button><button onClick={() => bulkStatus("Published")}><Icon name="send" size={16}/>Publish</button><button onClick={() => bulkStatus("Archived")}><Icon name="archive" size={16}/>Archive</button><button className="admin-delete-action" disabled={saving || loading} onClick={() => requestDelete(selectedProducts)}><Icon name="trash" size={16}/>Delete</button><button aria-label="Clear selection" onClick={() => setSelected([])}><Icon name="close" size={18}/></button></div>}
         <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th><input type="checkbox" aria-label="Select all products on this page" checked={rows.length > 0 && rows.every(product => selected.includes(product.id))} onChange={event => setSelected(event.target.checked ? Array.from(new Set([...selected, ...rows.map(product => product.id)])) : selected.filter(id => !rows.some(product => product.id === id)))}/></th><th>Image</th><th className="admin-name-heading">Name</th><th>Code</th><th>Category</th><th>Set</th><th>Brand / Store</th><th>Status</th><th>Updated</th><th>Actions</th></tr></thead><tbody>{rows.map(product => <tr key={product.id} className={`${selected.includes(product.id) ? "selected" : ""} ${editor?.id === product.id ? "editing" : ""}`}><td><input type="checkbox" aria-label={`Select ${product.name}`} checked={selected.includes(product.id)} onChange={event => setSelected(event.target.checked ? [...selected, product.id] : selected.filter(id => id !== product.id))}/></td><td className="admin-image-cell"><button className="admin-thumbnail" aria-label={`Edit image for ${product.name}`} onClick={() => openEditor(product)}><ProductImage product={product}/></button></td><td><button className="admin-product-cell" onClick={() => openEditor(product)}><strong>{product.name}</strong></button></td><td className="admin-code">{product.code}</td><td>{product.category}</td><td className="admin-set-cell">{product.category} Set {String(product.set).padStart(2, "0")}</td><td><span className="admin-store-cell"><StoreMark store={product.store}/><span>{product.store}{product.brand && <small>{product.brand}</small>}</span></span></td><td><span className={`admin-status ${product.status.toLowerCase().replaceAll(" ", "-")}`}><i/>{product.status}</span></td><td className="admin-date">{dateFormat.format(new Date(product.updated))}</td><td><div className="admin-row-actions"><button className="admin-delete-action" disabled={saving || loading} aria-label={`Delete ${product.name}`} onClick={() => requestDelete([product])}><Icon name="trash" size={16}/></button><button aria-label={`Edit ${product.name}`} onClick={() => openEditor(product)}><Icon name="edit" size={17}/></button><a href={validUrl(product.url) ? product.url : undefined} target="_blank" rel="noopener noreferrer" aria-label={`Open ${product.name} store page`}><Icon name="external" size={15}/></a></div></td></tr>)}</tbody></table>{!rows.length && <div className="admin-empty"><Icon name="search" size={35}/><h2>No products found</h2><p>Try another search or reset your filters.</p><button className="admin-button" onClick={clearFilters}>Reset filters</button></div>}</div>
         <div className="admin-pagination"><span>Showing <b>{filtered.length ? (currentPage - 1) * PAGE_SIZE + 1 : 0}–{Math.min(currentPage * PAGE_SIZE, filtered.length)}</b> of {filtered.length} products</span><div><button disabled={currentPage <= 1} aria-label="Previous page" onClick={() => setPage(currentPage - 1)}><span className="rotate"><Icon name="chevron" size={14}/></span></button>{Array.from({ length: pageCount }, (_, i) => i + 1).filter(number => number === 1 || number === pageCount || Math.abs(number - currentPage) <= 1).map((number, index, numbers) => <span key={number}>{index > 0 && number - numbers[index - 1] > 1 && <span className="page-ellipsis">…</span>}<button className={currentPage === number ? "active" : ""} aria-label={`Page ${number}`} aria-current={currentPage === number ? "page" : undefined} onClick={() => setPage(number)}>{number}</button></span>)}<button disabled={currentPage >= pageCount} aria-label="Next page" onClick={() => setPage(currentPage + 1)}><Icon name="chevron" size={14}/></button></div></div>

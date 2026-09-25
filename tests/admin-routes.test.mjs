@@ -11,6 +11,7 @@ import { sendCatalogPayload } from "../lib/catalog-upload-client.ts";
 import { optimizeProductImage } from "../lib/optimize-product-image.ts";
 import sharp from "sharp";
 import {torontoDate,calendarRange,shiftDate} from "../lib/click-analytics.ts";
+import {seedProducts} from "../lib/catalog.ts";
 
 // Uses an isolated production server and ephemeral credentials, never .env.local.
 const port = 3187;
@@ -100,7 +101,10 @@ try {
   assert.equal((await request('/store-app/temu-offer')).status,404);
   assert.ok(!(await (await request('/')).text()).includes('Check new-customer offers'));
   const admin = await request("/admin/products", authed);
-  assert.equal(admin.status, 200); assert.ok((await admin.text()).includes("Landing Page"));
+  assert.equal(admin.status, 200); const initialAdminHtml=await admin.text();assert.ok(initialAdminHtml.includes("Landing Page"));
+  const displayedCodes=[...initialAdminHtml.matchAll(/<td class="admin-code">([^<]+)<\/td>/g)].map(match=>match[1]);
+  assert.equal(displayedCodes.length,20);
+  assert.deepEqual(displayedCodes,[...seedProducts].sort((a,b)=>a.code.localeCompare(b.code,'en',{numeric:true,sensitivity:'base'})).slice(0,20).map(p=>p.code));
   const home = await (await request("/", authed)).text();
   assert.match(home, /class="landing-admin-button"[^>]*href="\/admin\/products"[^>]*>admin<\/a>/); assert.ok(home.includes("Manage products"));
   assert.equal((await request("/api/catalog?scope=admin")).status, 401);
@@ -276,9 +280,25 @@ try {
   const logout = await request("/api/admin/logout", { method: "POST", headers: { Origin: origin, Cookie: cookie } });
   assert.equal(logout.status, 303); assert.match(logout.headers.get("set-cookie"), /Max-Age=0/i);
   assert.equal((await request("/admin/products")).status, 307);
+  const newPin=password==='9876'?'6789':'9876';
+  const changePin=(body,headers={Origin:origin,Cookie:cookie})=>request('/api/admin/password',{method:'POST',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const pinBody={current:password,next:newPin,confirm:newPin};
+  assert.equal((await request('/admin/password')).status,307);
+  assert.equal((await changePin(pinBody,{Origin:origin})).status,401);
+  assert.equal((await changePin(pinBody,{Origin:'https://other.example',Cookie:cookie})).status,403);
+  assert.equal((await changePin({...pinBody,confirm:'bad'})).status,400);
+  assert.equal((await changePin({...pinBody,current:password==='1111'?'2222':'1111'})).status,400);
+  const changedPin=await changePin(pinBody);assert.equal(changedPin.status,200);
+  assert.match(changedPin.headers.get('set-cookie'),/Max-Age=0/);
+  assert.equal((await request('/api/admin/session',authed)).status,401);
+  assert.ok((await post('/api/admin/login',password)).headers.get('location').includes('error=invalid'));
+  const freshLogin=await post('/api/admin/login',newPin);assert.equal(freshLogin.status,303);
+  assert.ok(freshLogin.headers.get('location').endsWith('/admin/products'));
+  const credentials=JSON.parse(await readFile(catalogFile+'.credentials.json','utf8'));
+  assert.match(credentials.passwordHash,/^scrypt:/);assert.equal(credentials.password,undefined);
   console.log("PASS: authentication; public image sync; draft privacy; write authorization; stale-write protection; deletion; 20-product import over 4.5 MiB using small requests; compact admin reload; original image preservation; logout.");
 } finally {
   const stopped = child.exitCode === null ? once(child, "close") : Promise.resolve();
   child.kill(); await stopped;
-  await unlink(catalogFile).catch(() => {}); await unlink(catalogFile+'.clicks.json').catch(()=>{}); await unlink(catalogFile+'.store-apps.json').catch(()=>{}); await rmdir(testDirectory);
+  await unlink(catalogFile).catch(() => {}); await unlink(catalogFile+'.clicks.json').catch(()=>{}); await unlink(catalogFile+'.store-apps.json').catch(()=>{}); await unlink(catalogFile+'.credentials.json').catch(()=>{}); await rmdir(testDirectory);
 }
