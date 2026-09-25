@@ -1,13 +1,19 @@
 import { NextRequest } from "next/server";
 import { isAdmin } from "@/lib/admin-auth";
-import { saveStoreOffer } from "@/lib/server-store-apps";
-import { validTemuOffer } from "@/lib/store-apps";
+import { saveStoreOffer,saveStoreLinks } from "@/lib/server-store-apps";
+import { validTemuOffer,validateStoreLinks } from "@/lib/store-apps";
 export async function POST(request: NextRequest) {
   const headers = { "Cache-Control": "no-store, private" };
   if (request.headers.get("origin") !== request.nextUrl.origin) return Response.json({ error: "Forbidden" }, { status: 403, headers });
   if (!await isAdmin()) return Response.json({ error: "Sign in first." }, { status: 401, headers });
   try {
     const body = await request.json();
+    if(body&&"links" in body){
+      const links:unknown=body.links;
+      if(!validateStoreLinks(links))return Response.json({error:"Use up to 50 links with unique IDs, store names, titles (80 characters), descriptions (160 characters), and valid HTTPS URLs."},{status:400,headers});
+      await saveStoreLinks(links.map(link=>({...link,store:link.store.trim(),title:link.title.trim(),description:link.description.replace(/[\r\n]+/g," ").trim(),url:link.url.trim()})));
+      return Response.json({ok:true},{headers});
+    }
     const offer = typeof body.offer === "string" ? body.offer.trim() : null;
     if (offer === null || offer.length > 2048 || (offer && (!validTemuOffer(offer) || body.confirmed !== true))) return Response.json({ error: "Enter a valid HTTPS Temu campaign URL and confirm that you checked its terms, or clear the URL to hide the offer." }, { status: 400, headers });
     await saveStoreOffer(offer);

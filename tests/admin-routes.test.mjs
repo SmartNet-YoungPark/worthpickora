@@ -73,7 +73,7 @@ try {
   assert.equal((await saveBanner('  \n ')).status,200);
   assert.ok(!(await (await request('/')).text()).includes('class="site-message"'));
   // App guides never enter product analytics and all settings writes require admin + origin.
-  assert.match(publicHome, /Store app guide/);
+  assert.match(publicHome, /Store apps &amp; offers/);
   assert.ok(!publicHome.includes("Check new-customer offers"));
   assert.equal((await request('/admin/store-apps')).status,307);
   const saveOffer = (offer, confirmed, headers={Origin:origin,Cookie:cookie}) => request('/api/admin/store-apps',{method:'POST',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({offer,confirmed})});
@@ -100,6 +100,23 @@ try {
   assert.equal((await saveOffer('',false)).status,200);
   assert.equal((await request('/store-app/temu-offer')).status,404);
   assert.ok(!(await (await request('/')).text()).includes('Check new-customer offers'));
+  const links=[{id:'link-11111111-1111-4111-8111-111111111111',store:'Amazon',title:'Shop our picks',description:'Find useful products',url:'https://amzn.to/example?tag=test-20'},{id:'link-22222222-2222-4222-8222-222222222222',store:'Amazon',title:'Another collection',description:'More everyday finds',url:'https://www.amazon.com/s?k=home&tag=test-20'},{id:'link-33333333-3333-4333-8333-333333333333',store:'Walmart',title:'Weekly finds',description:'Explore this collection',url:'https://www.walmart.com/shop'}];
+  const saveLinks=items=>request('/api/admin/store-apps',{method:'POST',headers:{Origin:origin,Cookie:cookie,'Content-Type':'application/json'},body:JSON.stringify({links:items})});
+  assert.equal((await saveLinks([{...links[0],url:'javascript:alert(1)'}])).status,400);
+  assert.equal((await saveLinks([links[0],links[0]])).status,400);
+  assert.equal((await saveLinks(links)).status,200);
+  const linksHome=await (await request('/')).text();
+  for(const link of links){assert.ok(linksHome.includes(link.title));assert.ok(linksHome.includes(link.description));}
+  const customClick=await request('/store-app/'+links[0].id);
+  assert.equal(customClick.headers.get('location'),links[0].url);assert.equal(customClick.headers.get('x-app-click-recorded'),'true');
+  await request('/store-app/'+links[0].id,authed);
+  const customRows=JSON.parse(await readFile(catalogFile+'.store-apps.json','utf8')).rows;
+  assert.equal(customRows.find(row=>row.link_id===links[0].id).clicks,1);
+  assert.equal(customRows.find(row=>row.link_id===links[0].id).store_name,'Amazon');
+  assert.equal((await saveLinks([])).status,200);
+  assert.equal((await request('/store-app/'+links[0].id)).status,404);
+  assert.ok(!(await (await request('/')).text()).includes('Shop our picks'));
+  const linkStats=await (await request('/admin/store-apps',authed)).text();assert.ok(linkStats.includes('Shop our picks'));
   const admin = await request("/admin/products", authed);
   assert.equal(admin.status, 200); const initialAdminHtml=await admin.text();assert.ok(initialAdminHtml.includes("Landing Page"));
   const displayedCodes=[...initialAdminHtml.matchAll(/<td class="admin-code">([^<]+)<\/td>/g)].map(match=>match[1]);

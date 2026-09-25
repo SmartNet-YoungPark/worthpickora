@@ -7,6 +7,20 @@ export const STORE_APPS = [
   { id: "target", store: "Target", label: "Official app guide", url: "https://www.target.com/c/target-app/-/N-4th2r" },
   { id: "etsy", store: "Etsy", label: "Official app guide", url: "https://www.etsy.com/mobile" },
 ] as const;
+export type StoreLink = {id:string;store:string;title:string;description:string;url:string};
+export function validStoreLinkUrl(value:string){
+  try{const url=new URL(value);return url.protocol==="https:"&&!url.username&&!url.password&&!url.port&&!!url.hostname;}catch{return false;}
+}
+export function validateStoreLinks(value:unknown):value is StoreLink[]{
+  if(!Array.isArray(value)||value.length>50)return false;
+  const ids=new Set<string>();
+  return value.every(link=>{
+    if(!link||typeof link!=="object"||!["id","store","title","description","url"].every(key=>typeof link[key]==="string"))return false;
+    if(!/^(link-[a-f0-9-]{36}|temu-offer)$/.test(link.id)||ids.has(link.id))return false;ids.add(link.id);
+    return !!link.store.trim()&&link.store.length<=80&&!!link.title.trim()&&link.title.length<=80&&link.description.length<=160&&link.url.length<=2048&&validStoreLinkUrl(link.url);
+  });
+}
+export function legacyStoreLinks(offer:string):StoreLink[]{return validTemuOffer(offer)?[{id:"temu-offer",store:"Temu",title:"Check new-customer offers",description:"Eligibility and terms apply. Check current details at Temu.",url:offer}]:[];}
 export function validTemuOffer(value: string) {
   try {
     const url = new URL(value);
