@@ -6,7 +6,6 @@ import SiteLogo from "./site-logo";
 import StoreAppGuide from "./store-app-guide";
 import type {StoreLink} from "@/lib/store-apps";
 import SiteMessage from "./site-message";
-import BrandMark from "./brand-mark";
 import ProductSlider, { SetNavigation } from "./product-slider";
 import { useCatalog } from "@/lib/use-catalog";
 import { CatalogSnapshot, productSets } from "@/lib/catalog";
@@ -64,7 +63,6 @@ function categoryAppearance(name: string, index: number): { name: string; icon: 
   const [icon, className] = styles[name] || ["gift", ["tech", "home", "car", "beauty", "cute"][index % 5]];
   return { name, icon, className, description: "Thoughtful finds for your everyday." };
 }
-const brands = ["Amazon", "Walmart", "Best Buy", "Temu", "Target", "Etsy"];
 
 export default function LandingPage({ admin, initialCatalog, storeLinks = [], bannerMessage = "" }: { admin: boolean; initialCatalog: CatalogSnapshot; storeLinks?: StoreLink[]; bannerMessage?: string }) {
   const { products: catalog, categories: categoryNames, error: catalogError } = useCatalog(initialCatalog);
@@ -97,11 +95,11 @@ export default function LandingPage({ admin, initialCatalog, storeLinks = [], ba
     <main>
       <SiteMessage message={bannerMessage}/>
       {catalogError && <p className="catalog-sync-notice" role="status">Latest products could not be loaded. Reconnecting automatically.</p>}
-      <section className="brand-section" aria-label="Shop by brand"><div className="brand-search-heading"><h2>Shop by Brand</h2><label className="search-box"><Icon name="search" size={21}/><input ref={searchRef} value={query} onChange={event => setQuery(event.target.value)} placeholder="Search product code, name or brand" aria-label="Search products"/>{query && <button aria-label="Clear search" onClick={() => setQuery("")}><Icon name="close" size={16}/></button>}<span className="search-hint">Explore a little</span></label></div><div className="brand-list">{brands.map(item => <button key={item} className={`brand-button ${brand === item ? "active" : ""}`} onClick={() => setBrand(brand === item ? "" : item)} aria-pressed={brand === item}><BrandMark brand={item}/><span>{item}</span>{brand === item && <span className="brand-selected-dot"/>}</button>)}</div></section>
-      <StoreAppGuide links={storeLinks}/>
+
       <nav className="categories" aria-label="Product categories">{categories.map(item => <button key={item.name} onClick={() => selectCategory(item.name)} className={`${item.className} ${activeCategory === item.name ? "active" : ""}`} aria-pressed={activeCategory === item.name}><Icon name={item.icon} size={26}/><span>{item.name}</span><Icon name="chevron" size={15}/></button>)}</nav>
       {filtering && <div className="filter-status"><span>{savedOnly ? "Saved items" : "Search results"}{query && ` for “${query}”`}</span><button onClick={() => {setQuery("");setSavedOnly(false);}}>Clear filters <Icon name="close" size={14}/></button></div>}
       <div className="set-list-toolbar"><div className="header-tagline"><span className="eyebrow">THE EVERYDAY, A LITTLE BETTER</span><h1>Find more of what’s <span>worth it.</span></h1></div><button className={`saved-button ${savedOnly ? "selected" : ""}`} onClick={() => setSavedOnly(!savedOnly)} aria-pressed={savedOnly}><Icon name="heart"/><span>Saved Items</span><b>{saved.length}</b></button></div>
+      <StoreAppGuide links={storeLinks} brand={brand} onBrandChange={setBrand}><div className="brand-search-heading"><h2>Shop by Brand</h2><label className="search-box"><Icon name="search" size={21}/><input ref={searchRef} value={query} onChange={event => setQuery(event.target.value)} placeholder="Search product code, name or brand" aria-label="Search products"/>{query && <button aria-label="Clear search" onClick={() => setQuery("")}><Icon name="close" size={16}/></button>}<span className="search-hint">Explore a little</span></label></div></StoreAppGuide>
       {visibleCategories.map(cat => {
         const matches = matchingProducts(cat.name);
         if (!matches.length) return null;

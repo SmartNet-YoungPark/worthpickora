@@ -68,12 +68,14 @@ try {
   const bannerHome=await (await request('/')).text();
   assert.match(bannerHome,/class="site-message"/);assert.match(bannerHome,/Welcome, curious shoppers!/);
   assert.ok(!bannerHome.includes('<script>alert(1)</script>'));
-  assert.ok(bannerHome.indexOf('class="site-message"')<bannerHome.indexOf('class="brand-section"'));
+  assert.ok(bannerHome.indexOf('class="site-message"')<bannerHome.indexOf('class="brand-section '));
   assert.equal((await request('/admin/banner',authed)).status,200);
   assert.equal((await saveBanner('  \n ')).status,200);
   assert.ok(!(await (await request('/')).text()).includes('class="site-message"'));
   // App guides never enter product analytics and all settings writes require admin + origin.
-  assert.match(publicHome, /Store apps &amp; offers/);
+  assert.match(publicHome, /Shop by Brand/);
+  assert.equal([...publicHome.matchAll(/<button[^>]*class="store-promotion-trigger/g)].length,0);
+  assert.ok(publicHome.indexOf('class="brand-section ')<publicHome.indexOf('class="slider-category"'));
   assert.ok(!publicHome.includes("Check new-customer offers"));
   assert.equal((await request('/admin/store-apps')).status,307);
   const saveOffer = (offer, confirmed, headers={Origin:origin,Cookie:cookie}) => request('/api/admin/store-apps',{method:'POST',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({offer,confirmed})});
@@ -106,6 +108,9 @@ try {
   assert.equal((await saveLinks([links[0],links[0]])).status,400);
   assert.equal((await saveLinks(links)).status,200);
   const linksHome=await (await request('/')).text();
+  assert.equal([...linksHome.matchAll(/<button[^>]*class="store-promotion-trigger/g)].length,2);
+  assert.ok(linksHome.includes('aria-label="Amazon: 2 promotions"'));
+  assert.ok(linksHome.includes('aria-label="Walmart: 1 promotion"'));
   for(const link of links){assert.ok(linksHome.includes(link.title));assert.ok(linksHome.includes(link.description));}
   const customClick=await request('/store-app/'+links[0].id);
   assert.equal(customClick.headers.get('location'),links[0].url);assert.equal(customClick.headers.get('x-app-click-recorded'),'true');

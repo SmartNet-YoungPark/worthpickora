@@ -6,15 +6,15 @@ links may belong to the same store. Up to 50 custom links can be saved together.
 Store names are selected from a dropdown containing the six standard stores
 and any previously saved custom store names. Remove a row and Save all links to remove it publicly.
 
-The landing page displays Store apps & offers below Shop by Brand, with a single horizontal row of store buttons. All promotion panels start hidden.
-Selecting a store reveals its promotion links; selecting it again closes the panel.
-Selecting another store switches panels. Official app links are in a separate
-collapsed section within each panel. The button row scrolls horizontally on narrow screens.
-Store cards show larger headings, clickable link titles,
-destination hostnames and one-line descriptions. Full tracking URLs are retained
-in the redirect destination, not rendered as long, wrapping URL strings. Existing
-official app links remain present. Legacy Temu offers are carried forward until
-the administrator saves the new list. Empty custom lists show only app links.
+The landing page merges store promotions into Shop by Brand immediately before
+product sets. Brand buttons filter products. Only stores with custom promotion
+links get an additional Promotions button with a count badge; official app links
+do not contribute to that count. Selecting Promotions opens that store's panel,
+selecting again closes it, and selecting another switches the visible panel.
+Colored link titles, destination hostnames and one-line descriptions remain.
+Official app links are available in a collapsed section inside promotion panels.
+The single brand row scrolls horizontally on small screens. Search remains in
+the same block. Empty custom lists show brand filters without promotion buttons.
 
 Run `supabase/migrations/20260925020000_store_links.sql` after the existing
 `20260924010000_store_apps.sql` migration. It adds the list setting, extends valid
