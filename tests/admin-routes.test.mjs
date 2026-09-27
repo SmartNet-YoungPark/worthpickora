@@ -85,7 +85,7 @@ try {
   assert.equal((await saveOffer('https://www.temu.com/campaign',false)).status,400);
   const offer='https://www.temu.com/campaign?affiliate=test&campaign=example';
   assert.equal((await saveOffer(offer,true)).status,200);
-  assert.match(await (await request('/')).text(),/Check new-customer offers/);
+  assert.match(await (await request('/promotions/Temu')).text(),/Check new-customer offers/);
   const appRedirect=await request('/store-app/amazon-ios');
   assert.equal(appRedirect.status,302);assert.equal(appRedirect.headers.get('x-app-click-recorded'),'true');
   assert.equal(appRedirect.headers.get('location'),'https://apps.apple.com/us/app/amazon-shopping/id297606951');
@@ -106,6 +106,10 @@ try {
   const saveLinks=items=>request('/api/admin/store-apps',{method:'POST',headers:{Origin:origin,Cookie:cookie,'Content-Type':'application/json'},body:JSON.stringify({links:items})});
   assert.equal((await saveLinks([{...links[0],url:'javascript:alert(1)'}])).status,400);
   assert.equal((await saveLinks([links[0],links[0]])).status,400);
+  assert.equal((await saveLinks([{...links[0],offerType:'promo-code',promoCode:''}])).status,400);
+  assert.equal((await saveLinks([{...links[0],offerType:'unknown'}])).status,400);
+  links[0].offerType='promo-code'; links[0].promoCode='TESTONLY20';
+  links[1].offerType='clip-coupon';
   assert.equal((await saveLinks(links)).status,200);
   const linksHome=await (await request('/')).text();
   assert.equal([...linksHome.matchAll(/<a[^>]*class="store-promotion-trigger/g)].length,2);
@@ -115,12 +119,21 @@ try {
   assert.ok(!linksHome.includes('View offer at Amazon'));
   const amazonOffers=await (await request('/promotions/Amazon')).text();
   assert.ok(amazonOffers.includes('Amazon promotions'));
+  assert.ok(amazonOffers.includes('https://www.amazon.com/coupons'));
+  assert.ok(amazonOffers.includes('TESTONLY20'));
+  assert.ok(amazonOffers.includes('Copy code'));
+  assert.ok(amazonOffers.includes('chosen option'));
+  const savedOffers=JSON.parse(await readFile(catalogFile+'.store-apps.json','utf8')).links;
+  assert.equal(savedOffers[0].promoCode,'TESTONLY20');
+  assert.equal(savedOffers[1].offerType,'clip-coupon');
   for(const link of links.filter(link=>link.store==='Amazon')){assert.ok(amazonOffers.includes(link.title));assert.ok(amazonOffers.includes(link.description));}
   assert.ok(!amazonOffers.includes('Weekly finds'));
   assert.ok(!amazonOffers.includes('product-slider'));
   const walmartOffers=await (await request('/promotions/Walmart')).text();
   assert.ok(walmartOffers.includes('Weekly finds'));
   assert.ok(!walmartOffers.includes('Shop our picks'));
+  assert.ok(!walmartOffers.includes('TESTONLY20'));
+  assert.ok(!linksHome.includes('TESTONLY20'));
   assert.equal((await request('/promotions/UnknownStore')).status,404);
   assert.ok((await (await request('/promotions/Target')).text()).includes('No offers are available'));
   assert.equal((await request('/promotions/Best%20Buy')).status,200);

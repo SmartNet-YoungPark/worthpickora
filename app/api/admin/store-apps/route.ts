@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     if(body&&"links" in body){
       const links:unknown=body.links;
-      if(!validateStoreLinks(links))return Response.json({error:"Use up to 50 links with unique IDs, store names, titles (80 characters), descriptions (160 characters), and valid HTTPS URLs."},{status:400,headers});
+      if(!validateStoreLinks(links))return Response.json({error:"Use up to 50 valid HTTPS links. Titles and promo codes must be at most 80 characters, descriptions 160. Seller promo-code offers require a code."},{status:400,headers});
       await saveStoreLinks(links.map(link=>({...link,store:link.store.trim(),title:link.title.trim(),description:link.description.replace(/[\r\n]+/g," ").trim(),url:link.url.trim()})));
       return Response.json({ok:true},{headers});
     }
