@@ -74,7 +74,7 @@ try {
   assert.ok(!(await (await request('/')).text()).includes('class="site-message"'));
   // App guides never enter product analytics and all settings writes require admin + origin.
   assert.match(publicHome, /Shop by Brand/);
-  assert.equal([...publicHome.matchAll(/<button[^>]*class="store-promotion-trigger/g)].length,0);
+  assert.equal([...publicHome.matchAll(/<a[^>]*class="store-promotion-trigger/g)].length,0);
   assert.ok(publicHome.indexOf('class="brand-section ')<publicHome.indexOf('class="slider-category"'));
   assert.ok(!publicHome.includes("Check new-customer offers"));
   assert.equal((await request('/admin/store-apps')).status,307);
@@ -108,10 +108,22 @@ try {
   assert.equal((await saveLinks([links[0],links[0]])).status,400);
   assert.equal((await saveLinks(links)).status,200);
   const linksHome=await (await request('/')).text();
-  assert.equal([...linksHome.matchAll(/<button[^>]*class="store-promotion-trigger/g)].length,2);
+  assert.equal([...linksHome.matchAll(/<a[^>]*class="store-promotion-trigger/g)].length,2);
   assert.ok(linksHome.includes('aria-label="Amazon: 2 promotions"'));
   assert.ok(linksHome.includes('aria-label="Walmart: 1 promotion"'));
-  for(const link of links){assert.ok(linksHome.includes(link.title));assert.ok(linksHome.includes(link.description));}
+  assert.ok(linksHome.includes('/promotions/Amazon'));
+  assert.ok(!linksHome.includes('View offer at Amazon'));
+  const amazonOffers=await (await request('/promotions/Amazon')).text();
+  assert.ok(amazonOffers.includes('Amazon promotions'));
+  for(const link of links.filter(link=>link.store==='Amazon')){assert.ok(amazonOffers.includes(link.title));assert.ok(amazonOffers.includes(link.description));}
+  assert.ok(!amazonOffers.includes('Weekly finds'));
+  assert.ok(!amazonOffers.includes('product-slider'));
+  const walmartOffers=await (await request('/promotions/Walmart')).text();
+  assert.ok(walmartOffers.includes('Weekly finds'));
+  assert.ok(!walmartOffers.includes('Shop our picks'));
+  assert.equal((await request('/promotions/UnknownStore')).status,404);
+  assert.ok((await (await request('/promotions/Target')).text()).includes('No offers are available'));
+  assert.equal((await request('/promotions/Best%20Buy')).status,200);
   const customClick=await request('/store-app/'+links[0].id);
   assert.equal(customClick.headers.get('location'),links[0].url);assert.equal(customClick.headers.get('x-app-click-recorded'),'true');
   await request('/store-app/'+links[0].id,authed);

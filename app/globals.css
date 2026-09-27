@@ -241,3 +241,6 @@ button, input, select, textarea { font-family: inherit; }
   .set-list-toolbar .saved-button svg{width:16px;height:16px}
   .set-list-toolbar .saved-button b{width:16px;height:16px;font-size:9px}
 }
+
+.combined-store-list a.store-promotion-trigger { text-decoration: none; text-align: center; }
+.admin-promotion-previews{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.admin-promotion-preview{display:flex;align-items:center;gap:14px;padding:18px;border:1px solid #d4e4de;border-radius:16px;background:linear-gradient(135deg,#eef7f2,#fff9ec);color:#214c3b;text-decoration:none;min-width:0}.admin-promotion-preview>span:last-child{display:grid;gap:3px;min-width:0}.admin-promotion-preview strong{font-size:17px;overflow-wrap:anywhere}.admin-promotion-preview small{font-size:12px;color:#61736b}.admin-promotion-preview-action{font-size:12px;font-weight:700}.admin-promotion-preview:hover{border-color:#719b86;background:#e8f3ec}.admin-promotion-preview:focus-visible{outline:3px solid #d97706;outline-offset:3px}@media(max-width:760px){.admin-promotion-previews{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-promotion-preview{padding:12px;gap:10px}}@media(max-width:420px){.admin-promotion-previews{grid-template-columns:1fr}}
