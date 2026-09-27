@@ -6,4 +6,6 @@ Manage these links in **Admin → Store apps & offers**. The promotion page read
 
 No database migration or new environment variable is required. Amazon API synchronization is not implemented by this change. Registered offer titles and descriptions are manually maintained and must be checked for accuracy.
 
+The Amazon page also contains three static official destinations: Today's Deals, Amazon Outlet, and Amazon Renewed. These links require no API credentials and are not a live feed of product offers. They contain no affiliate tag and are not recorded as product or store-link clicks. Existing administrator-managed affiliate links retain their original tracking. The public destinations do not change catalog products or sets.
+
 Amazon Creators API OffersV2 documents price, savings and deal details when available. The documented fields do not provide a general seller promo-code or clip-coupon feed. A future API integration requires account access and credentials, ASINs, and compliance with Amazon's data-use requirements. Keep any future promotion data separate from catalog products.
