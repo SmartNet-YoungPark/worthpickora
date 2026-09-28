@@ -123,8 +123,8 @@ try {
   assert.ok(amazonOffers.includes('Amazon promotions'));
   assert.ok(amazonOffers.includes('https://www.amazon.com/coupons'));
   assert.ok(amazonOffers.includes('TESTONLY20'));
-  assert.ok(amazonOffers.includes('Sale information and warning for Shop our picks'));
-  assert.ok(amazonOffers.includes('Sale information and warning for Another collection'));
+  assert.ok(!amazonOffers.includes('Sale information and warning for Shop our picks'));
+  assert.ok(!amazonOffers.includes('Sale information and warning for Another collection'));
   assert.ok(amazonOffers.includes('Coupon Set 01'));
   assert.ok(amazonOffers.includes('Promo Code Set 01'));
   assert.ok(amazonOffers.includes('Coupon: 20% off; conditions apply'));
