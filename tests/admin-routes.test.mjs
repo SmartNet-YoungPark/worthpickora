@@ -128,7 +128,9 @@ try {
   assert.ok(amazonOffers.includes('https://example.com/product.jpg'));
   assert.ok(amazonOffers.includes('/store-app/'+links[0].id));
   assert.ok(!amazonOffers.includes('/go/'+links[0].id));
-  const savedOffers=JSON.parse(await readFile(catalogFile+'.store-apps.json','utf8')).links;
+  const separated=JSON.parse(await readFile(catalogFile+'.store-apps.json','utf8'));
+  assert.ok(separated.links.every(link=>link.store!=='Amazon'));
+  const savedOffers=separated.amazonProducts.map(product=>({...product,...separated.amazonPromotions.find(p=>p.productId===product.id)}));
   assert.equal(savedOffers[0].promoCode,'TESTONLY20');
   assert.equal(savedOffers[1].offerType,'clip-coupon');
   for(const link of links.filter(link=>link.store==='Amazon')){assert.ok(amazonOffers.includes(link.title));assert.ok(amazonOffers.includes(link.description));}

@@ -5,7 +5,17 @@ import { randomUUID } from "node:crypto";
 import { torontoDate } from "./click-analytics";
 import {legacyStoreLinks,validateStoreLinks,type StoreLink} from "./store-apps";
 export type AppClick = { click_date: string; link_id: string; clicks: number; store_name?:string; link_title?:string };
-type State = { offer: string; rows: AppClick[]; banner?: string; links?:StoreLink[] };
+type AmazonProduct = Pick<StoreLink,"id"|"title"|"description"|"url"|"image">;
+type AmazonPromotion = {productId:string;offerType:StoreLink["offerType"];promoCode?:string;saleInfo?:string};
+type State = { offer: string; rows: AppClick[]; banner?: string; links?:StoreLink[]; amazonProducts?:AmazonProduct[]; amazonPromotions?:AmazonPromotion[] };
+function splitAmazon(state:State,links:StoreLink[]){
+  state.links=links.filter(link=>link.store!=="Amazon");
+  state.amazonProducts=links.filter(link=>link.store==="Amazon").map(({id,title,description,url,image})=>({id,title,description,url,image}));
+  state.amazonPromotions=links.filter(link=>link.store==="Amazon").map(({id,offerType,promoCode,saleInfo})=>({productId:id,offerType:offerType||"general",promoCode,saleInfo}));
+}
+function combinedLinks(state:State):StoreLink[]{
+  return [...(state.links??legacyStoreLinks(state.offer)),...(state.amazonProducts||[]).map(product=>{const promotion=state.amazonPromotions?.find(row=>row.productId===product.id);return {...product,store:"Amazon",offerType:promotion?.offerType||"general",promoCode:promotion?.promoCode,saleInfo:promotion?.saleInfo};})];
+}
 const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
 const file = process.env.CATALOG_DATA_FILE ? process.env.CATALOG_DATA_FILE + ".store-apps.json" : resolve(".data/store-apps.json");
@@ -14,7 +24,7 @@ async function database(path: string, method = "GET", body?: object) {
   const headers: Record<string, string> = { apikey: key!, "Content-Type": "application/json", Prefer: "resolution=merge-duplicates" };
   if (!key!.startsWith("sb_secret_")) headers.Authorization = "Bearer " + key;
   const response = await fetch(new URL("/rest/v1/" + path, url), { method, headers, body: body ? JSON.stringify(body) : undefined, cache: "no-store", signal: AbortSignal.timeout(5000) });
-  if (!response.ok) throw new Error("Store app settings/analytics unavailable. Apply 20260924010000_store_apps.sql in Supabase and check the server connection.");
+  if (!response.ok) throw new Error("Store app settings/analytics unavailable. Apply the store-app and 20260927010000_amazon_promotions.sql migrations in Supabase and check the server connection.");
   const text = await response.text();
   return text ? JSON.parse(text) : null;
 }
@@ -39,8 +49,11 @@ export async function readStoreOffer(): Promise<string> {
 }
 export async function readStoreLinks():Promise<StoreLink[]>{
   let links:unknown,offer:string;
-  if(url&&key){const settings=(await database("store_app_settings?id=eq.1&select=*"))[0];links=settings?.links;offer=settings?.temu_offer_url||"";}
-  else{const settings=await local();links=settings.links;offer=settings.offer;}
+  if(url&&key){
+    const [settings,snapshot]=await Promise.all([database("store_app_settings?id=eq.1&select=links,temu_offer_url"),database("rpc/promotion_links_snapshot","POST",{})]);
+    offer=settings[0]?.temu_offer_url||"";
+    links=settings[0]?.links==null?[...legacyStoreLinks(offer),...snapshot]:snapshot;
+  } else { const settings=await local();links=combinedLinks(settings);offer=settings.offer; }
   if(links==null)return legacyStoreLinks(offer);
   if(!validateStoreLinks(links))throw new Error("Invalid store links configuration.");
   return links;
@@ -48,11 +61,11 @@ export async function readStoreLinks():Promise<StoreLink[]>{
 export async function saveStoreLinks(links:StoreLink[]){
   if(!validateStoreLinks(links))throw new Error("Invalid store links.");
   if(url&&key){
-    try{await database("store_app_settings","POST",{id:1,links,temu_offer_url:links.find(link=>link.id==="temu-offer")?.url||""});}
-    catch{throw new Error("Could not save links. Apply 20260925020000_store_links.sql in Supabase and check the connection.");}
+    try{await database("rpc/promotion_links_save","POST",{p_links:links});}
+    catch{throw new Error("Could not save links. Apply 20260927010000_amazon_promotions.sql in Supabase and check the connection.");}
     return;
   }
-  await updateLocal(state=>{state.links=links;state.offer=links.find(link=>link.id==="temu-offer")?.url||"";});
+  await updateLocal(state=>{splitAmazon(state,links);state.offer=links.find(link=>link.id==="temu-offer")?.url||"";});
 }
 export async function readSiteBanner(): Promise<string> {
   if(url&&key)return (await database("site_banner?id=eq.1&select=message"))[0]?.message || "";
