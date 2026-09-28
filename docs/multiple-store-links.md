@@ -2,7 +2,7 @@
 
 Admin → Store apps & offers → Add link accepts a store name, link title,
 HTTPS URL (including affiliate parameters) and a short description. Multiple
-links may belong to the same store. Up to 50 custom links can be saved together.
+links may belong to the same store. Up to 1,000 custom links can be saved together after applying `20260928010000_promotion_types.sql`.
 Store names are selected from a dropdown containing the six standard stores
 and any previously saved custom store names. Remove a row and Save all links to remove it publicly.
 

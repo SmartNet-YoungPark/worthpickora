@@ -9,7 +9,7 @@ import "./product-slider.css";
 function Arrow({direction}:{direction:"left"|"right"|"up"|"down"}){
   return <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" style={{transform:`rotate(${{right:0,down:90,left:180,up:270}[direction]}deg)`}}><path d="m9 5 7 7-7 7"/></svg>;
 }
-export default function ProductSlider({name,products,saved,onSave,tone,promotionCodes}:{name:string;products:Product[];saved:string[];onSave:(id:string)=>void;tone:number;promotionCodes?:Record<string,string>}){
+export default function ProductSlider({name,products,saved,onSave,tone,promotionCodes,promotionDiscounts}:{name:string;products:Product[];saved:string[];onSave:(id:string)=>void;tone:number;promotionCodes?:Record<string,string>;promotionDiscounts?:Record<string,{percent:number;label:string}>}){
   const track=useRef<HTMLDivElement>(null);
   const [edges,setEdges]=useState({start:true,end:true});
   const items=products.slice(0,10);
@@ -37,7 +37,8 @@ export default function ProductSlider({name,products,saved,onSave,tone,promotion
     <div className="slider-set-heading"><h3>{name}</h3><small>{items.length} products</small></div>
     <div className="slider-viewport">
       <div className="product-slider-track" id={id} ref={track} tabIndex={0} role="region" aria-label={name+" products; swipe left or right"}>
-        {items.map(product=><article className="slide-card product-card" key={product.id}>
+        {items.map(product=><article className={promotionCodes!==undefined?"slide-card product-card promotion-card":"slide-card product-card"} key={product.id}>
+          {promotionDiscounts?.[product.id]&&<strong className="promotion-percent" title={`${promotionDiscounts[product.id].label}: ${promotionDiscounts[product.id].percent}% off; conditions apply`} aria-label={`${promotionDiscounts[product.id].label}: ${promotionDiscounts[product.id].percent}% off; conditions apply`}>{promotionDiscounts[product.id].percent}%</strong>}
           <div className="slide-card-top"><strong className="slide-product-code" title={product.code}>{product.code}</strong><div className="slide-card-actions"><BrandMark brand={product.store}/><ProductDescription description={product.description} name={product.name} sale={promotionCodes!==undefined} promoCode={promotionCodes?.[product.id]}/><button className={saved.includes(product.id)?"slide-save is-saved":"slide-save"} onClick={()=>onSave(product.id)} aria-label={(saved.includes(product.id)?"Unsave ":"Save ")+product.name} aria-pressed={saved.includes(product.id)}>{saved.includes(product.id)?"♥":"♡"}</button></div></div>
           <h4 className="slide-product-name" title={product.name}>{product.name}</h4>
           <a className="slide-image-link" href={validUrl(product.url)?`${promotionCodes!==undefined?"/store-app":"/go"}/${encodeURIComponent(product.id)}`:undefined} target="_blank" rel="noopener noreferrer sponsored" aria-label={`View ${product.name} on ${product.store} (opens in a new tab)`}>

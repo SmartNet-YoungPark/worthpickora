@@ -20,7 +20,7 @@ export default async function StorePromotions({params}:{params:Promise<{store:st
   if(!store) notFound();
   const offers=links.filter(link=>link.store===store);
   const apps=STORE_APPS.filter(app=>app.store===store);
-  return <main className="offers-page">
+  return <main className={`offers-page ${store==="Amazon"?"amazon-catalog-page":""}`}>
     <nav className="offers-nav"><Link href="/">WorthPickora</Link><Link href="/">&larr; Shopping shorts</Link></nav>
     <header className="offers-hero"><span className="offers-eyebrow">STORE APPS &amp; OFFERS</span><div><BrandMark brand={store}/><h1>{`${store} promotions`}</h1></div><p>A little more value for your everyday. Explore offers and check the latest details at {store}.</p></header>
     <nav className="offers-stores" aria-label="Store promotions">{stores.filter(name=>links.some(link=>link.store===name)).map(name=><Link key={name} href={`/promotions/${encodeURIComponent(name)}`} aria-current={name===store?"page":undefined}>{name}</Link>)}</nav>

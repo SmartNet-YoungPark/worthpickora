@@ -111,7 +111,7 @@ try {
   assert.equal((await saveLinks([{...links[0],saleInfo:'x'.repeat(301)}])).status,400);
   assert.equal((await saveLinks([{...links[0],image:'javascript:alert(1)'}])).status,400);
   links[0].offerType='promo-code'; links[0].promoCode='TESTONLY20'; links[0].saleInfo='Test-only seller terms'; links[0].image='https://example.com/product.jpg';
-  links[1].offerType='clip-coupon';
+  links[1].offerType='clip-coupon';links[1].discountPercent=20;
   assert.equal((await saveLinks(links)).status,200);
   const linksHome=await (await request('/')).text();
   assert.equal([...linksHome.matchAll(/<a[^>]*class="store-promotion-trigger/g)].length,2);
@@ -124,7 +124,11 @@ try {
   assert.ok(amazonOffers.includes('https://www.amazon.com/coupons'));
   assert.ok(amazonOffers.includes('TESTONLY20'));
   assert.ok(amazonOffers.includes('Sale information and warning for Shop our picks'));
-  assert.ok(!amazonOffers.includes('Sale information and warning for Another collection'));
+  assert.ok(amazonOffers.includes('Sale information and warning for Another collection'));
+  assert.ok(amazonOffers.includes('Coupon Set 01'));
+  assert.ok(amazonOffers.includes('Promo Code Set 01'));
+  assert.ok(amazonOffers.includes('Coupon: 20% off; conditions apply'));
+  assert.ok(!linksHome.includes('Coupon: 20% off; conditions apply'));
   assert.ok(amazonOffers.includes('https://example.com/product.jpg'));
   assert.ok(amazonOffers.includes('/store-app/'+links[0].id));
   assert.ok(!amazonOffers.includes('/go/'+links[0].id));

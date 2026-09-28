@@ -1,3 +1,4 @@
+import {PROMOTION_TYPES,MAX_PROMOTION_LINKS,type PromotionType} from "./promotion-types.ts";
 export const STORE_APPS = [
   { id: "amazon-ios", store: "Amazon", label: "iPhone / iPad", url: "https://apps.apple.com/us/app/amazon-shopping/id297606951" },
   { id: "amazon-android", store: "Amazon", label: "Android", url: "https://play.google.com/store/apps/details?id=com.amazon.mShop.android.shopping" },
@@ -7,17 +8,18 @@ export const STORE_APPS = [
   { id: "target", store: "Target", label: "Official app guide", url: "https://www.target.com/c/target-app/-/N-4th2r" },
   { id: "etsy", store: "Etsy", label: "Official app guide", url: "https://www.etsy.com/mobile" },
 ] as const;
-export type StoreLink = {id:string;store:string;title:string;description:string;url:string;offerType?:"general"|"promo-code"|"clip-coupon";promoCode?:string;image?:string;saleInfo?:string};
+export type StoreLink = {id:string;store:string;title:string;description:string;url:string;offerType?:PromotionType;discountPercent?:number|null;promoCode?:string;image?:string;saleInfo?:string};
 export function validStoreLinkUrl(value:string){
   try{const url=new URL(value);return url.protocol==="https:"&&!url.username&&!url.password&&!url.port&&!!url.hostname;}catch{return false;}
 }
 export function validateStoreLinks(value:unknown):value is StoreLink[]{
-  if(!Array.isArray(value)||value.length>50)return false;
+  if(!Array.isArray(value)||value.length>MAX_PROMOTION_LINKS)return false;
   const ids=new Set<string>();
   return value.every(link=>{
     if(!link||typeof link!=="object"||!["id","store","title","description","url"].every(key=>typeof link[key]==="string"))return false;
     if(!/^(link-[a-f0-9-]{36}|temu-offer)$/.test(link.id)||ids.has(link.id))return false;ids.add(link.id);
-    if(link.offerType!==undefined&&!["general","promo-code","clip-coupon"].includes(link.offerType))return false;
+    if(link.offerType!==undefined&&!PROMOTION_TYPES.some(type=>type.value===link.offerType))return false;
+    if(link.discountPercent!=null&&(typeof link.discountPercent!=="number"||!Number.isFinite(link.discountPercent)||link.discountPercent<=0||link.discountPercent>100))return false;
     if(link.promoCode!==undefined&&(typeof link.promoCode!=="string"||link.promoCode.length>80||/[\r\n\x00-\x1f]/.test(link.promoCode)))return false;
     if(link.offerType==="promo-code"&&!link.promoCode?.trim())return false;
     if(link.saleInfo!==undefined&&(typeof link.saleInfo!=="string"||link.saleInfo.length>300))return false;

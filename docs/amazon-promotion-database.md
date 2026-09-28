@@ -14,3 +14,11 @@ After the migration, optionally run `supabase/seeds/tineco-amazon-promotion.sql`
 Local development stores equivalent separate `amazonProducts` and `amazonPromotions` collections in `.data/store-apps.json`, with non-Amazon records in `links`. The user's local Tineco item has been moved to these collections. Local storage is not the hosted Supabase database.
 
 Deployment sequence: back up database, run migration, run the optional seed, then deploy the code. Verify Admin > Store apps & offers and `/promotions/Amazon`. Do not deploy this code before the required RPCs exist. GitHub/Vercel deployment and hosted SQL execution have not been performed for this change.
+
+## Promotion types and ten-product sets
+
+After the initial Amazon migration, apply `supabase/migrations/20260928010000_promotion_types.sql` before deploying the promotion-set update. It adds the verified discount percentage, expands promotion types, and increases the combined custom-link limit to 1,000. Existing records are preserved.
+
+Amazon offers are grouped by promotion type, with at most ten products per set: Coupon Set 01, Coupon Set 02, Promo Code Set 01, and so on. Each type starts its own numbering. Search and saved-offer filters preserve assigned set numbers. The layout shares Landing page card dimensions.
+
+Admin > Store apps & offers supports Coupon, Promo Code, Price Discount, Lightning Deal, Limited-time Deal, Prime Exclusive, Subscribe & Save, Buy One Get One, Multi-buy, Targeted Offer, and General Offer. Enter an optional verified discount percentage (greater than zero, at most 100) for the selected promotion. It appears in bold red at the card's top-right. Leave it blank for monetary coupons such as $40; a separate 20% list-price reduction must not be presented as a 20% coupon. No discounts are inferred from free text or refreshed automatically from Amazon.
