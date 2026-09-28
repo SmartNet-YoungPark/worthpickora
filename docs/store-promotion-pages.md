@@ -6,7 +6,7 @@ Manage these links in **Admin → Store apps & offers**. The promotion page read
 
 No database migration or new environment variable is required. Amazon API synchronization is not implemented by this change. Registered offer titles and descriptions are manually maintained and must be checked for accuracy.
 
-The Amazon page also contains three static official destinations: Today's Deals, Amazon Outlet, and Amazon Renewed. These links require no API credentials and are not a live feed of product offers. They contain no affiliate tag and are not recorded as product or store-link clicks. Existing administrator-managed affiliate links retain their original tracking. The public destinations do not change catalog products or sets.
+The Amazon page also contains static official destinations including Amazon Coupons, Today's Deals, Amazon Outlet, and Amazon Renewed. These links require no API credentials and are not a live feed of product offers. They contain no affiliate tag and are not recorded as product or store-link clicks. Existing administrator-managed affiliate links retain their original tracking. The public destinations do not change catalog products or sets.
 
 Amazon Creators API OffersV2 documents price, savings and deal details when available. The documented fields do not provide a general seller promo-code or clip-coupon feed. A future API integration requires account access and credentials, ASINs, and compliance with Amazon's data-use requirements. Keep any future promotion data separate from catalog products.
 
@@ -17,3 +17,10 @@ The Amazon page includes a green Amazon Coupons directory card. This is a genera
 In Admin > Store apps & offers, select an offer type: General offer, Seller promo code, or Clip Coupon product. Seller codes require an actual verified code (up to 80 characters); customers can copy it, with a manual-copy fallback if the browser denies clipboard access. Use the description for eligibility, options and expiry information; remove expired offers after saving. Clip Coupon product cards instruct shoppers to select an available coupon on the store's product page. Custom cards keep their existing affiliate URLs and separate store-link click tracking.
 
 Optional offerType/promoCode fields are stored in the existing links JSONB column. Existing links remain compatible; no SQL migration is required. No sample seller codes are published and no automatic coupon or code feed is implied.
+
+
+## Amazon product cards and Sale information
+
+Amazon offers now use the landing-page product slider with ten offers per set, horizontal arrows, search and a separate saved-offers list. The catalog remains independent: these cards use store-link IDs and `/store-app` redirects, not catalog products or product click analytics.
+
+In Admin > Store apps & offers > Amazon, provide a product image HTTPS URL and optional **Sale information** (300 characters). Sale information or an existing seller code produces a small SALE mark and orange question button. Clicking opens the Sale information popup, caution about changing offers, and code copying when applicable. General descriptions are not converted into verified sale information. Shopping shorts retains its original description behavior. Without an image, a store-link placeholder appears; without Sale information or a code, there is no Sale badge. Optional `image` and `saleInfo` fields use the existing JSONB settings; no migration is needed. Expiry is not automatically determined, so administrators must update or remove outdated Sale information.

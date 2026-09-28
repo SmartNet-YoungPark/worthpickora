@@ -1,5 +1,6 @@
 "use client";
 import {useState} from "react";
+import ProductDescription from "@/app/product-description";
 import {STORE_APPS,type StoreLink} from "@/lib/store-apps";
 export default function OfferForm({initialLinks}:{initialLinks:StoreLink[]}){
   const [links,setLinks]=useState(initialLinks),[busy,setBusy]=useState(false),[error,setError]=useState(""),[saved,setSaved]=useState(false);
@@ -16,7 +17,8 @@ export default function OfferForm({initialLinks}:{initialLinks:StoreLink[]}){
       {link.offerType==="promo-code"&&<label>Verified seller promo code<input required maxLength={80} value={link.promoCode||""} onChange={event=>edit(link.id,"promoCode",event.target.value)} placeholder="Enter the actual seller-provided code"/></label>}
       <label>Link title<input required maxLength={80} placeholder="Explore this week's finds" value={link.title} onChange={event=>edit(link.id,"title",event.target.value)}/></label>
       <label>URL / affiliate link<input required type="url" maxLength={2048} placeholder="https://..." value={link.url} onChange={event=>edit(link.id,"url",event.target.value)}/></label>
-      <label>One-line description / offer conditions<input maxLength={160} placeholder="Eligible options, expiration date and verified offer details" value={link.description} onChange={event=>edit(link.id,"description",event.target.value)}/></label></div>)}
+      {link.store==="Amazon"&&<><label>Product image URL <small>optional</small><input type="url" maxLength={2048} value={link.image||""} placeholder="https://..." onChange={event=>edit(link.id,"image",event.target.value)}/></label><label>Sale information <small>optional - 300 characters</small><textarea maxLength={300} rows={3} value={link.saleInfo||""} placeholder="Verified discount, eligible options, code instructions and expiry date" onChange={event=>edit(link.id,"saleInfo",event.target.value)}/></label><p>Sale information or a seller code adds a SALE mark and an orange ? button. Leave both empty for no Sale mark. General descriptions are not treated as sale information.</p><ProductDescription description={link.saleInfo||""} promoCode={link.offerType==="promo-code"?link.promoCode:undefined} sale preview name={link.title||"Product"}/></>}
+      {link.store!=="Amazon"&&<label>One-line description / offer conditions<input maxLength={160} placeholder="Eligible options, expiration date and verified offer details" value={link.description} onChange={event=>edit(link.id,"description",event.target.value)}/></label>}</div>)}
     {!links.length&&<p>No custom links. Add a link below to get started.</p>}<div className="store-links-editor-actions"><button type="button" disabled={links.length>=50} onClick={()=>{setLinks(items=>[...items,{id:"link-"+crypto.randomUUID(),store:"",title:"",description:"",url:""}]);setSaved(false);}}>+ Add link</button><button type="submit">{busy?"Saving…":"Save all links"}</button></div></fieldset>
     <p>Removing a link takes effect after Save all links. Previously recorded click counts are kept.</p>{error&&<p className="store-app-error" role="alert">{error}</p>}{saved&&<p role="status">Saved. Refresh the store promotion page to see your links.</p>}</form>;
 }
