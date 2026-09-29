@@ -118,6 +118,7 @@ try {
   assert.ok(linksHome.includes('aria-label="Amazon: 2 promotions"'));
   assert.ok(linksHome.includes('aria-label="Walmart: 1 promotion"'));
   assert.ok(linksHome.includes('/promotions/Amazon'));
+  assert.ok(linksHome.includes('sales-promotions-category'));
   assert.ok(!linksHome.includes('View offer at Amazon'));
   const amazonOffers=await (await request('/promotions/Amazon')).text();
   assert.ok(amazonOffers.includes('Amazon promotions'));
