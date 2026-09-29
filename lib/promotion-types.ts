@@ -34,10 +34,18 @@ export function promotionCardSummary(offer:{offerType?:string;discountPercent?:n
   return {headline:percent?`${percent} off ? ${type.label}`:type.label,instruction:instructions[type.value]};
 }
 
-export function topCouponOffers<T extends {id:string;offerType?:string;category?:string;discountPercent?:number|null;expiresAt?:string|null}>(offers:T[],category="",now=Date.now()){
- return offers.filter(offer=>offer.offerType==="clip-coupon"&&!promotionExpired(offer.expiresAt,now)&&(!category||offer.category===category)&&typeof offer.discountPercent==="number"&&Number.isFinite(offer.discountPercent)&&offer.discountPercent>0&&offer.discountPercent<=100).sort((a,b)=>(b.discountPercent!-a.discountPercent!)||a.id.localeCompare(b.id)).slice(0,30);
+export function topCouponOffers<T extends {id:string;offerType?:string;category?:string;discountPercent?:number|null;expiresAt?:string|null;expiresOn?:string|null}>(offers:T[],category="",now=Date.now()){
+ return offers.filter(offer=>offer.offerType==="clip-coupon"&&promotionStatus(offer.expiresAt,now,offer.expiresOn)!=="expired"&&(!category||offer.category===category)&&typeof offer.discountPercent==="number"&&Number.isFinite(offer.discountPercent)&&offer.discountPercent>0&&offer.discountPercent<=100).sort((a,b)=>(b.discountPercent!-a.discountPercent!)||a.id.localeCompare(b.id)).slice(0,30);
 }
 
 export function promotionExpired(expiresAt:string|null|undefined,now=Date.now()){return !!expiresAt&&Number.isFinite(Date.parse(expiresAt))&&Date.parse(expiresAt)<=now;}
 
-export function promotionStatus(expiresAt:string|null|undefined,now=Date.now()):"active"|"expired"|"check"{if(!expiresAt||!Number.isFinite(Date.parse(expiresAt)))return "check";return promotionExpired(expiresAt,now)?"expired":"active";}
+export function promotionStatus(expiresAt:string|null|undefined,now=Date.now(),expiresOn?:string|null):"active"|"expired"|"check"{
+ if(expiresAt&&Number.isFinite(Date.parse(expiresAt)))return promotionExpired(expiresAt,now)?"expired":"active";
+ // Date-only evidence uses the site's calendar date; the expiry day itself is uncertain.
+ if(!expiresOn||!/^\d{4}-\d{2}-\d{2}$/.test(expiresOn)||!Number.isFinite(Date.parse(expiresOn))||new Date(expiresOn).toISOString().slice(0,10)!==expiresOn)return "check";
+ const parts=new Intl.DateTimeFormat("en-US",{timeZone:"America/Toronto",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(now);
+ const part=(type:string)=>parts.find(p=>p.type===type)!.value;
+ const today=`${part("year")}-${part("month")}-${part("day")}`;
+ return expiresOn>today?"active":expiresOn<today?"expired":"check";
+}

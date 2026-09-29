@@ -2,13 +2,13 @@
 import {useEffect,useState} from "react";
 import ProductSlider,{SetNavigation} from "../product-slider";
 import type {StoreLink} from "@/lib/store-apps";
-import {PROMOTION_TYPES,promotionSetAssignments,promotionCardSummary,topCouponOffers,promotionExpired,promotionStatus} from "@/lib/promotion-types";
+import {PROMOTION_TYPES,promotionSetAssignments,promotionCardSummary,topCouponOffers,promotionStatus} from "@/lib/promotion-types";
 import type {Product} from "@/lib/catalog";
 
 export default function PromotionProducts({offers}:{offers:StoreLink[]}){
   const [now,setNow]=useState<number|null>(null);
   useEffect(()=>{setNow(Date.now());const timer=setInterval(()=>setNow(Date.now()),30000);return()=>clearInterval(timer);},[]);
-  const statuses=now===null?{}:Object.fromEntries(offers.map(offer=>[offer.id,promotionStatus(offer.expiresAt,now)]));
+  const statuses=now===null?{}:Object.fromEntries(offers.map(offer=>[offer.id,promotionStatus(offer.expiresAt,now,offer.expiresOn)]));
   const [query,setQuery]=useState(""),[saved,setSaved]=useState<string[]>([]),[savedOnly,setSavedOnly]=useState(false);
   useEffect(()=>{try{const value=JSON.parse(localStorage.getItem("worthpickora-promotion-saved")||"[]");if(Array.isArray(value))setSaved(value.filter(id=>typeof id==="string"));}catch{}},[]);
   function toggleSave(id:string){setSaved(current=>{const next=current.includes(id)?current.filter(value=>value!==id):[...current,id];try{localStorage.setItem("worthpickora-promotion-saved",JSON.stringify(next));}catch{}return next;});}
@@ -18,7 +18,7 @@ export default function PromotionProducts({offers}:{offers:StoreLink[]}){
   const codes=Object.fromEntries(offers.map(offer=>[offer.id,offer.offerType==="promo-code"?offer.promoCode?.trim()||"":""]));
   const summaries=Object.fromEntries(offers.map(offer=>[offer.id,{...promotionCardSummary(offer),instruction:offer.saleInfo?.trim()||offer.description.trim()||promotionCardSummary(offer).instruction,details:offer.saleInfo||offer.description}]));
   const assignments=promotionSetAssignments(selectedOffers);
-  const discounts=Object.fromEntries(offers.filter(offer=>typeof offer.discountPercent==="number"&&!promotionExpired(offer.expiresAt,now??0)).map(offer=>[offer.id,{percent:offer.discountPercent!,label:PROMOTION_TYPES.find(type=>type.value===offer.offerType)?.label||"Offer"}]));
+  const discounts=Object.fromEntries(offers.filter(offer=>typeof offer.discountPercent==="number"&&promotionStatus(offer.expiresAt,now??0,offer.expiresOn)!=="expired").map(offer=>[offer.id,{percent:offer.discountPercent!,label:PROMOTION_TYPES.find(type=>type.value===offer.offerType)?.label||"Offer"}]));
   const products:Product[]=assignments.map(({offer,type,set})=>({id:offer.id,name:offer.title,code:`P${String(offers.findIndex(item=>item.id===offer.id)+1).padStart(3,"0")}`,description:[offer.discountPercent?`${type.label}: ${offer.discountPercent}% off. Conditions apply.`:"",offer.saleInfo?.trim()||""].filter(Boolean).join("\n"),category:type.label,set,store:offer.store,brand:"",asin:"",url:offer.url,image:offer.image||"",photo:null,status:"Published",updated:"2026-01-01T00:00:00Z"}));
   const matches=products.filter(product=>(!savedOnly||saved.includes(product.id))&&`${product.code} ${product.name} ${product.description}`.toLowerCase().includes(query.toLowerCase().trim()));
   return <section className="promotion-products" aria-label="Amazon promotion products">

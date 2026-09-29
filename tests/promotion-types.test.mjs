@@ -42,3 +42,14 @@ test('coupon cards support percentages, Canadian amounts and short text without 
 });
 
 test("unknown expiry never displays active",()=>{assert.equal(promotionStatus(null),"check");assert.equal(promotionStatus("invalid"),"check");assert.equal(promotionStatus("2026-10-01T00:00:00Z",Date.parse("2026-09-30T00:00:00Z")),"active");assert.equal(promotionStatus("2026-10-01T00:00:00Z",Date.parse("2026-10-01T00:00:00Z")),"expired");});
+
+test("date-only expiry uses site calendar and Check only on expiry day or missing date",()=>{
+ const now=Date.parse('2026-09-29T15:00:00Z');
+ assert.equal(promotionStatus(null,now,'2026-09-30'),'active');
+ assert.equal(promotionStatus(null,now,'2026-09-28'),'expired');
+ assert.equal(promotionStatus(null,now,'2026-09-29'),'check');
+ assert.equal(promotionStatus(null,now,'2026-02-30'),'check');
+ assert.equal(promotionStatus('2026-09-29T16:00:00Z',now,'2026-09-28'),'active');
+ assert.equal(promotionStatus(null,Date.parse('2026-09-30T02:00:00Z'),'2026-09-30'),'active');
+ assert.deepEqual(topCouponOffers([{id:'past',offerType:'clip-coupon',discountPercent:20,expiresOn:'2026-09-28'}],'',now),[]);
+});
