@@ -13,6 +13,8 @@ test('Amazon products and promotions migrate separately and saves are atomic and
   await run('20260927010000_amazon_promotions.sql');
   await run('20260927010000_amazon_promotions.sql');
   await run('20260928010000_promotion_types.sql');
+  await run('20260929010000_promotion_categories.sql');
+  await run('20260929030000_promotion_expiry.sql');
   assert.equal((await db.query('select * from amazon_products')).rows.length,1);
   assert.equal((await db.query('select * from amazon_promotions')).rows[0].sale_info,links[0].saleInfo);
   assert.equal((await db.query('select links from store_app_settings')).rows[0].links.length,1);
@@ -20,9 +22,11 @@ test('Amazon products and promotions migrate separately and saves are atomic and
   const snapshot=async()=> (await db.query('select public.promotion_links_snapshot() as links')).rows[0].links;
   assert.equal((await snapshot()).length,2);
   await db.query('select public.promotion_links_save($1::jsonb)',[JSON.stringify(links)]);
-  links[0].offerType='prime-exclusive';links[0].discountPercent=20;
+  links[0].expiresAt='2026-12-01T05:00:00.000Z';links[0].category='Electronics & Tech';links[0].offerType='prime-exclusive';links[0].discountPercent=20;
   await db.query('select public.promotion_links_save($1::jsonb)',[JSON.stringify(links)]);
   assert.equal((await snapshot()).find(row=>row.store==='Amazon').discountPercent,20);
+  assert.equal((await snapshot()).find(row=>row.store==='Amazon').category,'Electronics & Tech');
+  assert.equal(Date.parse((await snapshot()).find(row=>row.store==='Amazon').expiresAt),Date.parse(links[0].expiresAt));
   const before=await snapshot();
   await assert.rejects(db.query('select public.promotion_links_save($1::jsonb)',[JSON.stringify([{...links[0],discountPercent:101}])]));
   await assert.rejects(db.query('select public.promotion_links_save($1::jsonb)',[JSON.stringify([{...links[0],title:'changed',offerType:'promo-code',promoCode:''}]) ]));

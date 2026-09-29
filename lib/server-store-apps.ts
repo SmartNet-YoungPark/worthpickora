@@ -1,20 +1,21 @@
 import "server-only";
+import {amazonAffiliateUrl} from "./amazon-affiliate";
 import { readFile, writeFile, mkdir, rename } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
 import { torontoDate } from "./click-analytics";
 import {legacyStoreLinks,validateStoreLinks,type StoreLink} from "./store-apps";
 export type AppClick = { click_date: string; link_id: string; clicks: number; store_name?:string; link_title?:string };
-type AmazonProduct = Pick<StoreLink,"id"|"title"|"description"|"url"|"image">;
-type AmazonPromotion = {productId:string;offerType:StoreLink["offerType"];promoCode?:string;saleInfo?:string;discountPercent?:number|null};
+type AmazonProduct = Pick<StoreLink,"id"|"title"|"description"|"url"|"image"|"category">;
+type AmazonPromotion = {productId:string;offerType:StoreLink["offerType"];promoCode?:string;saleInfo?:string;discountPercent?:number|null;expiresAt?:string|null};
 type State = { offer: string; rows: AppClick[]; banner?: string; links?:StoreLink[]; amazonProducts?:AmazonProduct[]; amazonPromotions?:AmazonPromotion[] };
 function splitAmazon(state:State,links:StoreLink[]){
   state.links=links.filter(link=>link.store!=="Amazon");
-  state.amazonProducts=links.filter(link=>link.store==="Amazon").map(({id,title,description,url,image})=>({id,title,description,url,image}));
-  state.amazonPromotions=links.filter(link=>link.store==="Amazon").map(({id,offerType,promoCode,saleInfo,discountPercent})=>({productId:id,offerType:offerType||"general",promoCode,saleInfo,discountPercent}));
+  state.amazonProducts=links.filter(link=>link.store==="Amazon").map(({id,title,description,url,image,category})=>({id,title,description,url,image,category}));
+  state.amazonPromotions=links.filter(link=>link.store==="Amazon").map(({id,offerType,promoCode,saleInfo,discountPercent,expiresAt})=>({productId:id,offerType:offerType||"general",promoCode,saleInfo,discountPercent,expiresAt}));
 }
 function combinedLinks(state:State):StoreLink[]{
-  return [...(state.links??legacyStoreLinks(state.offer)),...(state.amazonProducts||[]).map(product=>{const promotion=state.amazonPromotions?.find(row=>row.productId===product.id);return {...product,store:"Amazon",offerType:promotion?.offerType||"general",promoCode:promotion?.promoCode,saleInfo:promotion?.saleInfo,discountPercent:promotion?.discountPercent};})];
+  return [...(state.links??legacyStoreLinks(state.offer)),...(state.amazonProducts||[]).map(product=>{const promotion=state.amazonPromotions?.find(row=>row.productId===product.id);return {...product,store:"Amazon",offerType:promotion?.offerType||"general",promoCode:promotion?.promoCode,saleInfo:promotion?.saleInfo,discountPercent:promotion?.discountPercent,expiresAt:promotion?.expiresAt};})];
 }
 const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -59,6 +60,7 @@ export async function readStoreLinks():Promise<StoreLink[]>{
   return links;
 }
 export async function saveStoreLinks(links:StoreLink[]){
+  links=links.map(link=>link.store==="Amazon"?{...link,url:amazonAffiliateUrl(link.url)}:link);
   if(!validateStoreLinks(links))throw new Error("Invalid store links.");
   if(url&&key){
     try{await database("rpc/promotion_links_save","POST",{p_links:links});}

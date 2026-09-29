@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {promotionSetAssignments,PROMOTION_TYPES} from '../lib/promotion-types.ts';
+import {promotionSetAssignments,PROMOTION_TYPES,topCouponOffers,promotionExpired} from '../lib/promotion-types.ts';
 import {validateStoreLinks} from '../lib/store-apps.ts';
 test('each promotion type gets independent sets of ten and retains set IDs when filtered',()=>{
  const offers=Array.from({length:21},(_,i)=>({id:String(i),offerType:'clip-coupon'}));
@@ -18,4 +18,18 @@ test('all promotion types support explicit percentages without inferring a coupo
  assert.equal(validateStoreLinks([{...base,offerType:'clip-coupon',saleInfo:'20% price reduction plus $40 coupon'}]),true);
  const offers=Array.from({length:101},(_,i)=>({...base,id:`link-${i.toString(16).padStart(8,'0')}-1111-4111-8111-111111111111`}));
  assert.equal(validateStoreLinks(offers),true);
+});
+
+test('coupon ranking selects the highest 30 in a category and excludes unknown or unrelated discounts',()=>{
+ const rows=Array.from({length:40},(_,i)=>({id:String(i),offerType:"clip-coupon",category:"Home",discountPercent:i+1}));
+ rows.push({id:"other",offerType:"clip-coupon",category:"Tech",discountPercent:90},{id:"sale",offerType:"price-discount",category:"Home",discountPercent:95},{id:"unknown",offerType:"clip-coupon",category:"Home",discountPercent:null});
+ const ranked=topCouponOffers(rows,"Home");assert.equal(ranked.length,30);assert.equal(ranked[0].discountPercent,40);assert.equal(ranked[29].discountPercent,11);assert.equal(rows[0].discountPercent,1);
+});
+
+test('expiry respects timezone offsets and excludes ended coupons from rankings',()=>{
+ const now=Date.parse('2026-10-01T00:00:00Z');
+ assert.equal(promotionExpired('2026-09-30T20:00:00-04:00',now),true);
+ assert.equal(promotionExpired('2026-10-01T01:00:00Z',now),false);
+ assert.equal(promotionExpired(null,now),false);
+ assert.deepEqual(topCouponOffers([{id:'ended',offerType:'clip-coupon',discountPercent:90,expiresAt:'2026-09-01T00:00:00Z'}],'',now),[]);
 });

@@ -8,7 +8,7 @@ export const STORE_APPS = [
   { id: "target", store: "Target", label: "Official app guide", url: "https://www.target.com/c/target-app/-/N-4th2r" },
   { id: "etsy", store: "Etsy", label: "Official app guide", url: "https://www.etsy.com/mobile" },
 ] as const;
-export type StoreLink = {id:string;store:string;title:string;description:string;url:string;offerType?:PromotionType;discountPercent?:number|null;promoCode?:string;image?:string;saleInfo?:string};
+export type StoreLink = {id:string;store:string;title:string;description:string;url:string;category?:string;offerType?:PromotionType;discountPercent?:number|null;expiresAt?:string|null;promoCode?:string;image?:string;saleInfo?:string};
 export function validStoreLinkUrl(value:string){
   try{const url=new URL(value);return url.protocol==="https:"&&!url.username&&!url.password&&!url.port&&!!url.hostname;}catch{return false;}
 }
@@ -18,6 +18,8 @@ export function validateStoreLinks(value:unknown):value is StoreLink[]{
   return value.every(link=>{
     if(!link||typeof link!=="object"||!["id","store","title","description","url"].every(key=>typeof link[key]==="string"))return false;
     if(!/^(link-[a-f0-9-]{36}|temu-offer)$/.test(link.id)||ids.has(link.id))return false;ids.add(link.id);
+    if(link.expiresAt!=null&&(typeof link.expiresAt!=="string"||!/^\d{4}-\d{2}-\d{2}T.*(?:Z|[+-]\d{2}:\d{2})$/.test(link.expiresAt)||!Number.isFinite(Date.parse(link.expiresAt))))return false;
+    if(link.category!==undefined&&(typeof link.category!=="string"||link.category.length>80))return false;
     if(link.offerType!==undefined&&!PROMOTION_TYPES.some(type=>type.value===link.offerType))return false;
     if(link.discountPercent!=null&&(typeof link.discountPercent!=="number"||!Number.isFinite(link.discountPercent)||link.discountPercent<=0||link.discountPercent>100))return false;
     if(link.promoCode!==undefined&&(typeof link.promoCode!=="string"||link.promoCode.length>80||/[\r\n\x00-\x1f]/.test(link.promoCode)))return false;
