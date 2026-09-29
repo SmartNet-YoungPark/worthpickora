@@ -8,7 +8,7 @@ export const STORE_APPS = [
   { id: "target", store: "Target", label: "Official app guide", url: "https://www.target.com/c/target-app/-/N-4th2r" },
   { id: "etsy", store: "Etsy", label: "Official app guide", url: "https://www.etsy.com/mobile" },
 ] as const;
-export type StoreLink = {id:string;store:string;title:string;description:string;url:string;category?:string;offerType?:PromotionType;discountPercent?:number|null;expiresAt?:string|null;promoCode?:string;image?:string;saleInfo?:string};
+export type StoreLink = {id:string;store:string;title:string;description:string;url:string;category?:string;offerType?:PromotionType;discountPercent?:number|null;expiresAt?:string|null;expiresOn?:string|null;promoCode?:string;image?:string;saleInfo?:string};
 export function validStoreLinkUrl(value:string){
   try{const url=new URL(value);return url.protocol==="https:"&&!url.username&&!url.password&&!url.port&&!!url.hostname;}catch{return false;}
 }

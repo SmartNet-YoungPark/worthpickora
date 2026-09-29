@@ -15,14 +15,16 @@ import uuid
 from pathlib import Path
 
 AMAZON_TRACKING_ID = "smartnetweb0a-20"
+MARKET = "US"
+HOSTS = {"US":"www.amazon.com", "CA":"www.amazon.ca"}
 
 
 def affiliate_url(value):
     url = urllib.parse.urlsplit(value)
-    if url.scheme != "https" or url.hostname not in ("amazon.com", "www.amazon.com"):
+    if url.scheme != "https" or url.hostname not in ("amazon.com", "www.amazon.com", "amazon.ca", "www.amazon.ca"):
         return value
     query = [(k,v) for k,v in urllib.parse.parse_qsl(url.query,keep_blank_values=True) if k != "tag"]
-    query.append(("tag",AMAZON_TRACKING_ID))
+    query.append(("tag","smartnetwe06a-20" if url.hostname.endswith("amazon.ca") else AMAZON_TRACKING_ID))
     return urllib.parse.urlunsplit(url._replace(query=urllib.parse.urlencode(query)))
 
 
@@ -47,9 +49,27 @@ def fetch(url):
 def category(product):
     return CATEGORIES.get(product.get('productCategory', {}).get('symbol'), '')
 
+def coupon_details(text):
+    rates=set(re.findall(r'(?:Apply|Clip|Save)\s+(\d+(?:\.\d+)?)%\s+(?:off\s+)?coupon\b',text,re.I))
+    if len(rates)>1: raise ValueError('Ambiguous coupon percentages')
+    if rates:
+        rate=float(next(iter(rates)))
+        if not 0<rate<=100: raise ValueError('Invalid coupon percentage')
+        return rate,f'{rate:g}% coupon'
+    amounts=set(re.findall(r'(?:Apply|Clip|Save)\s+((?:CA\$|C\$|\$)\s*\d+(?:\.\d{1,2})?)\s+(?:off\s+)?coupon\b',text,re.I))
+    if len(amounts)>1: raise ValueError('Ambiguous coupon amounts')
+    if amounts:
+        amount=re.sub(r'\s+','',next(iter(amounts)))
+        if float(re.sub(r'[^0-9.]','',amount))<=0: raise ValueError('Invalid coupon amount')
+        if MARKET=='CA' and amount.startswith('$'): amount='CA'+amount
+        return None,amount+' coupon'
+    phrases=set(re.findall(r'\b(?:Apply|Clip)\s+(?:(?:an?|the|available)\s+)?coupon\b[^.!?]{0,55}',text,re.I))
+    if len(phrases)==1: return None,next(iter(phrases)).strip()[:80]
+    raise ValueError('Current coupon information missing or ambiguous')
+
 def verify(product):
     asin = product['asin']
-    url = 'https://www.amazon.com/dp/' + asin
+    url = 'https://' + HOSTS[MARKET] + '/dp/' + asin
     try:
         source = fetch(url)
         title = re.search(r'<span[^>]*id="productTitle"[^>]*>(.*?)</span>', source, re.S)
@@ -66,12 +86,7 @@ def verify(product):
             main = main[:boundary.start()]
         main = re.sub(r'<(script|style)\b[^>]*>.*?</\1>', '', main, flags=re.S | re.I)
         text = re.sub(r'\s+', ' ', html.unescape(re.sub('<[^>]+>', ' ', main)))
-        rates = set(re.findall(r'(?:Apply|Clip|Save)\s+(\d+(?:\.\d+)?)%\s+coupon\b', text, re.I))
-        if len(rates) != 1:
-            raise ValueError('Current coupon percentage missing or ambiguous')
-        rate = float(next(iter(rates)))
-        if not 0 < rate <= 100:
-            raise ValueError('Invalid coupon percentage')
+        rate, coupon = coupon_details(text)
         picture = html.unescape(image_url.group(1))
         if urllib.parse.urlparse(picture).hostname != 'm.media-amazon.com':
             raise ValueError('Unrecognized product image host')
@@ -82,7 +97,7 @@ def verify(product):
         name = html.unescape(re.sub('<[^>]+>', '', title.group(1))).strip()
         name = name if len(name) <= 80 else name[:77].rsplit(' ', 1)[0] + '...'
         checked = datetime.datetime.now(datetime.timezone.utc).isoformat()
-        description = f'{rate:g}% coupon. Select the coupon on Amazon. Eligibility and selected variant may affect the offer; check checkout terms.'
+        description = coupon + '. Select the coupon on Amazon. Eligibility and selected variant may affect the offer; check checkout terms.'
         return dict(id='link-' + str(uuid.uuid5(uuid.NAMESPACE_URL, url)), asin=asin,
                     title=name, category=category(product), url=affiliate_url(url), image=picture,
                     description=description[:160], saleInfo=description, discountPercent=rate,
@@ -95,14 +110,14 @@ def top_by_category(rows):
     for row in rows:
         if 'excluded' not in row and row.get('category'):
             groups.setdefault(row['category'], []).append(row)
-    return {name: sorted(items, key=lambda x: (-x['discountPercent'], x['asin']))[:30]
+    return {name: sorted(items, key=lambda x: (-(x['discountPercent'] or 0), x['asin']))[:30]
             for name, items in sorted(groups.items())}
 
 def make_sql(rows, selected_category=None):
     rows = [{**row,"url":affiliate_url(row["url"])} for row in rows]
     payload = json.dumps(rows, ensure_ascii=True).replace("'", "''")
     scope = "null" if selected_category is None else "'" + selected_category.replace("'", "''") + "'"
-    return "select public.replace_coupon_results('" + payload + "'::jsonb," + scope + ");\n"
+    return "select public.replace_market_coupon_results('" + payload + "'::jsonb,'" + MARKET + "'," + scope + ");\n"
 
 
 def publish(rows, selected_category=None):
@@ -114,8 +129,8 @@ def publish(rows, selected_category=None):
     if not key.startswith('sb_secret_'):
         headers['Authorization'] = 'Bearer ' + key
     rows = [{**row,'url':affiliate_url(row['url'])} for row in rows]
-    body = json.dumps({'p_products': rows, 'p_category': selected_category}).encode()
-    request = urllib.request.Request(url.rstrip('/')+'/rest/v1/rpc/replace_coupon_results', data=body, headers=headers, method='POST')
+    body = json.dumps({'p_products': rows, 'p_category': selected_category, 'p_market': MARKET}).encode()
+    request = urllib.request.Request(url.rstrip('/')+'/rest/v1/rpc/replace_market_coupon_results', data=body, headers=headers, method='POST')
     try:
         with urllib.request.urlopen(request, timeout=45) as response:
             return json.load(response)
@@ -124,13 +139,16 @@ def publish(rows, selected_category=None):
 
 
 def main():
+    global MARKET
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--market', choices=['US','CA'], default='US')
     parser.add_argument('--category', default='all', help='Exact category name or all')
     parser.add_argument('--pages', type=int, default=10, help='Number of 30-item result pages to inspect')
     parser.add_argument('--output', default='.data/coupon-top30')
     parser.add_argument('--list-categories', action='store_true')
     parser.add_argument('--dry-run', action='store_true', help='Generate files without resetting or publishing')
     args = parser.parse_args()
+    MARKET = args.market
     if args.list_categories:
         print('\n'.join(sorted(set(CATEGORIES.values())))); return
     if args.category != 'all' and args.category not in CATEGORIES.values():
@@ -139,7 +157,7 @@ def main():
         parser.error('--pages must be 1..100')
     candidates, errors, pages = {}, [], 0
     for page in range(args.pages):
-        url = 'https://www.amazon.com/deals?' + urllib.parse.urlencode({
+        url = 'https://' + HOSTS[MARKET] + '/deals?' + urllib.parse.urlencode({
             'bubble-id': 'deals-collection-coupons', 'promotionsSearchStartIndex': page*30,
             'promotionsSearchPageSize': 30})
         try:
@@ -165,7 +183,7 @@ def main():
             if index % 10 == 0: print(f'Verified {index}/{len(selected)} product pages', flush=True)
     groups = top_by_category(rows)
     report = dict(checkedAt=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-                  scope='Top 30 per category within scanned and verified products; not all Amazon offers',
+                  market=MARKET, scope='Percent coupons ranked first; amount/text coupons follow. Up to 30 per category within scanned products.',
                   pagesRequested=args.pages, pagesRead=pages, candidates=len(candidates),
                   productPagesChecked=len(rows), errors=errors,
                   excluded=[r for r in rows if 'excluded' in r], groups=groups)

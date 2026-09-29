@@ -2,13 +2,13 @@
 import {useEffect,useState} from "react";
 import ProductSlider,{SetNavigation} from "../product-slider";
 import type {StoreLink} from "@/lib/store-apps";
-import {PROMOTION_TYPES,promotionSetAssignments,promotionCardSummary,topCouponOffers,promotionExpired} from "@/lib/promotion-types";
+import {PROMOTION_TYPES,promotionSetAssignments,promotionCardSummary,topCouponOffers,promotionExpired,promotionStatus} from "@/lib/promotion-types";
 import type {Product} from "@/lib/catalog";
 
 export default function PromotionProducts({offers}:{offers:StoreLink[]}){
   const [now,setNow]=useState<number|null>(null);
   useEffect(()=>{setNow(Date.now());const timer=setInterval(()=>setNow(Date.now()),30000);return()=>clearInterval(timer);},[]);
-  const statuses=now===null?{}:Object.fromEntries(offers.map(offer=>[offer.id,promotionExpired(offer.expiresAt,now)?"expired":"active"]));
+  const statuses=now===null?{}:Object.fromEntries(offers.map(offer=>[offer.id,promotionStatus(offer.expiresAt,now)]));
   const [query,setQuery]=useState(""),[saved,setSaved]=useState<string[]>([]),[savedOnly,setSavedOnly]=useState(false);
   useEffect(()=>{try{const value=JSON.parse(localStorage.getItem("worthpickora-promotion-saved")||"[]");if(Array.isArray(value))setSaved(value.filter(id=>typeof id==="string"));}catch{}},[]);
   function toggleSave(id:string){setSaved(current=>{const next=current.includes(id)?current.filter(value=>value!==id):[...current,id];try{localStorage.setItem("worthpickora-promotion-saved",JSON.stringify(next));}catch{}return next;});}

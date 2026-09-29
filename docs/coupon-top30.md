@@ -20,3 +20,8 @@ Apply `20260929010000_promotion_categories.sql` before deploying category-aware 
 Apply `20260929020000_replace_coupon_results.sql` before publishing. A search of all categories replaces all Amazon clip-coupon products; a single-category search replaces only that category's coupon products. Other promotion types, Shopping shorts and click history stay intact. Reset and insertion run in one database transaction; invalid data rolls back the reset. Empty results, listing errors or network errors block automatic publication. Coupon candidates without an unambiguous percentage are excluded. An unconfirmed HTTP response is not automatically retried; inspect the database first.
 
 The verified September 29 report replaced 16 prior coupon products with 123 products across 11 categories. The customer-facing code still needs its normal deployment step; SQL changes do not deploy frontend code.
+
+## Canadian coupons and non-percentage offers
+Use `python scripts/find-coupon-top30.py --market CA --pages 10` for Amazon.ca. Canadian URLs use `smartnetwe06a-20`; US URLs use `smartnetweb0a-20`. Publication replaces only coupons from the selected marketplace and category.
+
+Only product-page coupon evidence is accepted. An explicit percentage is preferred, then a coupon amount, then a short Apply/Clip coupon instruction. Canadian dollar amounts are labeled CA$. Percentage offers sort first; amount/text offers follow without inventing a comparable percentage. The UI percentage-ranking filter intentionally includes percentage offers only. `--dry-run` previews without changing products.

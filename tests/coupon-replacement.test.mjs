@@ -26,6 +26,15 @@ test('coupon reset is atomic, category scoped, rejects empty results and preserv
   assert.deepEqual(await snapshot(),before);
   await replace([item(6)]);
   assert.deepEqual((await snapshot()).map(r=>r.id),[item(3).id,item(6).id]);
+  await db.exec(await readFile(new URL('../supabase/migrations/20260929040000_market_coupon_results.sql',import.meta.url),'utf8'));
+  const marketReplace=(rows,market)=>db.query('select public.replace_market_coupon_results($1::jsonb,$2)',[JSON.stringify(rows),market]);
+  const ca={...item(8),url:'https://www.amazon.ca/dp/B000000008',discountPercent:null,saleInfo:'CA$10 coupon'};
+  await marketReplace([ca],'CA');
+  assert.deepEqual((await snapshot()).map(r=>r.id),[item(3).id,item(6).id,ca.id]);
+  await assert.rejects(marketReplace([{...ca,saleInfo:''}],'CA'));
+  await assert.rejects(marketReplace([ca],'US'));
+  await marketReplace([item(9)],'US');
+  assert.deepEqual((await snapshot()).map(r=>r.id),[item(3).id,ca.id,item(9).id]);
   await db.exec('set role anon');
   await assert.rejects(replace([item(7)]),{code:'42501'});
  }finally{await db.close();}

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {promotionSetAssignments,PROMOTION_TYPES,topCouponOffers,promotionExpired} from '../lib/promotion-types.ts';
+import {promotionSetAssignments,PROMOTION_TYPES,topCouponOffers,promotionExpired,promotionCardSummary,promotionStatus} from '../lib/promotion-types.ts';
 import {validateStoreLinks} from '../lib/store-apps.ts';
 test('each promotion type gets independent sets of ten and retains set IDs when filtered',()=>{
  const offers=Array.from({length:21},(_,i)=>({id:String(i),offerType:'clip-coupon'}));
@@ -33,3 +33,12 @@ test('expiry respects timezone offsets and excludes ended coupons from rankings'
  assert.equal(promotionExpired(null,now),false);
  assert.deepEqual(topCouponOffers([{id:'ended',offerType:'clip-coupon',discountPercent:90,expiresAt:'2026-09-01T00:00:00Z'}],'',now),[]);
 });
+
+test('coupon cards support percentages, Canadian amounts and short text without inventing a rate',()=>{
+ const base={offerType:'clip-coupon',url:'https://www.amazon.ca/dp/TEST'};
+ assert.equal(promotionCardSummary({...base,saleInfo:'Apply $10 coupon'}).headline,'CA$10 coupon');
+ assert.equal(promotionCardSummary({...base,saleInfo:'Clip coupon for eligible options'}).headline,'Clip coupon for eligible options');
+ assert.equal(promotionCardSummary({...base,discountPercent:20,saleInfo:'$10 coupon'}).headline,'20% coupon');
+});
+
+test("unknown expiry never displays active",()=>{assert.equal(promotionStatus(null),"check");assert.equal(promotionStatus("invalid"),"check");assert.equal(promotionStatus("2026-10-01T00:00:00Z",Date.parse("2026-09-30T00:00:00Z")),"active");assert.equal(promotionStatus("2026-10-01T00:00:00Z",Date.parse("2026-10-01T00:00:00Z")),"expired");});
