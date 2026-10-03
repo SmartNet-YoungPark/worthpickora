@@ -14,7 +14,7 @@ test('Amazon products and promotions migrate separately and saves are atomic and
   await run('20260927010000_amazon_promotions.sql');
   await run('20260928010000_promotion_types.sql');
   await run('20260929010000_promotion_categories.sql');
-  await run('20260929030000_promotion_expiry.sql','20260929050000_coupon_expiry_evidence.sql');
+  await run('20260929030000_promotion_expiry.sql');await run('20260929050000_coupon_expiry_evidence.sql');
   assert.equal((await db.query('select * from amazon_products')).rows.length,1);
   assert.equal((await db.query('select * from amazon_promotions')).rows[0].sale_info,links[0].saleInfo);
   assert.equal((await db.query('select links from store_app_settings')).rows[0].links.length,1);

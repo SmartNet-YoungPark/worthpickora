@@ -1,4 +1,5 @@
 import "server-only";
+import {preparePromotionLinks} from "./prepare-promotion-links";
 import {amazonAffiliateUrl} from "./amazon-affiliate";
 import { readFile, writeFile, mkdir, rename } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
@@ -8,13 +9,15 @@ import {legacyStoreLinks,validateStoreLinks,type StoreLink} from "./store-apps";
 export type AppClick = { click_date: string; link_id: string; clicks: number; store_name?:string; link_title?:string };
 type AmazonProduct = Pick<StoreLink,"id"|"title"|"description"|"url"|"image"|"category">;
 type AmazonPromotion = {productId:string;offerType:StoreLink["offerType"];promoCode?:string;saleInfo?:string;discountPercent?:number|null;expiresAt?:string|null;expiresOn?:string|null};
-type State = { offer: string; rows: AppClick[]; banner?: string; links?:StoreLink[]; amazonProducts?:AmazonProduct[]; amazonPromotions?:AmazonPromotion[] };
+type State = { unifiedLinks?:StoreLink[]; offer: string; rows: AppClick[]; banner?: string; links?:StoreLink[]; amazonProducts?:AmazonProduct[]; amazonPromotions?:AmazonPromotion[] };
 function splitAmazon(state:State,links:StoreLink[]){
+  state.unifiedLinks=links;
   state.links=links.filter(link=>link.store!=="Amazon");
   state.amazonProducts=links.filter(link=>link.store==="Amazon").map(({id,title,description,url,image,category})=>({id,title,description,url,image,category}));
   state.amazonPromotions=links.filter(link=>link.store==="Amazon").map(({id,offerType,promoCode,saleInfo,discountPercent,expiresAt,expiresOn})=>({productId:id,offerType:offerType||"general",promoCode,saleInfo,discountPercent,expiresAt,expiresOn}));
 }
 function combinedLinks(state:State):StoreLink[]{
+  if(state.unifiedLinks)return state.unifiedLinks;
   return [...(state.links??legacyStoreLinks(state.offer)),...(state.amazonProducts||[]).map(product=>{const promotion=state.amazonPromotions?.find(row=>row.productId===product.id);return {...product,store:"Amazon",offerType:promotion?.offerType||"general",promoCode:promotion?.promoCode,saleInfo:promotion?.saleInfo,discountPercent:promotion?.discountPercent,expiresAt:promotion?.expiresAt,expiresOn:promotion?.expiresOn};})];
 }
 const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -57,17 +60,17 @@ export async function readStoreLinks():Promise<StoreLink[]>{
   } else { const settings=await local();links=combinedLinks(settings);offer=settings.offer; }
   if(links==null)return legacyStoreLinks(offer);
   if(!validateStoreLinks(links))throw new Error("Invalid store links configuration.");
-  return links;
+  return links.map(link=>link.store==="Amazon"?{...link,url:amazonAffiliateUrl(link.url)}:link);
 }
 export async function saveStoreLinks(links:StoreLink[]){
-  links=links.map(link=>link.store==="Amazon"?{...link,url:amazonAffiliateUrl(link.url)}:link);
+  links=preparePromotionLinks(links);
   if(!validateStoreLinks(links))throw new Error("Invalid store links.");
   if(url&&key){
     try{await database("rpc/promotion_links_save","POST",{p_links:links});}
     catch{throw new Error("Could not save links. Apply 20260928010000_promotion_types.sql in Supabase and check the connection.");}
     return;
   }
-  await updateLocal(state=>{splitAmazon(state,links);state.offer=links.find(link=>link.id==="temu-offer")?.url||"";});
+  await updateLocal(state=>{splitAmazon(state,links.map(link=>({...link,verificationState:"unknown",verifiedAt:null})));state.offer=links.find(link=>link.id==="temu-offer")?.url||"";});
 }
 export async function readSiteBanner(): Promise<string> {
   if(url&&key)return (await database("site_banner?id=eq.1&select=message"))[0]?.message || "";

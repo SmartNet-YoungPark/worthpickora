@@ -1,3 +1,4 @@
+import {amazonAffiliateUrl} from "@/lib/amazon-affiliate";
 import { NextRequest } from "next/server";
 import { isAdmin } from "@/lib/admin-auth";
 import { readStoreLinks, recordAppClick } from "@/lib/server-store-apps";
@@ -12,7 +13,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     catch { return new Response("Offer temporarily unavailable", { status: 503, headers }); }
     if(!link)return new Response("Link unavailable",{status:404,headers});
   }
-  const destination = link?.url||storeAppDestination(id);
+  const savedDestination = link?.url||storeAppDestination(id);
+  const destination = savedDestination?amazonAffiliateUrl(savedDestination):null;
   if (!destination) return new Response("Link unavailable", { status: 404, headers });
   const preview = /prefetch|prerender/i.test((request.headers.get("purpose") || "") + (request.headers.get("sec-purpose") || "")) || request.headers.has("next-router-prefetch");
   const bot = /bot|crawler|spider|preview|facebookexternalhit|headless/i.test(request.headers.get("user-agent") || "");

@@ -87,7 +87,6 @@ export default function LandingPage({ admin, initialCatalog, storeLinks = [], ba
   }
 
   return <div className="site-shell">
-    <div className="announcement"><span>GOOD FINDS, EVERY DAY</span><span>Small choices. Big happiness. <span className="tiny-spark">✦</span></span></div>
     <header className="header">
       <Link href="/" className="wordmark site-brand" aria-label="WorthPickora home"><SiteLogo/><span className="site-brand-text">Worth<span>Pickora</span>.</span></Link>
       <div className="landing-header-actions"><Link className="landing-admin-button" href={admin ? "/admin/products" : "/admin/login"}>admin</Link></div>
