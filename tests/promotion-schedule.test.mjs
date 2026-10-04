@@ -36,7 +36,7 @@ test('active requires recent verification of this exact marketplace source',()=>
 test('unified offers, isolated marketplace updates, token leases and scheduler permissions',async()=>{
  const db=new PGlite();try{
  await db.exec('create role anon;create role authenticated;create role service_role bypassrls;');
- const migrations=['20260924010000_store_apps.sql','20260925020000_store_links.sql','20260927010000_amazon_promotions.sql','20260928010000_promotion_types.sql','20260929010000_promotion_categories.sql','20260929030000_promotion_expiry.sql','20260929040000_market_coupon_results.sql','20260929050000_coupon_expiry_evidence.sql','20261003010000_unified_promotions.sql','20261003020000_promotion_schedule.sql','20261003030000_promotion_details.sql'];
+ const migrations=['20260924010000_store_apps.sql','20260925020000_store_links.sql','20260927010000_amazon_promotions.sql','20260928010000_promotion_types.sql','20260929010000_promotion_categories.sql','20260929030000_promotion_expiry.sql','20260929040000_market_coupon_results.sql','20260929050000_coupon_expiry_evidence.sql','20261003010000_unified_promotions.sql','20261003020000_promotion_schedule.sql','20261003030000_promotion_details.sql','20261003040000_manual_promotion_run.sql'];
  for(const f of migrations)await db.exec(await readFile(new URL('../supabase/migrations/'+f,import.meta.url),'utf8'));
  const base={id:'link-11111111-1111-4111-8111-111111111111',store:'Amazon',title:'One product',description:'',promotionTitle:'Coupon offer',startsAt:'2026-01-01T00:00:00Z',channel:'both',sourceLinks:['https://www.amazon.com/promotion/details/test'],newCustomerOnly:true,image:'https://m.media-amazon.com/a.jpg',offerType:'clip-coupon',saleInfo:'10% coupon',discountPercent:10,market:'US',url:'https://www.amazon.com/dp/B012345678?th=1&tag=old#d',productUrl:'https://www.amazon.com/dp/B012345678'};
  const ca={...base,id:'link-22222222-2222-4222-8222-222222222222',productId:base.id,market:'CA',url:'https://www.amazon.ca/dp/B012345679?tag=old',productUrl:'https://www.amazon.ca/dp/B012345679'};
@@ -48,9 +48,11 @@ test('unified offers, isolated marketplace updates, token leases and scheduler p
  const offers=(await db.query('select * from marketplace_offers order by market')).rows;assert.equal(offers.length,2);assert.match(offers[0].affiliate_url,/tag=smartnetwe06a-20/);assert.match(offers[1].affiliate_url,/th=1&tag=smartnetweb0a-20#d/);
  await assert.rejects(db.query("select promotion_schedule_save(true,'06:00',0,'US')"));
  await db.query("select promotion_schedule_save(true,'06:00',24,'CA')");
+ await db.query("update promotion_schedule set enabled=false,next_run_at='2030-01-01T12:00:00Z'");
  const run=(await db.query("select promotion_run_start('manual') id")).rows[0].id;
  assert.equal((await db.query("select promotion_run_start('manual') id")).rows[0].id,run);
  assert.equal((await db.query('select * from promotion_run_items')).rows.length,1);
+ const settings=(await db.query('select enabled,next_run_at from promotion_schedule')).rows[0];assert.equal(settings.enabled,false);assert.equal(new Date(settings.next_run_at).toISOString(),'2030-01-01T12:00:00.000Z');
  const token=(await db.query('insert into promotion_worker_tokens default values returning token')).rows[0].token;
  const items=(await db.query('select promotion_batch_claim($1) items',[token])).rows[0].items;assert.equal(items.length,1);assert.equal(items[0].market,'CA');
  await assert.rejects(db.query('select promotion_batch_claim($1)',[token]));

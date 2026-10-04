@@ -17,7 +17,7 @@ try{
  assert.equal((await request('/api/promotion-worker',{method:'POST',headers:{'Content-Type':'application/json'},body:'{"token":"invalid"}'})).status,401);
  const login=await request('/api/admin/login',{method:'POST',headers:{Origin:origin,'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({password})});
  const cookie=login.headers.get('set-cookie')?.split(';')[0];assert.ok(cookie);
- const html=await (await request('/admin/store-apps',{headers:{Cookie:cookie}})).text();assert.match(html,/Shop by Brand/);assert.match(html,/Schedule time/);assert.match(html,/Update now/);
+ const html=await (await request('/admin/store-apps',{headers:{Cookie:cookie}})).text();assert.match(html,/Shop by Brand/);assert.match(html,/Schedule time/);assert.match(html,/Run now/);assert.match(html,/Automatic schedule/);
  const invalid=await request('/api/admin/promotion-schedule',{method:'POST',headers:{Cookie:cookie,Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({enabled:true,time:'25:00',hours:24,market:'US'})});assert.equal(invalid.status,400);
  const unconfigured=await request('/api/admin/promotion-schedule',{headers:{Cookie:cookie}});assert.equal(unconfigured.status,503);assert.match((await unconfigured.json()).error,/Supabase/);
  console.log('Admin auth, CSRF, worker auth, schedule rendering, validation and unavailable-DB checks passed');
