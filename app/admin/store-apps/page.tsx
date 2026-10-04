@@ -20,7 +20,7 @@ export default async function StoreAppsPage() {
       <h2 id="promotion-preview-title">Store promotion previews</h2>
       <p>Open a store's promotion page in a new tab. Save your offer changes before previewing. Stores without offers show an empty page with official app links.</p>
       <div className="admin-promotion-previews">{stores.flatMap(store=>(["US","CA"] as const).map(market=>{const count=links.filter(link=>link.store===store&&offerMarket(link)===market).length;return <Link key={`${store}-${market}`} href={`/promotions/${encodeURIComponent(store)}/${market}`} target="_blank" rel="noopener noreferrer" prefetch={false} className="admin-promotion-preview" aria-label={`Preview ${store} ${market} promotions (new tab)`}>
-        <BrandMark brand={store}/><span><strong>{store} ? {market==="CA"?"Canada / CAD":"US / USD"}</strong><small>{error?"Offer count unavailable":`${count} saved offer${count===1?"":"s"}`}</small><span className="admin-promotion-preview-action">Preview promotions ↗</span></span>
+        <BrandMark brand={store}/><span><strong>{store} / {market==="CA"?"Canada / CAD":"US / USD"}</strong><small>{error?"Offer count unavailable":`${count} saved offer${count===1?"":"s"}`}</small><span className="admin-promotion-preview-action">Preview promotions ↗</span></span>
       </Link>;}))}</div>
       <p>Shopping shorts products and sets are separate. Clicks made while logged in as admin are excluded from store-link statistics.</p>
     </section>

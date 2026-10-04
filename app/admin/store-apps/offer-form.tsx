@@ -6,7 +6,7 @@ export default function OfferForm({initialLinks}:{initialLinks:StoreLink[]}){
   const [links,setLinks]=useState(initialLinks),[busy,setBusy]=useState(false),[error,setError]=useState(""),[saved,setSaved]=useState(false);
   const storeNames=[...new Set([...STORE_APPS.map(app=>app.store),"Superstore","Costco",...initialLinks.map(link=>link.store)])];
   function edit<K extends keyof StoreLink>(id:string,key:K,value:StoreLink[K]){setLinks(items=>items.map(item=>(item.id===id||(["title","image","category"].includes(key)&&(item.productId||item.id)===(items.find(row=>row.id===id)?.productId||id)))?{...item,[key]:value,...(key==="discountPercent"?{discountBasis:"explicit" as const}:{})}:item));setSaved(false);}
-  return <form className="store-app-settings store-links-editor" onSubmit={async event=>{
+  return <form id="store-links" className="store-app-settings store-links-editor" onSubmit={async event=>{
     event.preventDefault();setBusy(true);setError("");setSaved(false);
     try{const response=await fetch("/api/admin/store-apps",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({links})});const result=await response.json();if(!response.ok)throw new Error(result.error||"Could not save links.");setSaved(true);}
     catch(problem){setError(problem instanceof Error?problem.message:"Could not save links.");}finally{setBusy(false);}
