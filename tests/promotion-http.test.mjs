@@ -18,6 +18,9 @@ try{
  const login=await request('/api/admin/login',{method:'POST',headers:{Origin:origin,'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({password})});
  const cookie=login.headers.get('set-cookie')?.split(';')[0];assert.ok(cookie);
  const html=await (await request('/admin/store-apps',{headers:{Cookie:cookie}})).text();assert.match(html,/Shop by Brand/);assert.match(html,/Schedule time/);assert.match(html,/Run now/);assert.match(html,/Automatic schedule/);
+ const caPage=await (await request('/promotions/Amazon?market=US',{headers:{'x-vercel-ip-country':'CA'}})).text();assert.match(caPage,/<h1>Amazon Canada promotions<\/h1>/);assert.doesNotMatch(caPage,/Admin preview:/);
+ const usPreview=await (await request('/promotions/Amazon?market=US',{headers:{Cookie:cookie,'x-vercel-ip-country':'CA'}})).text();assert.match(usPreview,/<h1>Amazon United States promotions<\/h1>/);assert.match(usPreview,/Admin preview:/);
+ const caPreview=await (await request('/promotions/Amazon?market=CA',{headers:{Cookie:cookie,'x-vercel-ip-country':'US'}})).text();assert.match(caPreview,/<h1>Amazon Canada promotions<\/h1>/);
  const invalid=await request('/api/admin/promotion-schedule',{method:'POST',headers:{Cookie:cookie,Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({enabled:true,time:'25:00',hours:24,market:'US'})});assert.equal(invalid.status,400);
  const unconfigured=await request('/api/admin/promotion-schedule',{headers:{Cookie:cookie}});assert.equal(unconfigured.status,503);assert.match((await unconfigured.json()).error,/Supabase/);
  console.log('Admin auth, CSRF, worker auth, schedule rendering, validation and unavailable-DB checks passed');

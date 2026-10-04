@@ -1,4 +1,5 @@
-import {amazonAffiliateUrl} from "@/lib/amazon-affiliate";
+import {offerMarket} from "@/lib/promotion-market";
+import {amazonAffiliateUrl,amazonPromotionDestination} from "@/lib/amazon-affiliate";
 import { NextRequest } from "next/server";
 import { isAdmin } from "@/lib/admin-auth";
 import { readStoreLinks, recordAppClick } from "@/lib/server-store-apps";
@@ -13,13 +14,14 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     catch { return new Response("Offer temporarily unavailable", { status: 503, headers }); }
     if(!link)return new Response("Link unavailable",{status:404,headers});
   }
+  const admin=await isAdmin();
   const savedDestination = link?.url||storeAppDestination(id);
-  const destination = savedDestination?amazonAffiliateUrl(savedDestination):null;
+  const destination = link?.store==="Amazon"?amazonPromotionDestination(link.productUrl||link.url,offerMarket(link),admin):savedDestination?amazonAffiliateUrl(savedDestination):null;
   if (!destination) return new Response("Link unavailable", { status: 404, headers });
   const preview = /prefetch|prerender/i.test((request.headers.get("purpose") || "") + (request.headers.get("sec-purpose") || "")) || request.headers.has("next-router-prefetch");
   const bot = /bot|crawler|spider|preview|facebookexternalhit|headless/i.test(request.headers.get("user-agent") || "");
   let recorded = false;
-  if (!preview && !bot && !await isAdmin()) {
+  if (!preview && !bot && !admin) {
     try { await recordAppClick(id,link); recorded = true; }
     catch { console.error("Store app click was not recorded; check store app migration and database connection."); }
   }

@@ -10,3 +10,13 @@ export function amazonAffiliateUrl(value:string):string {
     return url.toString();
   } catch {return value;}
 }
+
+// Use the verified source marketplace, never a saved geo-routing/short URL.
+export function amazonPromotionDestination(source:string,market:"US"|"CA",admin=false):string|null{
+ try{const u=new URL(source);const asin=u.pathname.match(/\/dp\/([A-Z0-9]{10})(?:[/?]|$)/)?.[1];
+ const hosts=market==="CA"?["amazon.ca","www.amazon.ca"]:["amazon.com","www.amazon.com"];
+ if(!asin||u.protocol!=="https:"||!hosts.includes(u.hostname)||u.username||u.password||u.port)return null;
+ const direct=`https://www.amazon.${market==="CA"?"ca":"com"}/dp/${asin}`;
+ return admin?direct:amazonAffiliateUrl(direct);
+ }catch{return null;}
+}

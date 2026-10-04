@@ -25,3 +25,9 @@ Disabled and future-start offers are not listed. Confirmed Amazon badges require
 ## Migration
 
 Existing deployments: apply `20261003030000_promotion_details.sql` after the unified promotions/schedule migrations. The migration preserves existing products and offers and removes only old display titles that duplicated product names. New deployments run migrations in filename order, including this migration after the daily-schedule setup bundle.
+
+## Country-specific pages and admin preview
+
+`/promotions/Amazon` resolves visitor market from Vercel `x-vercel-ip-country`. When absent, the primary browser language ending in `-CA` selects Canada; otherwise US is the fallback. Only the selected country's offers are sent to the client. No US offers are substituted when Canadian inventory is empty.
+
+Authenticated administrators can use `?market=US` and `?market=CA` to preview either market; anonymous query overrides are ignored. Admin Amazon clicks use a clean source-market `/dp/ASIN` URL with no affiliate tag or saved geo-routing parameters, and are excluded from click analytics. Public clicks use the verified source-market URL with its regional tracking ID. Amazon account-level redirect settings remain external to this application; no undocumented redirect-bypass parameter is added.
