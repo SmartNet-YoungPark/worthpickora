@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     if(body&&"links" in body){
       const links:unknown=body.links;
-      if(!validateStoreLinks(links))return Response.json({error:"Use up to 1000 valid HTTPS links. Titles and promo codes must be at most 80 characters, descriptions 160 and sale information 300. Optional image URLs must use HTTPS. Seller promo-code offers require a code. Discount percentages must be greater than 0 and at most 100."},{status:400,headers});
+      if(!validateStoreLinks(links))return Response.json({error:"Use up to 1000 valid HTTPS links. Product names must be at most 300 characters, promotion titles 200, descriptions 500, original text 1000 and promo codes 80. Start time must precede end time. Optional image URLs must use HTTPS. Seller promo-code offers require a code. Discount percentages must be greater than 0 and at most 100."},{status:400,headers});
       await saveStoreLinks(links.map(link=>({...link,store:link.store.trim(),title:link.title.trim(),description:link.description.replace(/[\r\n]+/g," ").trim(),url:link.url.trim()})));
       return Response.json({ok:true},{headers});
     }

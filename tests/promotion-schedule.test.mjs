@@ -15,6 +15,8 @@ test('market tracking is enforced, other networks and existing query parameters 
 test('normalizer never substitutes list-price savings for a coupon and rejects invalid prices',()=>{
  assert.equal(normalizePromotion({promotionType:'clip-coupon',regularPrice:100,salePrice:80}).discountPercent,null);
  assert.equal(normalizePromotion({promotionType:'limited-time',regularPrice:100,salePrice:80}).discountPercent,20);
+ assert.equal(normalizePromotion({promotionType:'general',regularPrice:100,salePrice:99.99}).discountPercent,null);
+ assert.equal(normalizePromotion({promotionType:'AMOUNT_COUPON',regularPrice:100,salePrice:80}).discountPercent,null);
  assert.equal(normalizePromotion({promotionType:'general',regularPrice:0,salePrice:80}).discountPercent,null);
  assert.equal(normalizePromotion({promotionType:'clip-coupon',discountAmount:10,currency:'CAD'}).discountAmount,10);
 });
@@ -34,12 +36,15 @@ test('active requires recent verification of this exact marketplace source',()=>
 test('unified offers, isolated marketplace updates, token leases and scheduler permissions',async()=>{
  const db=new PGlite();try{
  await db.exec('create role anon;create role authenticated;create role service_role bypassrls;');
- const migrations=['20260924010000_store_apps.sql','20260925020000_store_links.sql','20260927010000_amazon_promotions.sql','20260928010000_promotion_types.sql','20260929010000_promotion_categories.sql','20260929030000_promotion_expiry.sql','20260929040000_market_coupon_results.sql','20260929050000_coupon_expiry_evidence.sql','20261003010000_unified_promotions.sql','20261003020000_promotion_schedule.sql'];
+ const migrations=['20260924010000_store_apps.sql','20260925020000_store_links.sql','20260927010000_amazon_promotions.sql','20260928010000_promotion_types.sql','20260929010000_promotion_categories.sql','20260929030000_promotion_expiry.sql','20260929040000_market_coupon_results.sql','20260929050000_coupon_expiry_evidence.sql','20261003010000_unified_promotions.sql','20261003020000_promotion_schedule.sql','20261003030000_promotion_details.sql'];
  for(const f of migrations)await db.exec(await readFile(new URL('../supabase/migrations/'+f,import.meta.url),'utf8'));
- const base={id:'link-11111111-1111-4111-8111-111111111111',store:'Amazon',title:'One product',description:'',image:'https://m.media-amazon.com/a.jpg',offerType:'clip-coupon',saleInfo:'10% coupon',discountPercent:10,market:'US',url:'https://www.amazon.com/dp/B012345678?th=1&tag=old#d',productUrl:'https://www.amazon.com/dp/B012345678'};
+ const base={id:'link-11111111-1111-4111-8111-111111111111',store:'Amazon',title:'One product',description:'',promotionTitle:'Coupon offer',startsAt:'2026-01-01T00:00:00Z',channel:'both',sourceLinks:['https://www.amazon.com/promotion/details/test'],newCustomerOnly:true,image:'https://m.media-amazon.com/a.jpg',offerType:'clip-coupon',saleInfo:'10% coupon',discountPercent:10,market:'US',url:'https://www.amazon.com/dp/B012345678?th=1&tag=old#d',productUrl:'https://www.amazon.com/dp/B012345678'};
  const ca={...base,id:'link-22222222-2222-4222-8222-222222222222',productId:base.id,market:'CA',url:'https://www.amazon.ca/dp/B012345679?tag=old',productUrl:'https://www.amazon.ca/dp/B012345679'};
  await db.query('select promotion_links_save($1::jsonb)',[JSON.stringify([base,ca])]);
  assert.equal((await db.query('select * from deal_products')).rows.length,1);
+ const snapshot=(await db.query('select promotion_links_snapshot() value')).rows[0].value;
+ assert.equal(snapshot[0].promotionTitle,'Coupon offer');assert.equal(snapshot[0].channel,'both');assert.equal(snapshot[0].newCustomerOnly,true);assert.equal(snapshot[0].sourceLinks.length,1);assert.ok(snapshot[0].startsAt);
+
  const offers=(await db.query('select * from marketplace_offers order by market')).rows;assert.equal(offers.length,2);assert.match(offers[0].affiliate_url,/tag=smartnetwe06a-20/);assert.match(offers[1].affiliate_url,/th=1&tag=smartnetweb0a-20#d/);
  await assert.rejects(db.query("select promotion_schedule_save(true,'06:00',0,'US')"));
  await db.query("select promotion_schedule_save(true,'06:00',24,'CA')");

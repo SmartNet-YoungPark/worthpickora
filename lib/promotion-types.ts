@@ -55,7 +55,8 @@ export function promotionStatus(expiresAt:string|null|undefined,now=Date.now(),e
  return expiresOn>today?"active":expiresOn<today?"expired":"check";
 }
 
-export function verifiedPromotionStatus(offer:{expiresAt?:string|null;expiresOn?:string|null;verificationState?:string;verifiedAt?:string|null;verifiedUrl?:string|null;productUrl?:string;url:string},now=Date.now()):"active"|"expired"|"check"{
+export function verifiedPromotionStatus(offer:{isActive?:boolean;startsAt?:string|null;expiresAt?:string|null;expiresOn?:string|null;verificationState?:string;verifiedAt?:string|null;verifiedUrl?:string|null;productUrl?:string;url:string},now=Date.now()):"active"|"expired"|"check"{
+ if(offer.isActive===false||(offer.startsAt&&Date.parse(offer.startsAt)>now))return "check";
  const expiration=promotionStatus(offer.expiresAt,now,offer.expiresOn);
  if(expiration==="expired"||offer.verificationState==="expired")return "expired";
  const age=offer.verifiedAt?now-Date.parse(offer.verifiedAt):NaN;
@@ -63,3 +64,5 @@ export function verifiedPromotionStatus(offer:{expiresAt?:string|null;expiresOn?
  // Confirmed live coupon presence can be active even when its end time is not published.
  return "active";
 }
+
+export function visiblePromotion(offer:{isActive?:boolean;startsAt?:string|null},now=Date.now()){return offer.isActive!==false&&(!offer.startsAt||Date.parse(offer.startsAt)<=now);}

@@ -28,7 +28,7 @@ async function database(path: string, method = "GET", body?: object) {
   const headers: Record<string, string> = { apikey: key!, "Content-Type": "application/json", Prefer: "resolution=merge-duplicates" };
   if (!key!.startsWith("sb_secret_")) headers.Authorization = "Bearer " + key;
   const response = await fetch(new URL("/rest/v1/" + path, url), { method, headers, body: body ? JSON.stringify(body) : undefined, cache: "no-store", signal: AbortSignal.timeout(5000) });
-  if (!response.ok) throw new Error("Store app settings/analytics unavailable. Apply the store-app and 20260928010000_promotion_types.sql migrations in Supabase and check the server connection.");
+  if (!response.ok) throw new Error("Store app settings/analytics unavailable. Apply the store-app and 20261003030000_promotion_details.sql migrations in Supabase and check the server connection.");
   const text = await response.text();
   return text ? JSON.parse(text) : null;
 }
@@ -67,7 +67,7 @@ export async function saveStoreLinks(links:StoreLink[]){
   if(!validateStoreLinks(links))throw new Error("Invalid store links.");
   if(url&&key){
     try{await database("rpc/promotion_links_save","POST",{p_links:links});}
-    catch{throw new Error("Could not save links. Apply 20260928010000_promotion_types.sql in Supabase and check the connection.");}
+    catch{throw new Error("Could not save links. Apply 20261003030000_promotion_details.sql in Supabase and check the connection.");}
     return;
   }
   await updateLocal(state=>{splitAmazon(state,links.map(link=>({...link,verificationState:"unknown",verifiedAt:null})));state.offer=links.find(link=>link.id==="temu-offer")?.url||"";});
