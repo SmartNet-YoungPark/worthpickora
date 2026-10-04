@@ -24,6 +24,9 @@ try{
  const usPreview=await (await request('/promotions/Amazon/US',{headers:{Cookie:cookie,'x-vercel-ip-country':'CA'}})).text();assert.match(usPreview,/<h1>Amazon United States promotions<\/h1>/);assert.match(usPreview,/Admin preview:/);
  const caPreview=await (await request('/promotions/Amazon/CA',{headers:{Cookie:cookie,'x-vercel-ip-country':'US'}})).text();assert.match(caPreview,/<h1>Amazon Canada promotions<\/h1>/);
  const invalid=await request('/api/admin/promotion-schedule',{method:'POST',headers:{Cookie:cookie,Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({enabled:true,time:'25:00',hours:24,market:'US'})});assert.equal(invalid.status,400);
+ assert.equal((await request('/api/admin/promotion-display')).status,401);
+ const badLimit=await request('/api/admin/promotion-display',{method:'POST',headers:{Cookie:cookie,Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({rankingLimit:15})});assert.equal(badLimit.status,400);
+ assert.match(html,/Ranking count/);assert.match(html,/<option value="300">/);
  const unconfigured=await request('/api/admin/promotion-schedule',{headers:{Cookie:cookie}});assert.equal(unconfigured.status,503);assert.match((await unconfigured.json()).error,/Supabase/);
  console.log('Admin auth, CSRF, worker auth, schedule rendering, validation and unavailable-DB checks passed');
 }finally{child.kill();await pause(500);await rm(dir,{recursive:true,force:true});}

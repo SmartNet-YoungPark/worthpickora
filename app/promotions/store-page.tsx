@@ -1,3 +1,5 @@
+import DiscountLegend from "./discount-legend";
+import {promotionRpc} from "@/lib/server-promotion-schedule";
 import {isAdmin} from "@/lib/admin-auth";
 import {offerMarket} from "@/lib/promotion-market";
 import Link from "next/link";
@@ -13,6 +15,7 @@ import PromotionProducts from "./promotion-products";
 
 export default async function StorePromotions({requested,market}:{requested:string;market:"US"|"CA"}) {
   const [links,admin]=await Promise.all([readStoreLinks(),isAdmin()]);
+  let rankingLimit=30;try{rankingLimit=(await promotionRpc("promotion_display_get")).rankingLimit;}catch{/* Keep public catalog available if settings are unavailable. */}
   const stores=[...new Set([...STORE_APPS.map(app=>app.store),...links.map(link=>link.store)])];
   let decoded=requested;
   try { decoded=decodeURIComponent(requested); } catch { notFound(); }
@@ -25,8 +28,9 @@ export default async function StorePromotions({requested,market}:{requested:stri
     <header className="offers-hero"><span className="offers-eyebrow">STORE APPS &amp; OFFERS</span><div><BrandMark brand={store}/><h1>{`${store} ${market=== "CA"?"Canada":"United States"} promotions`}</h1></div><p>A little more value for your everyday. Explore offers and check the latest details at {store}.</p></header>
     <nav className="offers-stores" aria-label="Store promotions">{stores.filter(name=>links.some(link=>link.store===name)).map(name=><Link key={name} href={`/promotions/${encodeURIComponent(name)}/${market}`} aria-current={name===store?"page":undefined}>{name}</Link>)}</nav>
     <section className="coupon-ranking-controls" aria-label="Marketplace"><strong>{market==="CA"?"Canada / CAD":"United States / USD"}</strong>{admin?<><span>Admin preview: direct Amazon links without affiliate routing.</span><Link href={`/promotions/${encodeURIComponent(store)}/US`} aria-current={market==="US"?"page":undefined}>United States</Link><Link href={`/promotions/${encodeURIComponent(store)}/CA`} aria-current={market==="CA"?"page":undefined}>Canada</Link></>:<span>Offers for this shopping country.</span>}</section>
-    {store==="Amazon"&&offers.length>0&&<PromotionProducts key={market} offers={offers} market={market}/>}
-    {store!=="Amazon"&&offers.length>0&&<MarketOffers offers={offers} market={market}/>}
+    <DiscountLegend/>
+    {store==="Amazon"&&offers.length>0&&<PromotionProducts key={market} offers={offers} market={market} rankingLimit={rankingLimit}/>}
+    {store!=="Amazon"&&offers.length>0&&<MarketOffers offers={offers} market={market} rankingLimit={rankingLimit}/>}
     {!offers.length&&store==="Amazon"&&<section className="offers-empty"><h2>{market==="CA"?"Canada":"US"} promotions are not registered yet</h2><p>Offers will appear here after products for this marketplace are registered and verified.</p>{admin&&<Link href="/admin/store-apps#store-links">Register marketplace offers in admin</Link>}</section>}
     {!offers.length&&store!=="Amazon"&&<p className="offers-empty">No offers are available right now. Please check back later.</p>}
     {store==="Amazon"&&<details className="amazon-discovery-links"><summary>Explore Amazon coupon & deal pages</summary><AmazonPublicOffers market={market} admin={admin}/></details>}

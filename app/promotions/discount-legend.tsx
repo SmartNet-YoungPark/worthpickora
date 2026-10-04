@@ -1,0 +1,2 @@
+import {PROMOTION_TYPES} from "@/lib/promotion-types";
+export default function DiscountLegend(){return <aside className="discount-legend" aria-label="Discount type guide"><strong>Discount guide</strong><div className="discount-legend-row">{PROMOTION_TYPES.filter(t=>t.value!=="general").map((t,i)=><span className={`discount-chip tone-${i%4}`} key={t.value}><span aria-hidden="true">{t.icon}</span>{t.label}</span>)}</div><small>Total savings combines only verified, compatible discounts. Coupon eligibility and checkout terms apply.</small></aside>;}

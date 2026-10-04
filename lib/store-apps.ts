@@ -33,6 +33,8 @@ export function validateStoreLinks(value:unknown):value is StoreLink[]{
     for(const field of ["productUrl","termsUrl","sourceUrl"]){if(link[field]!=null&&(typeof link[field]!=="string"||link[field].length>2048||(link[field]&&!validStoreLinkUrl(link[field]))))return false;}
     for(const field of ["regularPrice","salePrice","discountAmount"]){if(link[field]!=null&&(typeof link[field]!=="number"||!Number.isFinite(link[field])||link[field]<0||link[field]>9999999999.99||(field==="discountAmount"&&link[field]===0)))return false;}
     if(link.metadata!==undefined&&(!link.metadata||typeof link.metadata!=="object"||Array.isArray(link.metadata)||JSON.stringify(link.metadata).length>10000))return false;
+    if(link.metadata?.finalPrice!=null&&(typeof link.metadata.finalPrice!=="number"||!Number.isFinite(link.metadata.finalPrice)||link.metadata.finalPrice<0||(typeof link.salePrice==="number"&&link.metadata.finalPrice>link.salePrice)))return false;
+    if(link.metadata?.stackable!==undefined&&typeof link.metadata.stackable!=="boolean")return false;
     if(link.category!==undefined&&(typeof link.category!=="string"||link.category.length>80))return false;
     if(link.offerType!==undefined&&!PROMOTION_TYPES.some(type=>type.value===link.offerType))return false;
     if(link.discountPercent!=null&&(typeof link.discountPercent!=="number"||!Number.isFinite(link.discountPercent)||link.discountPercent<=0||link.discountPercent>100))return false;

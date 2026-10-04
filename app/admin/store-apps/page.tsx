@@ -1,3 +1,4 @@
+import DisplaySettings from "./display-settings";
 import {offerMarket} from "@/lib/promotion-market";
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin-auth";
@@ -24,6 +25,7 @@ export default async function StoreAppsPage() {
       </Link>;}))}</div>
       <p>Shopping shorts products and sets are separate. Clicks made while logged in as admin are excluded from store-link statistics.</p>
     </section>
+    <DisplaySettings/>
     <SchedulePanel/>
     {!error && <OfferForm initialLinks={links}/>}
     <section><h2>App guide & offer clicks — last 30 days</h2><p>Toronto time. Counts link clicks, not app installs, orders or commissions. Logged-in admin tests and recognized bots/prefetches are excluded. These counts do not enter product analytics.</p>
