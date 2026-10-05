@@ -1,7 +1,7 @@
 "use client";
 import {useEffect,useId,useRef,useState} from "react";
 import {createPortal} from "react-dom";
-export type DiscountDetail={headline:string;instruction:string;details:string;badges?:{type:string;label:string;icon:string}[];breakdown?:{label:string;value:string}[];verified?:boolean};
+export type DiscountDetail={headline:string;offerCaption?:string;salePrice?:number|null;regularPrice?:number|null;instruction:string;details:string;badges?:{type:string;label:string;icon:string}[];breakdown?:{label:string;value:string}[];verified?:boolean};
 export default function DiscountDetails({name,summary,code=""}:{name:string;summary?:DiscountDetail;code?:string}){
  const [open,setOpen]=useState(false);const dialog=useRef<HTMLDialogElement>(null),trigger=useRef<HTMLButtonElement>(null);const title=useId();
  useEffect(()=>{if(open&&!dialog.current?.open)dialog.current?.showModal();},[open]);

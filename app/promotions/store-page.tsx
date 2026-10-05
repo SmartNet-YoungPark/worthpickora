@@ -1,3 +1,4 @@
+import type {DepartmentLimits} from "@/lib/department-ranking";
 import DiscountLegend from "./discount-legend";
 import {promotionRpc} from "@/lib/server-promotion-schedule";
 import {isAdmin} from "@/lib/admin-auth";
@@ -16,6 +17,7 @@ import PromotionProducts from "./promotion-products";
 export default async function StorePromotions({requested,market}:{requested:string;market:"US"|"CA"}) {
   const [links,admin]=await Promise.all([readStoreLinks(),isAdmin()]);
   let rankingLimit=30;try{rankingLimit=(await promotionRpc("promotion_display_get")).rankingLimit;}catch{/* Keep public catalog available if settings are unavailable. */}
+  let departmentLimits:DepartmentLimits={};try{departmentLimits=(await promotionRpc("amazon_department_ranking_get"))[market]||{};}catch{/* Default to 10 per Department and 30 for All until settings are available. */}
   const stores=[...new Set([...STORE_APPS.map(app=>app.store),...links.map(link=>link.store)])];
   let decoded=requested;
   try { decoded=decodeURIComponent(requested); } catch { notFound(); }
@@ -29,7 +31,7 @@ export default async function StorePromotions({requested,market}:{requested:stri
     <nav className="offers-stores" aria-label="Store promotions">{stores.filter(name=>links.some(link=>link.store===name)).map(name=><Link key={name} href={`/promotions/${encodeURIComponent(name)}/${market}`} aria-current={name===store?"page":undefined}>{name}</Link>)}</nav>
     <section className="coupon-ranking-controls" aria-label="Marketplace"><strong>{market==="CA"?"Canada / CAD":"United States / USD"}</strong>{admin?<><span>Admin preview: direct Amazon links without affiliate routing.</span><Link href={`/promotions/${encodeURIComponent(store)}/US`} aria-current={market==="US"?"page":undefined}>United States</Link><Link href={`/promotions/${encodeURIComponent(store)}/CA`} aria-current={market==="CA"?"page":undefined}>Canada</Link></>:<span>Offers for this shopping country.</span>}</section>
     <DiscountLegend/>
-    {store==="Amazon"&&offers.length>0&&<PromotionProducts key={market} offers={offers} market={market} rankingLimit={rankingLimit}/>}
+    {store==="Amazon"&&offers.length>0&&<PromotionProducts departmentLimits={departmentLimits} key={market} offers={offers} market={market} rankingLimit={rankingLimit}/>}
     {store!=="Amazon"&&offers.length>0&&<MarketOffers offers={offers} market={market} rankingLimit={rankingLimit}/>}
     {!offers.length&&store==="Amazon"&&<section className="offers-empty"><h2>{market==="CA"?"Canada":"US"} promotions are not registered yet</h2><p>Offers will appear here after products for this marketplace are registered and verified.</p>{admin&&<Link href="/admin/store-apps#store-links">Register marketplace offers in admin</Link>}</section>}
     {!offers.length&&store!=="Amazon"&&<p className="offers-empty">No offers are available right now. Please check back later.</p>}

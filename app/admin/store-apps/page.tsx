@@ -1,3 +1,4 @@
+import DepartmentSettings from "./department-settings";
 import DisplaySettings from "./display-settings";
 import {offerMarket} from "@/lib/promotion-market";
 import Link from "next/link";
@@ -25,6 +26,7 @@ export default async function StoreAppsPage() {
       </Link>;}))}</div>
       <p>Shopping shorts products and sets are separate. Clicks made while logged in as admin are excluded from store-link statistics.</p>
     </section>
+    <DepartmentSettings categories={[...new Set(links.filter(l=>l.store==="Amazon").map(l=>l.category||"Uncategorized"))]}/>
     <DisplaySettings/>
     <SchedulePanel/>
     {!error && <OfferForm initialLinks={links}/>}
