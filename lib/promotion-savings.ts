@@ -17,7 +17,13 @@ export function promotionSavings(o:SavingsOffer){
  else if(drop>0){total=drop;complete=true;types.add("price-discount");details.push(`Price reduction ${money(drop)}`);}else if(extra!==null){total=extra;details.push(`Confirmed discount ${money(extra)}`);}
  if(total!==null&&Math.round(total*100)<=0)total=null;
  const badges=PROMOTION_TYPES.filter(t=>types.has(t.value)).map(t=>({type:t.value,label:t.label,icon:t.icon}));
- return {total,complete,badges,details:details.join(" + "),label:total===null?"Check amount":`${money(total)} ${complete?"TOTAL OFF":"OFF"}`};
+ const breakdown=[{label:"Original price",value:regular===null?"Not confirmed":money(regular)},{label:"Current selling price",value:sale===null?"Not confirmed":money(sale)}];
+ if(drop>0)breakdown.push({label:"Price discount",value:money(drop)});
+ if(coupon){const applied=complete&&final!==null&&sale!==null?sale-final:extra;breakdown.push({label:o.offerType==="promo-code"?"Promo-code discount":"Coupon discount",value:applied===null?"Not confirmed":money(applied)});}
+ const finalValue=final!==null&&sale!==null&&final<=sale?final:complete&&regular!==null&&total!==null?regular-total:null;
+ breakdown.push({label:"Final price after promotions",value:finalValue===null?"Not confirmed":money(finalValue)});
+ breakdown.push({label:complete?"Total savings":"Known discount (combined total unconfirmed)",value:total===null?"Not confirmed":money(total)});
+ return {total,complete,badges,breakdown,details:details.join(" + "),label:total===null?"Check amount":`${money(total)} ${complete?"TOTAL OFF":"OFF"}`};
 }
 export function validRankingLimit(n:unknown):n is number{return typeof n==="number"&&Number.isInteger(n)&&n>=10&&n<=300&&n%10===0;}
 export function rankSavings<T extends SavingsOffer>(offers:T[],limit:number){return offers.filter(o=>promotionSavings(o).total!==null).sort((a,b)=>promotionSavings(b).total!-promotionSavings(a).total!||String(a.id).localeCompare(String(b.id))).slice(0,validRankingLimit(limit)?limit:30);}

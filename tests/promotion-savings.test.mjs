@@ -5,7 +5,7 @@ import {PGlite} from '@electric-sql/pglite';
 import {promotionSavings as savings,rankSavings,validRankingLimit} from '../lib/promotion-savings.ts';
 test('final price and stacked coupon produce 65 without double counting',()=>{
  const o={offerType:'clip-coupon',regularPrice:259,salePrice:229,discountAmount:35};
- const final=savings({...o,metadata:{finalPrice:194,stackable:true}});assert.equal(final.total,65);assert.equal(final.label,'$65.00 TOTAL OFF');assert.deepEqual(final.badges.map(b=>b.type),['clip-coupon','price-discount']);
+ const final=savings({...o,metadata:{finalPrice:194,stackable:true}});assert.equal(final.total,65);assert.deepEqual(final.breakdown.map(r=>r.value),['$259.00','$229.00','$30.00','$35.00','$194.00','$65.00']);assert.equal(final.label,'$65.00 TOTAL OFF');assert.deepEqual(final.badges.map(b=>b.type),['clip-coupon','price-discount']);
  assert.equal(savings({...o,metadata:{stackable:true}}).total,65);
  assert.equal(savings(o).total,35);assert.equal(savings(o).complete,false);
  assert.equal(savings({offerType:'clip-coupon',discountPercent:20}).total,null);
