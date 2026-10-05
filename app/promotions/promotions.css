@@ -75,3 +75,14 @@
 .promotion-products .promotion-card .slide-card-actions .card-discount-icons>span{flex:0 0 21px;width:21px;min-width:21px}
 .promotion-coupon-line>span:empty{display:none}
 .discount-details-dialog h2{overflow-wrap:anywhere;padding-right:8px}
+
+/* Text rows must size from their content, independently of the image. */
+.promotion-products .product-slider-track .slide-card.promotion-card{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto auto;height:auto;max-height:none;min-width:132px;align-content:start;padding:6px 6px 10px;row-gap:8px}
+.promotion-products .promotion-card>.slide-card-top,.promotion-products .promotion-card>.promotion-price-block,.promotion-products .promotion-card>.slide-product-name{grid-column:1;min-width:0;width:100%;box-sizing:border-box}
+.promotion-products .promotion-card>.slide-product-name{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;grid-row:4;margin:0;padding:0;height:2.9em;min-height:2.9em;max-height:2.9em;font-size:12px;line-height:1.45;white-space:normal;overflow:hidden;text-overflow:ellipsis;overflow-wrap:anywhere;word-break:normal;align-self:start}
+.promotion-products .promotion-card>.promotion-price-block{grid-row:3;padding:0;margin:0;height:auto;overflow:visible;align-self:start}
+.promotion-products .promotion-card .promotion-coupon-line{display:flex;flex-direction:column;align-items:flex-start;gap:3px;margin:0;min-width:0;font-size:13px;line-height:1.4}
+.promotion-products .promotion-card .promotion-coupon-line>strong{display:block;max-width:100%;white-space:normal;overflow-wrap:anywhere;word-break:normal;font-size:14px;line-height:1.4;letter-spacing:0}
+.promotion-products .promotion-card .promotion-coupon-line>span:not(:empty){font-size:11px;line-height:1.4;overflow-wrap:anywhere}
+.promotion-products .promotion-card .promotion-selling-price{margin:4px 0 0;min-width:0;line-height:1.4}
+.promotion-products .promotion-card .promotion-selling-price>span{white-space:nowrap}
