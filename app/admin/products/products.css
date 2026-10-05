@@ -250,3 +250,23 @@
 .admin-logo.site-brand { flex-wrap: wrap; gap: 8px; }
 .admin-logo .site-logo { width: 56px; height: 56px; }
 .admin-logo .site-brand-text > b { font-size: 9px; font-weight: 500; letter-spacing: 0; margin-left: 5px; padding: 4px; border-radius: 4px; background: #edf0f5; color: #7a8498; }
+
+/* Independently scrollable, left-aligned administrator navigation. */
+.admin-sidebar{overflow-y:auto;overflow-x:hidden;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:#91a4c1 #edf2fa;padding-bottom:16px;min-height:0;overscroll-behavior-y:contain}
+.admin-sidebar::-webkit-scrollbar{width:8px}
+.admin-sidebar::-webkit-scrollbar-track{background:#edf2fa;border-radius:8px}
+.admin-sidebar::-webkit-scrollbar-thumb{background:#91a4c1;border:2px solid #edf2fa;border-radius:8px}
+.admin-sidebar>*{flex-shrink:0}
+.admin-sidebar nav :is(button,a),.admin-sidebar>.admin-button{--menu-bg:#ffeded;--menu-fg:#8c2734;--menu-border:#edacb4;display:flex;justify-content:flex-start;text-align:left;align-items:center;gap:10px;width:100%;min-height:44px;white-space:normal;overflow-wrap:anywhere;padding:11px 12px;background:var(--menu-bg);color:var(--menu-fg);border:1px solid var(--menu-border);border-left-width:4px;border-radius:9px;font-weight:600;line-height:1.4}
+.admin-sidebar>.admin-button{margin-bottom:6px}
+.admin-sidebar nav :is(button,a)>svg,.admin-sidebar>.admin-button>svg{flex-shrink:0}
+.admin-sidebar nav :is(button,a):nth-child(7n+2),.admin-sidebar>.admin-button:nth-of-type(7n+2){--menu-bg:#fff0df;--menu-fg:#874611;--menu-border:#eab478}
+.admin-sidebar nav :is(button,a):nth-child(7n+3),.admin-sidebar>.admin-button:nth-of-type(7n+3){--menu-bg:#fff8cf;--menu-fg:#6c5610;--menu-border:#d8c15c}
+.admin-sidebar nav :is(button,a):nth-child(7n+4),.admin-sidebar>.admin-button:nth-of-type(7n+4){--menu-bg:#e5f5e9;--menu-fg:#245e36;--menu-border:#92caa2}
+.admin-sidebar nav :is(button,a):nth-child(7n+5),.admin-sidebar>.admin-button:nth-of-type(7n+5){--menu-bg:#e4f2ff;--menu-fg:#245784;--menu-border:#97bfe3}
+.admin-sidebar nav :is(button,a):nth-child(7n+6),.admin-sidebar>.admin-button:nth-of-type(7n+6){--menu-bg:#eaeaff;--menu-fg:#45428a;--menu-border:#b0ade3}
+.admin-sidebar nav :is(button,a):nth-child(7n),.admin-sidebar>.admin-button:nth-of-type(7n){--menu-bg:#f5e7fb;--menu-fg:#763b85;--menu-border:#d4a4e0}
+.admin-sidebar nav button.active{background:var(--menu-bg);color:var(--menu-fg);box-shadow:inset 0 0 0 1px var(--menu-fg);font-weight:800}
+.admin-sidebar nav :is(button,a):hover,.admin-sidebar>.admin-button:hover{background:var(--menu-bg);color:var(--menu-fg);filter:brightness(.96)}
+.admin-sidebar :is(button,a):focus-visible{outline:3px solid #244c7e;outline-offset:2px}
+@media(max-width:650px){.admin-sidebar{height:auto;max-height:48dvh;padding-bottom:12px}.admin-sidebar nav,.admin-sidebar nav[aria-label="Quick links"]{display:flex;flex-direction:column;overflow:visible;padding-bottom:6px;gap:6px}.admin-sidebar nav button{white-space:normal;min-height:44px}.admin-sidebar .admin-nav-label{display:block;margin-top:14px}}
