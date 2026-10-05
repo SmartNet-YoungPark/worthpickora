@@ -14,6 +14,7 @@ export function parseAmazonOffer(source:string,url:string):Verification & {terms
  const blocks=[...main.matchAll(/<span[^>]*id="couponText[^>]*>([\s\S]*?)(?=<style|$)/g)];
  if(blocks.length>1)return unknown("Multiple coupon conditions require manual review");
  if(blocks.length===1){
+  if(/Save\s+(?:(?:CA\$|C\$|\$)\s*)?\d+(?:\.\d+)?%?\s+at checkout/i.test(plain(main)))return unknown("Coupon and checkout promotion coexist; price and stacking conditions require manual review");
   const text=plain(blocks[0][1]);const pct=text.match(/(?:Apply|Clip|Save)\s+(\d+(?:\.\d+)?)%\s+(?:off\s+)?coupon/i);
   const amount=text.match(/(?:Apply|Clip|Save)\s+((?:CA\$|C\$|\$)\s*\d+(?:\.\d{1,2})?)\s+(?:off\s+)?coupon/i);
   if(!pct&&!amount&&!/\b(?:Apply|Clip)\s+(?:(?:the|a|available)\s+)?coupon\b/i.test(text))return unknown("Coupon amount or instructions not verified");

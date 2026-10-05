@@ -28,6 +28,8 @@ test('parser distinguishes coupon, timed discount, missing coupon, variant misma
  assert.equal(parseAmazonOffer(head+'List price -10%',url).state,'unknown');
  assert.equal(parseAmazonOffer(coupon.replace('value="B012345678"','value="B012345679"'),url).state,'unknown');
  assert.equal(parseAmazonOffer('Robot check',url).state,'unknown');
+ assert.equal(parseAmazonOffer(coupon.replace('<div id="feature-bullets">','<span>Save 20% at checkout</span><div id="feature-bullets">'),url).state,'unknown');
+ assert.equal(parseAmazonOffer(coupon.replace('Apply $10 coupon','Coupon price $194'),url).state,'unknown');
 });
 test('active requires recent verification of this exact marketplace source',()=>{
  const now=Date.parse('2026-10-03T12:00:00Z');const offer={url:'https://www.amazon.ca/dp/B012345678?tag=x',productUrl:'https://www.amazon.ca/dp/B012345678',expiresOn:'2026-12-01',verificationState:'confirmed',verifiedAt:'2026-10-03T10:00:00Z',verifiedUrl:'https://www.amazon.ca/dp/B012345678'};

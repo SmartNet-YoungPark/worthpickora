@@ -8,13 +8,15 @@ export function promotionSavings(o:SavingsOffer){
  const drop=regular!==null&&sale!==null&&regular>sale?regular-sale:0;
  const coupon=["clip-coupon","promo-code"].includes(o.offerType||"");
  let extra=nonnegative(o.discountAmount)&&o.discountAmount>0?o.discountAmount:null;
- if(extra===null&&coupon){const match=o.saleInfo?.match(/(?:CA\$|US\$|C\$|\$)\s*(\d+(?:\.\d{1,2})?)\s+(?:off\s+)?coupon\b/i);if(match)extra=Number(match[1]);}
- if(extra===null&&coupon&&sale!==null&&nonnegative(o.discountPercent)&&o.discountPercent>0&&o.discountPercent<=100)extra=sale*o.discountPercent/100;
+ // Never infer money from prose: "coupon price $194" is not a $194 discount.
+ // A percentage also needs an explicitly verified calculation basis.
+ if(extra===null&&coupon&&o.metadata?.stackable===true&&sale!==null&&nonnegative(o.discountPercent)&&o.discountPercent>0&&o.discountPercent<=100)extra=sale*o.discountPercent/100;
+ if(sale===null||extra!==null&&extra>sale)extra=null;
  const final=nonnegative(o.metadata?.finalPrice)?o.metadata.finalPrice:null;
  let total:number|null=null,complete=false;
  if(final!==null&&sale!==null&&final<=sale&&regular!==null&&regular>=sale){total=regular-final;complete=true;if(drop>0){types.add("price-discount");details.push(`Price reduction ${money(drop)}`);}if(sale>final)details.push(`Additional discount ${money(sale-final)}`);}
- else if(coupon){if(drop>0&&extra!==null&&sale!==null&&extra<=sale&&o.metadata?.stackable===true){total=drop+extra;complete=true;types.add("price-discount");details.push(`Price reduction ${money(drop)}`,`Additional discount ${money(extra)}`);}else if(extra!==null&&(sale===null||extra<=sale)){total=extra;details.push(`Confirmed additional discount ${money(extra)}; total savings not verified`);}}
- else if(drop>0){total=drop;complete=true;types.add("price-discount");details.push(`Price reduction ${money(drop)}`);}else if(extra!==null){total=extra;details.push(`Confirmed discount ${money(extra)}`);}
+ else if(coupon){if(drop>0&&extra!==null&&sale!==null&&extra<=sale&&o.metadata?.stackable===true){total=drop+extra;complete=true;types.add("price-discount");details.push(`Price reduction ${money(drop)}`,`Additional discount ${money(extra)}`);}}
+ else if(drop>0){total=drop;complete=true;types.add("price-discount");details.push(`Price reduction ${money(drop)}`);}
  if(total!==null&&Math.round(total*100)<=0)total=null;
  const badges=PROMOTION_TYPES.filter(t=>types.has(t.value)).map(t=>({type:t.value,label:t.label,icon:t.icon}));
  const breakdown=[{label:"Original price",value:regular===null?"Not confirmed":money(regular)},{label:"Current selling price",value:sale===null?"Not confirmed":money(sale)}];
@@ -22,8 +24,8 @@ export function promotionSavings(o:SavingsOffer){
  if(coupon){const applied=complete&&final!==null&&sale!==null?sale-final:extra;breakdown.push({label:o.offerType==="promo-code"?"Promo-code discount":"Coupon discount",value:applied===null?"Not confirmed":money(applied)});}
  const finalValue=final!==null&&sale!==null&&final<=sale?final:complete&&regular!==null&&total!==null?regular-total:null;
  breakdown.push({label:"Final price after promotions",value:finalValue===null?"Not confirmed":money(finalValue)});
- breakdown.push({label:complete?"Total savings":"Known discount (combined total unconfirmed)",value:total===null?"Not confirmed":money(total)});
- return {total,complete,badges,breakdown,details:details.join(" + "),label:total===null?"Check amount":`${money(total)} ${complete?"TOTAL OFF":"OFF"}`};
+ breakdown.push({label:"Total savings",value:total===null?"Not confirmed":money(total)});
+ return {total,complete,badges,breakdown,instruction:complete?"Confirm coupon eligibility and the final price at checkout.":"Price and promotion conditions need verification. No combined savings or final price is confirmed.",details:details.join(" + "),label:total===null?"Check amount":`${money(total)} ${complete?"TOTAL OFF":"OFF"}`};
 }
 export function validRankingLimit(n:unknown):n is number{return typeof n==="number"&&Number.isInteger(n)&&n>=10&&n<=300&&n%10===0;}
 export function rankSavings<T extends SavingsOffer>(offers:T[],limit:number){return offers.filter(o=>promotionSavings(o).total!==null).sort((a,b)=>promotionSavings(b).total!-promotionSavings(a).total!||String(a.id).localeCompare(String(b.id))).slice(0,validRankingLimit(limit)?limit:30);}
