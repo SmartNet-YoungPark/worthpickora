@@ -21,8 +21,15 @@ test('ranking persists and database rejects invalid values and public access',as
 
 test('incomplete prices and coupon-price prose never become monetary savings',()=>{
  const laptop=savings({offerType:'clip-coupon',discountAmount:630,saleInfo:'$630 coupon'});
- assert.equal(laptop.total,null);assert.equal(laptop.label,'Check amount');assert.ok(laptop.breakdown.every(row=>!row.value.includes('630')));
+ assert.equal(laptop.total,null);assert.equal(laptop.label,'Check amount');assert.equal(laptop.breakdown.find(row=>row.label==='Coupon discount').value,'$630.00');assert.equal(laptop.breakdown.find(row=>row.label==='Total savings').value,'Not confirmed');
  assert.equal(savings({offerType:'clip-coupon',regularPrice:259,salePrice:229,saleInfo:'Coupon price $194'}).total,null);
  assert.equal(savings({offerType:'clip-coupon',regularPrice:259,salePrice:229,discountPercent:20}).total,null);
  assert.equal(savings({offerType:'clip-coupon',regularPrice:259,salePrice:229,discountAmount:300}).breakdown.find(r=>r.label==='Coupon discount').value,'Not confirmed');
+});
+
+test('advertised coupon is visible without inventing missing selling or final prices',()=>{
+ const detail=savings({offerType:'clip-coupon',discountAmount:100});
+ assert.equal(detail.breakdown.find(r=>r.label==='Coupon discount').value,'$100.00');
+ for(const label of ['Original price','Current selling price','Final price after promotions','Total savings'])assert.equal(detail.breakdown.find(r=>r.label===label).value,'Not confirmed');
+ assert.equal(savings({offerType:'clip-coupon',discountPercent:10}).breakdown.find(r=>r.label==='Coupon discount').value,'10%');
 });

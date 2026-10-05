@@ -7,7 +7,9 @@ export function promotionSavings(o:SavingsOffer){
  const regular=nonnegative(o.regularPrice)?o.regularPrice:null,sale=nonnegative(o.salePrice)?o.salePrice:null;
  const drop=regular!==null&&sale!==null&&regular>sale?regular-sale:0;
  const coupon=["clip-coupon","promo-code"].includes(o.offerType||"");
- let extra=nonnegative(o.discountAmount)&&o.discountAmount>0?o.discountAmount:null;
+ const advertisedAmount=nonnegative(o.discountAmount)&&o.discountAmount>0&&(sale===null||o.discountAmount<=sale)?o.discountAmount:null;
+ const advertisedPercent=nonnegative(o.discountPercent)&&o.discountPercent>0&&o.discountPercent<=100?o.discountPercent:null;
+ let extra=advertisedAmount;
  // Never infer money from prose: "coupon price $194" is not a $194 discount.
  // A percentage also needs an explicitly verified calculation basis.
  if(extra===null&&coupon&&o.metadata?.stackable===true&&sale!==null&&nonnegative(o.discountPercent)&&o.discountPercent>0&&o.discountPercent<=100)extra=sale*o.discountPercent/100;
@@ -21,11 +23,11 @@ export function promotionSavings(o:SavingsOffer){
  const badges=PROMOTION_TYPES.filter(t=>types.has(t.value)).map(t=>({type:t.value,label:t.label,icon:t.icon}));
  const breakdown=[{label:"Original price",value:regular===null?"Not confirmed":money(regular)},{label:"Current selling price",value:sale===null?"Not confirmed":money(sale)}];
  if(drop>0)breakdown.push({label:"Price discount",value:money(drop)});
- if(coupon){const applied=complete&&final!==null&&sale!==null?sale-final:extra;breakdown.push({label:o.offerType==="promo-code"?"Promo-code discount":"Coupon discount",value:applied===null?"Not confirmed":money(applied)});}
+ if(coupon){const applied=complete&&final!==null&&sale!==null?sale-final:advertisedAmount??extra;breakdown.push({label:o.offerType==="promo-code"?"Promo-code discount":"Coupon discount",value:applied!==null?money(applied):advertisedPercent!==null?`${advertisedPercent}%`:"Not confirmed"});}
  const finalValue=final!==null&&sale!==null&&final<=sale?final:complete&&regular!==null&&total!==null?regular-total:null;
  breakdown.push({label:"Final price after promotions",value:finalValue===null?"Not confirmed":money(finalValue)});
  breakdown.push({label:"Total savings",value:total===null?"Not confirmed":money(total)});
- return {total,complete,badges,breakdown,instruction:complete?"Confirm coupon eligibility and the final price at checkout.":"Price and promotion conditions need verification. No combined savings or final price is confirmed.",details:details.join(" + "),label:total===null?"Check amount":`${money(total)} ${complete?"TOTAL OFF":"OFF"}`};
+ return {total,complete,badges,breakdown,instruction:complete?"Confirm coupon eligibility and the final price at checkout.":"Coupon amounts are conditional on eligibility. Missing prices and unverified stacking prevent a confirmed final price or total savings.",details:details.join(" + "),label:total===null?"Check amount":`${money(total)} ${complete?"TOTAL OFF":"OFF"}`};
 }
 export function validRankingLimit(n:unknown):n is number{return typeof n==="number"&&Number.isInteger(n)&&n>=10&&n<=300&&n%10===0;}
 export function rankSavings<T extends SavingsOffer>(offers:T[],limit:number){return offers.filter(o=>promotionSavings(o).total!==null).sort((a,b)=>promotionSavings(b).total!-promotionSavings(a).total!||String(a.id).localeCompare(String(b.id))).slice(0,validRankingLimit(limit)?limit:30);}

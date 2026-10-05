@@ -66,3 +66,12 @@
 .promotion-products .promotion-card .slide-card-actions{grid-column:2;width:auto;box-sizing:border-box}
 .promotion-products .promotion-card .slide-card-actions .card-discount-icons{max-width:100%;overflow:visible;flex-wrap:wrap}
 .promotion-products .promotion-card .slide-image-link{grid-column:1}
+
+/* Keep promotion icons in normal flow so they cannot overlap each other. */
+.promotion-products .promotion-card .slide-card-top{height:auto;min-height:32px;align-items:center;gap:6px}
+.promotion-products .promotion-card .slide-card-actions{padding:0;gap:6px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.promotion-products .promotion-card .discount-details-trigger{position:static;order:2;flex:0 0 28px;width:28px;height:28px;margin:0}
+.promotion-products .promotion-card .slide-card-actions .card-discount-icons{order:1;flex:0 1 auto;width:auto;max-width:100%;gap:4px;margin:0;overflow:visible}
+.promotion-products .promotion-card .slide-card-actions .card-discount-icons>span{flex:0 0 21px;width:21px;min-width:21px}
+.promotion-coupon-line>span:empty{display:none}
+.discount-details-dialog h2{overflow-wrap:anywhere;padding-right:8px}
