@@ -1,3 +1,4 @@
+import {amazonAffiliateUrl} from "./amazon-affiliate";
 import "server-only";
 import { optimizeProductImage } from "./optimize-product-image";
 import { catalogStorage } from "./server-catalog";
@@ -23,6 +24,8 @@ export async function saveCatalogPayload(input: unknown): Promise<Response> {
     const problem = validateProduct(product, [], categories);
     if (problem) return Response.json({ error: problem }, { status: 400, headers });
     if (ids.has(product.id) || codes.has(product.code.toLowerCase())) return Response.json({ error: "Duplicate product ID or code." }, { status: 400, headers });
+    if(product.urlUS)product.urlUS=amazonAffiliateUrl(product.urlUS);
+    if(product.urlCA)product.urlCA=amazonAffiliateUrl(product.urlCA);
     ids.add(product.id); codes.add(product.code.toLowerCase());
   }
   const capacityError = validateSetCapacity(products);
