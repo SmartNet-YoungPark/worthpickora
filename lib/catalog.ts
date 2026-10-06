@@ -109,7 +109,7 @@ export function validateProduct(product: Product, existing: Product[], categorie
   for(const field of ["urlUS","urlCA"] as const)if(product[field]!==undefined&&typeof product[field]!=="string")return "Invalid regional affiliate link.";
   if(product.urlUS||product.urlCA){
     if(product.store!=="Amazon")return "Regional Amazon links require the Amazon store.";
-    if(!validAmazonFullLink(product.urlUS||"","US")||!validAmazonFullLink(product.urlCA||"","CA"))return "Enter both full Amazon.com and Amazon.ca product links. Short links and geo-redirect links are not supported.";
+    if(!validAmazonFullLink(product.urlUS||"","US")||!validAmazonFullLink(product.urlCA||"","CA"))return "Enter both full Amazon.com and Amazon.ca product links in their matching country fields. Short links are not supported.";
   }
   if (!validUrl(product.url)) return "Enter a complete http:// or https:// affiliate URL.";
   if (!categories.includes(product.category)) return "Choose a valid category from the current category list.";
