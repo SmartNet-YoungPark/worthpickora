@@ -9,6 +9,7 @@ export async function saveCatalogPayload(input: unknown): Promise<Response> {
   if (!data || !Array.isArray(data.products) || data.products.length > 5000 || typeof data.revision !== "string") return Response.json({ error: "Invalid catalog data." }, { status: 400, headers });
   const current = await catalogStorage.read();
   if (current.revision !== data.revision) return Response.json({ error: "The catalog changed. Refresh and try again." }, { status: 409, headers });
+  if(data.products.some((p:Product)=>p?.urlShortUS||p?.urlShortCA)&&!current.products.some(p=>p.urlShortUS!==undefined))return Response.json({error:"Apply the regional short-links database migration before saving short links."},{status:503,headers});
   const products = (data.products as Product[]).map(product => {
     if (!product || typeof product.image !== "string" || !product.image.startsWith("/api/products/")) return product;
     const previous = current.products.find(item => item.id === product.id);

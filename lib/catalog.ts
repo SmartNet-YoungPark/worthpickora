@@ -1,4 +1,4 @@
-import {validAmazonFullLink} from "./product-affiliate.ts";
+import {validAmazonFullLink,validAmazonShortLink} from "./product-affiliate.ts";
 export const CATEGORIES: readonly string[] = ["Tech", "Home & Kitchen", "Electronics & Tech", "Beauty & Personal Care", "Health & Household", "Clothing, Shoes & Jewelry", "Sports & Outdoors", "Toys & Games", "Pet Supplies", "Automotive", "Tools & Home Improvement"];
 export const STORES = ["Amazon", "Walmart", "Best Buy", "Temu", "Target", "Etsy"] as const;
 export const STATUSES = ["Published", "Draft", "Needs Review", "Archived"] as const;
@@ -27,6 +27,8 @@ export type Product = {
   url: string;
   urlUS?: string;
   urlCA?: string;
+  urlShortUS?: string;
+  urlShortCA?: string;
   image: string;
   photo: number | null;
   status: ProductStatus;
@@ -106,10 +108,12 @@ export function validateProduct(product: Product, existing: Product[], categorie
   if (!product.name.trim()) return "Enter a product name.";
   if (!/^[a-z0-9_-]{2,24}$/i.test(product.code)) return "Use 2–24 letters, numbers, hyphens, or underscores for the code.";
   if (existing.some(item => item.id !== product.id && item.code.toLowerCase() === product.code.toLowerCase())) return "This product code is already in use.";
-  for(const field of ["urlUS","urlCA"] as const)if(product[field]!==undefined&&typeof product[field]!=="string")return "Invalid regional affiliate link.";
-  if(product.urlUS||product.urlCA){
+  for(const field of ["urlUS","urlCA","urlShortUS","urlShortCA"] as const)if(product[field]!==undefined&&typeof product[field]!=="string")return "Invalid regional affiliate link.";
+  if(product.urlUS||product.urlCA||product.urlShortUS||product.urlShortCA){
     if(product.store!=="Amazon")return "Regional Amazon links require the Amazon store.";
-    if(!validAmazonFullLink(product.urlUS||"","US")||!validAmazonFullLink(product.urlCA||"","CA"))return "Enter both full Amazon.com and Amazon.ca product links in their matching country fields. Short links are not supported.";
+    if((product.urlUS&&!validAmazonFullLink(product.urlUS,"US"))||(product.urlCA&&!validAmazonFullLink(product.urlCA,"CA")))return "Use the matching Amazon.com or Amazon.ca product URL in each full-link field.";
+    if((product.urlShortUS&&!validAmazonShortLink(product.urlShortUS))||(product.urlShortCA&&!validAmazonShortLink(product.urlShortCA)))return "Short links must be complete https://amzn.to/... or https://a.co/... URLs.";
+    if(!(product.urlUS||product.urlShortUS)||!(product.urlCA||product.urlShortCA))return "Enter at least one full or short link for each country.";
   }
   if (!validUrl(product.url)) return "Enter a complete http:// or https:// affiliate URL.";
   if (!categories.includes(product.category)) return "Choose a valid category from the current category list.";
@@ -123,7 +127,7 @@ export function validateProduct(product: Product, existing: Product[], categorie
   return "";
 }
 
-const CSV_FIELDS = ["name", "code", "description", "category", "set", "store", "brand", "asin", "url", "urlUS", "urlCA", "status", "image"] as const;
+const CSV_FIELDS = ["name", "code", "description", "category", "set", "store", "brand", "asin", "url", "urlUS", "urlCA", "urlShortUS", "urlShortCA", "status", "image"] as const;
 // Quoted fields can contain commas, newlines, and escaped quotes.
 export function parseCsv(text: string): string[][] {
   const rows: string[][] = [];
@@ -182,7 +186,7 @@ export function prepareCsvImport(text: string, existing: Product[], categories: 
     const product: Product = {
       id: previous?.id || crypto.randomUUID(), name: data.name, code, description: data.description || "",
       category, store: data.store, set, brand: data.brand || "", asin: data.asin || "",
-      url: data.url, urlUS: fields.includes("urlus") ? data.urlus : previous?.urlUS, urlCA: fields.includes("urlca") ? data.urlca : previous?.urlCA, image: fields.includes("image") ? data.image : previous?.image || "",
+      urlShortUS: fields.includes("urlshortus") ? data.urlshortus : previous?.urlShortUS, urlShortCA: fields.includes("urlshortca") ? data.urlshortca : previous?.urlShortCA, url: data.url, urlUS: fields.includes("urlus") ? data.urlus : previous?.urlUS, urlCA: fields.includes("urlca") ? data.urlca : previous?.urlCA, image: fields.includes("image") ? data.image : previous?.image || "",
       photo: fields.includes("photo") ? data.photo && /^[0-4]$/.test(data.photo) ? Number(data.photo) : null : data.image ? null : previous?.photo ?? null,
       status: (data.status || previous?.status || "Draft") as ProductStatus, updated: new Date().toISOString(),
     };

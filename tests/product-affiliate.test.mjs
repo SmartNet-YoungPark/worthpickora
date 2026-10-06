@@ -29,3 +29,15 @@ test('Amazon mh and mobile product URLs accept original redirect attribution par
  assert.equal(productDestination({...pair,urlUS:us,urlCA:ca},'US'),us);
  assert.equal(productDestination({...pair,urlUS:us,urlCA:ca},'CA'),ca);
 });
+
+test('short links are separate per country and full links always take priority',()=>{
+ const p={...pair,urlShortUS:'https://amzn.to/us-backup',urlShortCA:'https://a.co/ca-backup'};
+ assert.equal(productDestination(p,'US'),p.urlUS);assert.equal(productDestination(p,'CA'),p.urlCA);
+ assert.equal(productDestination({...p,urlUS:''},'US'),p.urlShortUS);
+ assert.equal(productDestination({...p,urlCA:''},'CA'),p.urlShortCA);
+ assert.equal(productDestination({...p,urlCA:'',urlShortCA:''},'CA'),null);
+ assert.equal(productDestination({...p,urlUS:'',urlCA:''},null),p.urlShortUS);
+ assert.equal(validateProduct({...p,urlUS:'',urlCA:''},[]),'');
+ assert.ok(validateProduct({...p,urlShortCA:'javascript:alert(1)'},[]));
+ const [saved]=importCsv(exportCsv([p]),[]);assert.equal(saved.urlShortUS,p.urlShortUS);assert.equal(saved.urlShortCA,p.urlShortCA);
+});

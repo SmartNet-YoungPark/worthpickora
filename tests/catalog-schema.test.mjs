@@ -19,7 +19,7 @@ test("catalog schema, capacity, relations and authorization", async t => {
       grant usage on schema auth to anon,authenticated,service_role;
       grant execute on function auth.uid() to anon,authenticated,service_role;
     `);
-    for (const file of ["20260917000100_create_profiles.sql","20260918003102_create_catalog.sql","20260918004315_catalog_bridge.sql","20260918012856_catalog_import_performance.sql","20260918014410_catalog_image_reads.sql","20260918015358_catalog_metadata_writes.sql","20260919010000_product_click_analytics.sql","20261005010000_product_regional_links.sql"]) {
+    for (const file of ["20260917000100_create_profiles.sql","20260918003102_create_catalog.sql","20260918004315_catalog_bridge.sql","20260918012856_catalog_import_performance.sql","20260918014410_catalog_image_reads.sql","20260918015358_catalog_metadata_writes.sql","20260919010000_product_click_analytics.sql","20261005010000_product_regional_links.sql","20261006010000_product_regional_short_links.sql"]) {
       await db.exec(await readFile(new URL("../supabase/migrations/" + file, import.meta.url),"utf8"));
     }
     await db.query("insert into auth.users values ($1,'{}'),($2,'{}')",[admin,user]);
@@ -116,11 +116,11 @@ test("catalog schema, capacity, relations and authorization", async t => {
       const snapshot=async()=>(await db.query('select public.catalog_snapshot_metadata() data')).rows[0].data;
       const initial=await snapshot(),p=initial.products.find(p=>p.id==='P1');
       const write=async(product,revision)=>(await db.query("select public.catalog_apply_metadata($1,'[]',$2,'[]',$3) data",[JSON.stringify([product]),JSON.stringify(initial.categories),revision])).rows[0].data;
-      const urls={urlUS:'https://www.amazon.com/dp/B012345678',urlCA:'https://www.amazon.ca/dp/B087654321'};
+      const urls={urlShortUS:'https://amzn.to/us-test',urlShortCA:'https://amzn.to/ca-test',urlUS:'https://www.amazon.com/dp/B012345678',urlCA:'https://www.amazon.ca/dp/B087654321'};
       const saved=await write({...p,...urls},initial.revision);
-      assert.equal(saved.products.find(p=>p.id==='P1').urlCA,urls.urlCA);
-      const legacy={...p};delete legacy.urlUS;delete legacy.urlCA;
-      const preserved=await write(legacy,saved.revision);assert.equal(preserved.products.find(p=>p.id==='P1').urlUS,urls.urlUS);
+      assert.equal(saved.products.find(p=>p.id==='P1').urlCA,urls.urlCA);assert.equal(saved.products.find(p=>p.id==='P1').urlShortCA,urls.urlShortCA);
+      const legacy={...p};delete legacy.urlUS;delete legacy.urlCA;delete legacy.urlShortUS;delete legacy.urlShortCA;
+      const preserved=await write(legacy,saved.revision);assert.equal(preserved.products.find(p=>p.id==='P1').urlUS,urls.urlUS);assert.equal(preserved.products.find(p=>p.id==='P1').urlShortUS,urls.urlShortUS);
     });
     await t.test("daily clicks accumulate, test clicks and drafts are excluded, and browser roles cannot forge analytics",async()=>{
       const click=async(id,count)=>(await db.query('select public.product_click_outbound($1,$2) as url',[id,count])).rows[0].url;
