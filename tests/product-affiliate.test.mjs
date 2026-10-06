@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import {productDestination,validAmazonFullLink} from '../lib/product-affiliate.ts';
 import {seedProducts,validateProduct,exportCsv,importCsv} from '../lib/catalog.ts';
 const pair={...seedProducts[0],urlUS:'https://www.amazon.com/dp/B012345678?th=1&tag=wrong',urlCA:'https://www.amazon.ca/dp/B087654321?th=2&tag=wrong'};
-test('country routing preserves the explicitly configured product and parameters and replaces tags',()=>{
+test('country routing preserves the explicitly configured product and parameters without editing supplied tags',()=>{
  for(const [country,host,asin,tag] of [['CA','www.amazon.ca','B087654321','smartnetwe06a-20'],['US','www.amazon.com','B012345678','smartnetweb0a-20'],[null,'www.amazon.com','B012345678','smartnetweb0a-20']]){
- const u=new URL(productDestination(pair,country));assert.equal(u.hostname,host);assert.ok(u.pathname.endsWith(asin));assert.equal(u.searchParams.get('tag'),tag);assert.ok(u.searchParams.has('th'));
+ const u=new URL(productDestination(pair,country));assert.equal(u.hostname,host);assert.ok(u.pathname.endsWith(asin));assert.equal(u.searchParams.get('tag'),'wrong');assert.equal(productDestination(pair,country),country==='CA'?pair.urlCA:pair.urlUS);assert.ok(u.searchParams.has('th'));
  }
  assert.equal(productDestination({...pair,urlCA:''},'CA'),null);
  assert.equal(validateProduct(pair,[]),'');

@@ -24,7 +24,7 @@ function StoreMark({ store }: { store: string }) {
 function Modal({ title, children, onClose }: { title: string; children: React.ReactNode; onClose: () => void }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => { ref.current?.showModal(); }, []);
-  return <dialog className="admin-modal" ref={ref} onCancel={event => { event.preventDefault(); onClose(); }} onClick={event => { if (event.target === event.currentTarget) onClose(); }}><div className="admin-modal-heading"><h2>{title}</h2><button onClick={onClose} aria-label="Close dialog"><Icon name="close"/></button></div>{children}</dialog>;
+  return <dialog className="admin-modal" aria-label={title} ref={ref} onCancel={event => { event.preventDefault(); onClose(); }} onClick={event => { if (event.target === event.currentTarget) onClose(); }}><div className="admin-modal-heading"><h2>{title}</h2><button onClick={onClose} aria-label="Close dialog"><Icon name="close"/></button></div>{children}</dialog>;
 }
 async function download(products: Product[], format: "xlsx" | "csv") {
   const embedded = await embedProductImages(products, format === "xlsx");
@@ -57,6 +57,7 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
   const [draft, setDraft] = useState<Product | null>(null);
   const [dirty, setDirty] = useState(false);
   const [error, setError] = useState("");
+  const [saveResult,setSaveResult]=useState<{title:string;message:string;error:boolean}|null>(null);
   const [notice, setNotice] = useState<{ message: string; error: boolean } | null>(null);
   const [preview, setPreview] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -149,15 +150,22 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
     finally { setExporting(false); }
   }
   async function save(event: React.FormEvent) {
-    event.preventDefault(); if (!editor) return;
+    event.preventDefault(); if (!editor||saving||loading) return;
+    const invalid=event.currentTarget.querySelector<HTMLInputElement>(":invalid");
+    if(invalid){const message=invalid.validationMessage;setError(message);setSaveResult({title:"Check product details",message,error:true});return;}
+    const operation=isNew?"added":"updated";
+    const failed=(message:string)=>{setError(message);setSaveResult({title:"Product could not be saved",message,error:true});};
     const product = { ...editor, name: editor.name.trim(), code: editor.code.trim().toUpperCase(), url: (editor.store==="Amazon"?editor.urlUS?.trim():"")||editor.url.trim(), urlUS:editor.urlUS?.trim(),urlCA:editor.urlCA?.trim(), brand: editor.brand.trim(), asin: editor.asin.trim().toUpperCase(), updated: new Date().toISOString() };
-    const problem = validateProduct(product, products, categoryNames); if (problem) { setError(problem); return; }
+    const problem = validateProduct(product, products, categoryNames); if (problem) { failed(problem); return; }
     const next = isNew ? [product, ...products] : products.map(item => item.id === product.id ? product : item);
-    if (await persist(next, `${product.name} ${isNew ? "added" : "updated"}${product.status === "Published" ? " and visible on your storefront" : " as " + product.status.toLowerCase()}.`)) {
-      setDraft(product); setDirty(false); setError("");
-      if (isNew) { clearFilters(); setPage(1); }
-    } else setError("Your changes were not saved. Check the notification above for details.");
+    const message=`${product.name} was ${operation} successfully${product.status==="Published"?" and is visible on your storefront":" as "+product.status.toLowerCase()}.`;
+    if(await persist(next,message,categoryNames,failed)){
+      setDraft(product);setDirty(false);setError("");
+      if(isNew){clearFilters();setPage(1);}
+      setSaveResult({title:operation==="added"?"Product added":"Product updated",message,error:false});
+    }
   }
+
   async function upload(file?: File) {
     if (!file || !editor) return;
     if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) { setError("Choose a JPG, PNG, or WebP image."); return; }
@@ -248,10 +256,10 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
       </>}
     </main>
     {editor && <><button className="admin-editor-backdrop" aria-label="Close product editor" onClick={closeEditor}/><aside className="admin-editor" aria-label={isNew ? "Add product" : "Edit product"}><div className="admin-editor-title"><div><span className="admin-editor-eyebrow">YOUR NEXT GOOD FIND</span><h2>{isNew ? "Add Product" : "Edit Product"}</h2></div><button onClick={closeEditor} aria-label="Close product editor"><Icon name="close" size={20}/></button></div>
-      <form onSubmit={save} className="admin-form"><fieldset className="admin-editor-fields" disabled={saving || loading}>
+      <form noValidate onSubmit={save} className="admin-form"><fieldset className="admin-editor-fields" disabled={saving || loading}>
         <label>Product Name <span>*</span><input ref={nameInput} required maxLength={120} value={editor.name} placeholder="e.g. Wireless Earbuds" onChange={event => update("name", event.target.value)}/></label>
         <label>Product Code <span>*</span><input required maxLength={24} value={editor.code} placeholder="T001" onChange={event => update("code", event.target.value.toUpperCase())}/></label>
-        {editor.store==="Amazon"&&<><label>US full affiliate link<input type="url" value={editor.urlUS||""} placeholder="https://www.amazon.com/dp/ASIN?tag=smartnetweb0a-20" onChange={event=>update("urlUS",event.target.value)}/></label><label>Canada full affiliate link<input type="url" value={editor.urlCA||""} placeholder="https://www.amazon.ca/dp/ASIN?tag=smartnetwe06a-20" onChange={event=>update("urlCA",event.target.value)}/></label><p>Enter both country-specific product URLs to enable IP-based routing. Tags are applied automatically. Unknown countries use US. Existing links remain in use until both URLs are saved.</p></>}
+        {editor.store==="Amazon"&&<><label>US full affiliate link<input type="url" value={editor.urlUS||""} placeholder="https://www.amazon.com/dp/ASIN?tag=smartnetweb0a-20" onChange={event=>update("urlUS",event.target.value)}/></label><label>Canada full affiliate link<input type="url" value={editor.urlCA||""} placeholder="https://www.amazon.ca/dp/ASIN?tag=smartnetwe06a-20" onChange={event=>update("urlCA",event.target.value)}/></label><p>Enter both country-specific product URLs to enable IP-based routing. Your tracking IDs and URL parameters are preserved exactly. Unknown countries use US. Existing links remain in use until both URLs are saved.</p></>}
         {editor.store!=="Amazon"&&<label>Store product link <span>*</span><input required type="url" value={editor.url} placeholder="https://..." onChange={event => update("url", event.target.value)}/></label>}
         <label>Store <span>*</span><select value={editor.store} onChange={event => update("store", event.target.value)}>{STORES.map(item => <option key={item}>{item}</option>)}</select></label>
         <div className="admin-form-pair"><label>Category<select value={editor.category} onChange={event => update("category", event.target.value)}>{categoryNames.map(item => <option key={item}>{item}</option>)}</select></label><label>Product Set<SetPicker products={products} category={editor.category} value={editor.set} onChange={number => update("set", number)}/></label></div>
@@ -280,6 +288,7 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
         <button className="admin-button primary" disabled={saving || loading} onClick={() => void confirmImport()}>{saving ? "Importing..." : "Import products"}</button>
       </div>
     </Modal>}
+    {saveResult&&<Modal title={saveResult.title} onClose={()=>setSaveResult(null)}><p className={`admin-notice ${saveResult.error?"admin-notice-error":""}`} role={saveResult.error?"alert":"status"}>{saveResult.message}</p>{saveResult.error&&<p className="admin-modal-note">Your entries are still in the editor. Review the message and try saving again.</p>}<div className="admin-modal-actions"><button type="button" autoFocus className="admin-button primary" onClick={()=>setSaveResult(null)}>OK</button></div></Modal>}
     {moveOpen && <Modal title="Move products to a set" onClose={() => setMoveOpen(false)}><p>Choose a category and set for {selectedProducts.length} selected products.</p><div className="admin-move-fields"><label>Category<select value={moveCategory} onChange={event => { setMoveCategory(event.target.value as Category); setMoveSet(productSets(products, event.target.value)[0]); }}>{categoryNames.map(item => <option key={item}>{item}</option>)}</select></label><label>Product Set<SetPicker products={products} category={moveCategory} value={moveSet} onChange={setMoveSet}/></label></div><div className="admin-modal-actions"><button className="admin-button" onClick={() => setMoveOpen(false)}>Cancel</button><button className="admin-button primary" onClick={() => { setMoveOpen(false); guard(async () => { if (await persist(products.map(product => selected.includes(product.id) ? { ...product, category: moveCategory, set: moveSet, updated: new Date().toISOString() } : product), `${selectedProducts.length} products moved to ${moveCategory} Set ${String(moveSet).padStart(2, "0")}.`)) { setSelected([]); setDirty(false); } }); }}>Move products</button></div></Modal>}
   </div>;
 }
