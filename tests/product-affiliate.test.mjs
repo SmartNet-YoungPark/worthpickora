@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {productDestination,validAmazonFullLink} from '../lib/product-affiliate.ts';
+import {productDestination,validAmazonFullLink,validAmazonShortLink} from '../lib/product-affiliate.ts';
 import {seedProducts,validateProduct,exportCsv,importCsv} from '../lib/catalog.ts';
 const pair={...seedProducts[0],urlUS:'https://www.amazon.com/dp/B012345678?th=1&tag=wrong',urlCA:'https://www.amazon.ca/dp/B087654321?th=2&tag=wrong'};
 test('country routing preserves the explicitly configured product and parameters without editing supplied tags',()=>{
@@ -40,4 +40,12 @@ test('short links are separate per country and full links always take priority',
  assert.equal(validateProduct({...p,urlUS:'',urlCA:''},[]),'');
  assert.ok(validateProduct({...p,urlShortCA:'javascript:alert(1)'},[]));
  const [saved]=importCsv(exportCsv([p]),[]);assert.equal(saved.urlShortUS,p.urlShortUS);assert.equal(saved.urlShortCA,p.urlShortCA);
+});
+
+test('link.amazon short links preserve the exact country-specific URL',()=>{
+ const ca='https://link.amazon/ExampleCode?tag=original-ca-20';
+ assert.equal(validAmazonShortLink(ca),true);
+ assert.equal(productDestination({...pair,urlCA:'',urlShortCA:ca},'CA'),ca);
+ assert.equal(validateProduct({...pair,urlCA:'',urlShortCA:ca},[]),'');
+ for(const value of ['https://link.amazon','https://link.amazon.evil.test/code','http://link.amazon/code','https://user@link.amazon/code'])assert.equal(validAmazonShortLink(value),false);
 });

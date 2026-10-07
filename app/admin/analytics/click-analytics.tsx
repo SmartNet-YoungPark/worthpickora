@@ -20,6 +20,8 @@ export default function ClickAnalytics(){
   const [selected,setSelected]=useState("");const [limit,setLimit]=useState(50);
   const [deletion,setDeletion]=useState<({period:Period;date:string;start:string;end:string})|null>(null);
   const [deleting,setDeleting]=useState(false);const [deleteError,setDeleteError]=useState("");const [deleteNotice,setDeleteNotice]=useState("");
+  const [pageViews,setPageViews]=useState<{view_date:string;source:string;device:string;views:number}[]>([]);
+  const [pageViewsAvailable,setPageViewsAvailable]=useState(false);
   async function confirmDeletion(){
     if(!deletion||deleting)return;
     setDeleting(true);setDeleteError("");setDeleteNotice("");
@@ -34,7 +36,7 @@ export default function ClickAnalytics(){
   useEffect(()=>{
     const controller=new AbortController();
     fetch("/api/admin/analytics?"+new URLSearchParams(range),{cache:"no-store",signal:controller.signal})
-      .then(async response=>{const data=await response.json();if(controller.signal.aborted)return;if(!response.ok)throw new Error(data.error);setRows(data.rows);setStores(data.stores);setCategories(data.categories);setError("");})
+      .then(async response=>{const data=await response.json();if(controller.signal.aborted)return;if(!response.ok)throw new Error(data.error);setRows(data.rows);setPageViews(data.pageViews||[]);setPageViewsAvailable(data.pageViewsAvailable===true);setStores(data.stores);setCategories(data.categories);setError("");})
       .catch(problem=>{if(!controller.signal.aborted&&problem.name!=="AbortError")setError(problem.message||"Could not load analytics.");})
       .finally(()=>{if(!controller.signal.aborted)setBusy(false);});
     return ()=>controller.abort();
@@ -50,6 +52,7 @@ export default function ClickAnalytics(){
   const current=filtered.filter(row=>row.click_date>=range.start&&row.click_date<=range.end);
   const previous=filtered.filter(row=>row.click_date<range.start);
   const total=current.reduce((sum,row)=>sum+Number(row.clicks),0);
+  const loads=pageViews.filter(row=>row.view_date>=range.start&&row.view_date<=range.end&&(!source||row.source===source)&&(!device||row.device===device)).reduce((sum,row)=>sum+Number(row.views),0);
   const prior=previous.reduce((sum,row)=>sum+Number(row.clicks),0);
   const ranking=rankClicks(current,by);
   const active=ranking.find(item=>item.key===selected)||ranking[0];
@@ -71,7 +74,7 @@ export default function ClickAnalytics(){
   const comparison=prior?(total===prior?"Unchanged":(total>prior?"Up ":"Down ")+Math.abs((total-prior)/prior*100).toFixed(1)+"%")+" vs previous "+days+" days.":total?"No prior-period clicks; percentage change is not available.":"No clicks in either period.";
   return <main className="analytics-page">
     <header><div><p className="analytics-eyebrow">WORTHPICKORA ADMIN</p><h1>Click analytics</h1><p>Store visits from product images and View on Store buttons. Toronto time.</p></div><nav><Link href="/admin/products">Manage products</Link><Link href="/">Landing page</Link></nav></header>
-    <p className="analytics-exclusion">Your clicks are excluded while signed in as administrator in this browser. These are click totals, not unique customers or sales.</p>
+    <p className="analytics-exclusion">Your clicks are excluded while signed in as administrator in this browser. Total clicks counts landing page loads from when tracking was enabled. Product clicks counts product-card store visits. Neither metric counts unique customers or sales.</p>
     <details className="analytics-exclusion"><summary>About source and device tracking</summary><p>Source uses utm_source or the referring website, retained for 30 minutes in this browser. Share links ending in ?utm_source=youtube or ?utm_source=tiktok for clearer attribution. Without this information, visits are Direct / Unknown. Device is estimated from browser headers; some tablets may appear as PC. Earlier records remain Unknown.</p></details>
     <form className="analytics-filters" onSubmit={event=>{event.preventDefault();if(!validRange(start,end)){setError("Choose a valid range of up to 366 days.");return;}setBusy(true);setSelected("");setLimit(50);setRange({start,end});setRefresh(value=>value+1);}}>
       <label>From<input type="date" value={start} onChange={e=>changeDates(e.target.value,end)} required/></label>
@@ -85,14 +88,14 @@ export default function ClickAnalytics(){
       <label>Device<select value={device} onChange={e=>{setDevice(e.target.value);setSelected("");setLimit(50);}}><option value="">All devices</option>{CLICK_DEVICES.map(name=><option key={name}>{name}</option>)}</select></label>
     </form>
     <div className="analytics-tools"><div className="analytics-small-buttons" role="group" aria-label="Trend interval"><strong>Trend interval</strong>{PERIODS.map(value=><button key={value} type="button" aria-pressed={period===value} onClick={()=>{setPeriod(value);setLimit(50);}}>{PERIOD_LABELS[value]}</button>)}</div>
-      <div className="analytics-small-buttons analytics-delete-buttons" role="group" aria-label="Delete product click statistics"><strong>Delete statistics</strong>{PERIODS.map(value=><button key={value} type="button" disabled={busy||deleting||!validRange(end,end)} onClick={()=>{setDeleteError("");setDeleteNotice("");setDeletion({period:value,date:end,...calendarRange(end,value)});}}>Delete {PERIOD_LABELS[value]}</button>)}</div>
-      <p>Delete uses the calendar day / week / month / year containing the Through date ({end || "choose a date"}). Weeks begin Monday. All product click records in that period are included, regardless of filters. Products and app-guide statistics are kept.</p>
+      <div className="analytics-small-buttons analytics-delete-buttons" role="group" aria-label="Delete product click statistics"><strong>Delete product click statistics</strong>{PERIODS.map(value=><button key={value} type="button" disabled={busy||deleting||!validRange(end,end)} onClick={()=>{setDeleteError("");setDeleteNotice("");setDeletion({period:value,date:end,...calendarRange(end,value)});}}>Delete {PERIOD_LABELS[value]}</button>)}</div>
+      <p>Delete uses the calendar day / week / month / year containing the Through date ({end || "choose a date"}). Weeks begin Monday. All product click records in that period are included, regardless of filters. Landing page loads, products and app-guide statistics are kept.</p>
     </div>
     {deletion&&<section className="analytics-delete-confirm" role="alertdialog" aria-labelledby="analytics-delete-title" aria-describedby="analytics-delete-description"><h2 id="analytics-delete-title">Permanently delete {PERIOD_LABELS[deletion.period].toLowerCase()} statistics?</h2><p id="analytics-delete-description"><strong>{deletion.start} through {deletion.end} (Toronto time)</strong><br/>All products, stores, categories, sources and devices in this period. This may extend beyond the displayed report. This cannot be undone.</p><div><button type="button" disabled={deleting} onClick={()=>{setDeletion(null);setDeleteError("");}}>Cancel</button><button type="button" disabled={deleting} onClick={()=>void confirmDeletion()}>{deleting?"Deleting…":"Delete permanently"}</button></div>{deleteError&&<p className="analytics-error" role="alert">{deleteError}</p>}</section>}
     {deleteNotice&&<p className="analytics-delete-notice" role="status">{deleteNotice}</p>}
     <p className="analytics-applied-range" role="status">{busy?"Loading selected dates…":`Reporting period: ${range.start} through ${range.end} (Toronto time).`} Dates apply automatically. Daily / Weekly / Monthly / Yearly changes the chart grouping only. Current interval: {PERIOD_LABELS[period]}.</p>
     {error&&<p className="analytics-error" role="alert">{error}</p>}
-    {!error&&!busy&&<><section className="analytics-stats"><div><span>Total clicks</span><strong>{total.toLocaleString()}</strong></div><div><span>Products clicked</span><strong>{new Set(current.filter(row=>Number(row.clicks)>0).map(row=>row.product_id)).size}</strong><small>Different products clicked in this date range</small></div><div><span>Previous equal period</span><strong>{prior.toLocaleString()}</strong></div></section>
+    {!error&&!busy&&<><section className="analytics-stats"><div><span>Total clicks</span><strong>{pageViewsAvailable?loads.toLocaleString():"Unavailable"}</strong><small>Landing page loads, including refreshes. Source/device filters apply; product/store/category filters do not.</small></div><div><span>Product clicks</span><strong>{total.toLocaleString()}</strong><small>Total product-card store-link clicks in this date range</small></div><div><span>Previous period product clicks</span><strong>{prior.toLocaleString()}</strong></div></section>
     <div className="analytics-charts"><section className="analytics-panel"><h2>Top 10 · {by}</h2><p>Hover, focus, or tap a bar to view its records.</p>{!ranking.length&&<p className="analytics-empty">No customer clicks for these filters yet.</p>}
       <div className="analytics-ranking">{ranking.map((item,index)=><button key={item.key} className={active?.key===item.key?"active":""} onMouseEnter={()=>{setSelected(item.key);setLimit(50);}} onFocus={()=>{setSelected(item.key);setLimit(50);}} onClick={()=>{setSelected(item.key);setLimit(50);}} aria-pressed={active?.key===item.key}><span>{index+1}. {item.label}</span><span className="analytics-bar-track"><i style={{width:(item.clicks/Math.max(1,ranking[0].clicks)*100)+"%"}}/></span><b>{item.clicks.toLocaleString()}</b></button>)}</div>
     </section><section className="analytics-panel analytics-detail" aria-label="Selected click records"><h2>{active?.label||"Click details"}</h2><p>{active?active.clicks.toLocaleString()+" clicks · "+detail.length+" daily records":"Select a ranked item"}</p>

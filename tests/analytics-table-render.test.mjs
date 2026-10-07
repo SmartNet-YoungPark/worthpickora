@@ -73,7 +73,7 @@ test('rendered analytics headers match separate ID, product, clicks and store ce
   assert.deepEqual(cells(daily,'td'),['T001product-1','Sample product','7','Amazon']);
 });
 
-test('changing date inputs applies the range and recalculates unique clicked products',()=>{
+test('changing date inputs applies the range and recalculates total product clicks',()=>{
   const today=analytics.torontoDate(),yesterday=analytics.shiftDate(today,-1);
   const base={product_code:'T001',product_name:'Sample',set_name:'Tech Set 01',category_name:'Tech',store_name:'Amazon',source:'YouTube',device:'Mobile',clicks:1};
   const page=harness([
@@ -88,20 +88,23 @@ test('changing date inputs applies the range and recalculates unique clicked pro
     if(predicate(node))return node;
     for(const child of React.Children.toArray(node.props?.children)){const found=find(child,predicate);if(found)return found;}
   };
-  const count=html=>Number(html.match(/<span>Products clicked<\/span><strong>(\d+)<\/strong>/)?.[1]);
-  assert.equal(count(page.render().html),2);
+  page.values.set(22,[{view_date:today,source:"YouTube",device:"Mobile",views:9}]);
+  page.values.set(23,true);
+  const count=html=>Number(html.match(/<span>Product clicks<\/span><strong>(\d+)<\/strong>/)?.[1]);
+  assert.equal(count(page.render().html),4);
+  assert.ok(page.render().html.includes("<span>Total clicks</span><strong>9</strong>"));
   let tree=page.render().tree;
   find(tree,n=>n.type==='input'&&n.props.type==='date').props.onChange({target:{value:yesterday}});
   tree=page.render().tree;
   const through=find(tree,n=>n.type==='label'&&React.Children.toArray(n.props.children)[0]==='Through');
   find(through,n=>n.type==='input').props.onChange({target:{value:yesterday}});
   assert.deepEqual(JSON.parse(JSON.stringify(page.values.get(2))),{start:yesterday,end:yesterday});
-  assert.ok(!page.render().html.includes('<span>Products clicked</span>'),'old totals hidden while loading');
+  assert.ok(!page.render().html.includes('<span>Product clicks</span>'),'old totals hidden while loading');
   page.values.set(7,false);
   assert.equal(count(page.render().html),1);
   tree=page.render().tree;
   const label=find(tree,n=>n.type==='label'&&React.Children.toArray(n.props.children)[0]==='Through');
   find(label,n=>n.type==='input').props.onChange({target:{value:today}});
   page.values.set(7,false);
-  assert.equal(count(page.render().html),2);
+  assert.equal(count(page.render().html),4);
 });

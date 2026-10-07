@@ -6,7 +6,7 @@ import {catalogStorage} from "./server-catalog";
 import {torontoDate,validRange,type ClickRow} from "./click-analytics";
 const url=process.env.SUPABASE_URL||process.env.NEXT_PUBLIC_SUPABASE_URL;
 const key=process.env.SUPABASE_SECRET_KEY||process.env.SUPABASE_SERVICE_ROLE_KEY;
-async function rpc(name:string,body:object){
+export async function rpc(name:string,body:object){
   const headers:Record<string,string>={apikey:key!,"Content-Type":"application/json"};
   if(!key!.startsWith("sb_secret_"))headers.Authorization="Bearer "+key;
   const response=await fetch(new URL("/rest/v1/rpc/"+name,url),{method:"POST",headers,body:JSON.stringify(body),cache:"no-store"});
