@@ -12,9 +12,9 @@ try{
  const unauth=await fetch(base+'/admin/walmart-flyer',{redirect:'manual'});assert.equal(unauth.status,307);
  assert.equal((await fetch(base+'/api/admin/walmart-flyer/card-01.jpg')).status,401);
  const headers={cookie:`${SESSION_COOKIE}=${createSession(secret,hash)}`};
- const html=await(await fetch(base+'/admin/walmart-flyer',{headers})).text();assert.ok(html.includes('Walmart PDF cards'));assert.ok(html.includes('51053321'));assert.ok(html.replace(/<!--.*?-->/g,'').includes('26 pages'));assert.ok(html.includes('$6.34'));
- for(const file of ['card-01.jpg','card-14.jpg','page-01.jpg','page-26.jpg']){const r=await fetch(base+'/api/admin/walmart-flyer/'+file,{headers});assert.equal(r.status,200);assert.equal(r.headers.get('content-type'),'image/jpeg');assert.ok(r.headers.get('cache-control').includes('private'));assert.ok((await r.arrayBuffer()).byteLength>1000);}
+ const html=await(await fetch(base+'/admin/walmart-flyer',{headers})).text();assert.ok(html.includes('Walmart product cards'));assert.ok(html.includes('Rollback Set 01'));assert.ok(html.includes('Rollback Set 02'));assert.ok(!html.includes('Original PDF pages'));assert.ok(!html.includes('View source'));assert.equal((html.match(/class="slide-card product-card"/g)||[]).length,14);assert.ok(html.includes('Previous product set'));assert.ok(html.includes('Next products in Rollback Set 01'));
+ for(const file of ['product-01.jpg','product-14.jpg']){const r=await fetch(base+'/api/admin/walmart-flyer/'+file,{headers});assert.equal(r.status,200);assert.equal(r.headers.get('content-type'),'image/jpeg');assert.ok(r.headers.get('cache-control').includes('private'));assert.ok((await r.arrayBuffer()).byteLength>1000);}
  assert.equal((await fetch(base+'/api/admin/walmart-flyer/not-allowed.jpg',{headers})).status,404);
- const trace=JSON.parse(await readFile('.next/server/app/api/admin/walmart-flyer/[file]/route.js.nft.json','utf8'));assert.equal(new Set(trace.files.filter(file=>file.includes('assets/admin/walmart-flyer/')&&file.endsWith('.jpg'))).size,40);
- console.log('Admin authentication, 14 cards, 26 pages, asset allowlist and deployment file tracing passed.');
+ const trace=JSON.parse(await readFile('.next/server/app/api/admin/walmart-flyer/[file]/route.js.nft.json','utf8'));assert.equal(new Set(trace.files.filter(file=>file.includes('assets/admin/walmart-flyer/')&&file.endsWith('.jpg'))).size,54);
+ console.log('Admin authentication, 14 landing-style cards, 10 per set, asset allowlist and deployment file tracing passed.');
 }finally{child.kill();}

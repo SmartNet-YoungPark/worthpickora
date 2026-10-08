@@ -3,7 +3,7 @@ import {join} from "node:path";
 import {isAdmin} from "@/lib/admin-auth";
 import flyer from "@/lib/walmart-flyer.json";
 export const runtime="nodejs";
-const allowed=new Set([...Array.from({length:flyer.pageCount},(_,i)=>`page-${String(i+1).padStart(2,"0")}.jpg`),...flyer.items.map(item=>item.id+".jpg")]);
+const allowed=new Set([...Array.from({length:flyer.pageCount},(_,i)=>`page-${String(i+1).padStart(2,"0")}.jpg`),...flyer.items.flatMap(item=>[item.id+".jpg","product-"+item.id.slice(-2)+".jpg"])]);
 export async function GET(_request:Request,{params}:{params:Promise<{file:string}>}){
  const headers={"Cache-Control":"private, no-store","X-Robots-Tag":"noindex, nofollow"};
  if(!await isAdmin())return new Response("Sign in required",{status:401,headers});

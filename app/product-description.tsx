@@ -45,7 +45,7 @@ export default function ProductDescription({ description, preview = false, name 
   }, [open, description, preview, sale, promoCode]);
 
   if (!description.trim()&&!promoCode.trim()) return null;
-  const content = <>{sale&&<strong className="sale-notice-heading">⚠ Sale information</strong>}<p>{description}</p>{sale&&promoCode&&<PromoCode code={promoCode}/>} {sale&&<p className="sale-notice-warning">Warning: offers can change or expire. Check eligibility and the final price at the store before ordering.</p>}</>;
+  const content = <>{sale&&<strong className="sale-notice-heading">⚠ Sale information</strong>}<p style={{whiteSpace:"pre-line"}}>{description}</p>{sale&&promoCode&&<PromoCode code={promoCode}/>} {sale&&<p className="sale-notice-warning">Warning: offers can change or expire. Check eligibility and the final price at the store before ordering.</p>}</>;
   if (preview) return <div className={`product-description-panel is-preview ${sale?"has-sale":""}`}>{content}</div>;
   return <div className="product-description-anchor" ref={anchor}>
     <button type="button" className={`product-description-trigger ${sale?"has-sale":""}`} aria-label={`${sale?"Sale information and warning for":"Details about"} ${name}`} aria-expanded={open} aria-controls={open ? id : undefined} onClick={() => setOpen(value => !value)}><span aria-hidden="true">?</span>{sale&&<b className="card-sale-mark" aria-hidden="true">SALE</b>}</button>
