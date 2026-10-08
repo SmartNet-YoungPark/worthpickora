@@ -10,7 +10,7 @@ import "./product-slider.css";
 function Arrow({direction}:{direction:"left"|"right"|"up"|"down"}){
   return <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" style={{transform:`rotate(${{right:0,down:90,left:180,up:270}[direction]}deg)`}}><path d="m9 5 7 7-7 7"/></svg>;
 }
-export default function ProductSlider({name,products,saved,onSave,tone,promotionCodes,promotionDiscounts,promotionSummaries,promotionStatuses,detailsOnly=false,showProductCode=false,saleFooters}:{showProductCode?:boolean;saleFooters?:Record<string,{price:string;previousPrice:string;savings:string}>;detailsOnly?:boolean;name:string;products:Product[];saved:string[];onSave:(id:string)=>void;tone:number;promotionCodes?:Record<string,string>;promotionDiscounts?:Record<string,{percent:number;label:string}>;promotionStatuses?:Record<string,string>;promotionSummaries?:Record<string,DiscountDetail>}){
+export default function ProductSlider({name,products,saved,onSave,tone,promotionCodes,promotionDiscounts,promotionSummaries,promotionStatuses,detailsOnly=false,showProductCode=false,saleFooters,hideSetHeading=false}:{hideSetHeading?:boolean;showProductCode?:boolean;saleFooters?:Record<string,{price:string;previousPrice:string;savings:string;promotionType?:string}>;detailsOnly?:boolean;name:string;products:Product[];saved:string[];onSave:(id:string)=>void;tone:number;promotionCodes?:Record<string,string>;promotionDiscounts?:Record<string,{percent:number;label:string}>;promotionStatuses?:Record<string,string>;promotionSummaries?:Record<string,DiscountDetail>}){
   const track=useRef<HTMLDivElement>(null);
   const [edges,setEdges]=useState({start:true,end:true});
   const items=products.slice(0,10);
@@ -35,7 +35,7 @@ export default function ProductSlider({name,products,saved,onSave,tone,promotion
   const palette=["#254d39","#853d19","#254b78","#603c83","#893850","#155c65"];
   const isTech=items[0]?.category==="Tech";
   return <div className="product-set-slider" data-product-set style={{"--set-background":isTech?`hsl(${(tone*137.508+205)%360} 65% 90%)`:palette[tone%palette.length],"--set-title-color":isTech?"#243b45":"#fff","--set-block-background":isTech?`hsl(${(tone*137.508+205)%360} 65% 90%)`:"transparent","--card-background":`hsl(${(tone*137.508+205)%360} 55% 96%)`} as CSSProperties}>
-    <div className="slider-set-heading"><h3>{name}</h3><small>{items.length} products</small></div>
+    {!hideSetHeading&&<div className="slider-set-heading"><h3>{name}</h3><small>{items.length} products</small></div>}
     <div className="slider-viewport">
       <div className="product-slider-track" id={id} ref={track} tabIndex={0} role="region" aria-label={name+" products; swipe left or right"}>
         {items.map(product=><article className={(promotionCodes!==undefined?"slide-card product-card promotion-card":"slide-card product-card")+(saleFooters?.[product.id]?" has-sale-footer":"")} key={product.id}>
@@ -46,7 +46,7 @@ export default function ProductSlider({name,products,saved,onSave,tone,promotion
             {product.image?<Image src={product.image} alt={product.name} width={400} height={400} unoptimized className="slide-product-image"/>:product.photo!==null?<svg className="slide-product-image" viewBox="0 0 150 132" preserveAspectRatio="xMidYMid meet" role="img" aria-label={product.name}><svg width="150" height="132" viewBox={`${[126,327,526,727,925][product.photo]??126} ${product.photo===0?461:460} 150 132`} overflow="hidden"><image href="/products-reference.png" width="1536" height="1024"/></svg></svg>:<span className="slide-image-placeholder">Explore on {product.store} ↗</span>}
           </a>
           {promotionSummaries?.[product.id]&&<div className="promotion-price-block"><div className="promotion-coupon-line"><strong>{promotionSummaries[product.id].headline}</strong><span>{promotionSummaries[product.id].offerCaption}</span></div>{typeof promotionSummaries[product.id].salePrice==="number"&&<div className="promotion-selling-price"><span>${promotionSummaries[product.id].salePrice!.toFixed(2)}</span>{typeof promotionSummaries[product.id].regularPrice==="number"&&promotionSummaries[product.id].regularPrice!>promotionSummaries[product.id].salePrice!&&<small>List: <s>${promotionSummaries[product.id].regularPrice!.toFixed(2)}</s></small>}</div>}</div>}
-          {saleFooters?.[product.id]&&<div className="slide-sale-footer" aria-label={`Sale information for ${product.name}`}><div><strong>{saleFooters[product.id].price}</strong><del>{saleFooters[product.id].previousPrice}</del></div><b>{saleFooters[product.id].savings}</b></div>}
+          {saleFooters?.[product.id]&&<div className="slide-sale-footer" aria-label={`Sale information for ${product.name}`}>{saleFooters[product.id].promotionType&&<span className="slide-promotion-type">{saleFooters[product.id].promotionType}</span>}<div><strong>{saleFooters[product.id].price}</strong><del>{saleFooters[product.id].previousPrice}</del></div><b>{saleFooters[product.id].savings}</b></div>}
           {promotionStatuses?.[product.id]&&<span className={`promotion-status-badge is-${promotionStatuses[product.id]}`} aria-label={`Promotion ${promotionStatuses[product.id]}`}><span>{promotionStatuses[product.id]==="check"?"Check":promotionStatuses[product.id]}</span></span>}
         </article>)}
       </div>
