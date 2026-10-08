@@ -21,12 +21,13 @@ Currency: CAD
 Flyer dates: ${flyer.startDate} to ${flyer.endDate}
 Status: ${status}
 Selected varieties, sizes and store availability apply. UPC/GTIN and exact cross-store matches are not verified. Source: supplied flyer, page ${item.page}.`}));
+ const saleFooters=Object.fromEntries(items.map(item=>[item.id,{price:money(item.salePrice)+(item.unit==="lb"?"/lb":""),previousPrice:money(item.regularPrice)+(item.unit==="lb"?"/lb":""),savings:`Save ${money(item.savings)}${item.unit==="lb"?"/lb":""}`} ]));
  const sets=Array.from({length:Math.ceil(products.length/10)},(_,i)=>products.slice(i*10,i*10+10));
  return <main className="walmart-admin"><nav><Link href="/admin/products">Products</Link><Link href="/admin/store-apps">Store apps & offers</Link></nav>
  <header><div><p className="walmart-kicker">ADMIN PREVIEW / CANADA</p><h1>Walmart product cards</h1><p>{flyer.startDate} - {flyer.endDate} / {status}</p></div></header>
  <div className="walmart-controls"><label>Find a product or code<input type="search" value={query} onChange={event=>setQuery(event.target.value)} placeholder="Name, code or size"/></label><span role="status">{items.length} products / up to 10 per set</span></div>
  <p className="walmart-details-hint">Select ? for prices, savings, specifications and promotion conditions. These 14 cards are verified from the supplied flyer, not a live stock check.</p>
- <section aria-label="Walmart flyer product sets">{sets.map((set,index)=><ProductSlider key={`${query}-${index}`} name={`Rollback Set ${String(index+1).padStart(2,"0")}`} products={set} saved={[]} onSave={()=>{}} tone={index} detailsOnly/>)}</section>
+ <section aria-label="Walmart flyer product sets">{sets.map((set,index)=><ProductSlider key={`${query}-${index}`} name={`Rollback Set ${String(index+1).padStart(2,"0")}`} products={set} saved={[]} onSave={()=>{}} tone={index} detailsOnly showProductCode saleFooters={saleFooters}/>)}</section>
  {!items.length&&<p>No matching products.</p>}<SetNavigation/>
  </main>;
 }
