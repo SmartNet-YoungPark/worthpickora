@@ -16,7 +16,7 @@ export default async function StoreAppsPage() {
   catch (problem) { error = problem instanceof Error ? problem.message : "Store app settings unavailable."; }
   const stores=[...new Set([...STORE_APPS.map(app=>app.store),...links.map(link=>link.store)])];
   return <main className="store-app-admin"><nav><Link href="/admin/products">← Products</Link><Link href="/admin/analytics">Product analytics</Link><Link href="/">Landing page</Link></nav>
-    <h1>Store apps & offers</h1><p>Official app guides help shoppers find retailer apps. Product images keep their existing affiliate destinations.</p>
+    <h1>Store apps & offers</h1><p><Link href="/admin/walmart-flyer">View Walmart PDF product cards ?</Link></p><p>Official app guides help shoppers find retailer apps. Product images keep their existing affiliate destinations.</p>
     {error && <p role="alert" className="store-app-error">{error}</p>}
     <section id="promotion-previews" aria-labelledby="promotion-preview-title">
       <h2 id="promotion-preview-title">Store promotion previews</h2>

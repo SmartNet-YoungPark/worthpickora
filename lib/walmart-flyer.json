@@ -1,0 +1,164 @@
+{
+  "title": "Walmart Canada Thanksgiving flyer",
+  "market": "CA",
+  "currency": "CAD",
+  "startDate": "2026-10-08",
+  "endDate": "2026-10-14",
+  "pageCount": 26,
+  "items": [
+    {
+      "id": "card-01",
+      "storeCode": "51053321",
+      "name": "Maple Leaf Prime chicken breasts",
+      "size": "Boneless, skinless; 3 pieces; priced per lb",
+      "regularPrice": 7.43,
+      "salePrice": 6.34,
+      "savings": 1.09,
+      "unit": "lb",
+      "page": 1
+    },
+    {
+      "id": "card-02",
+      "storeCode": "9290300",
+      "name": "Stove Top stuffing mix",
+      "size": "120g; selected varieties",
+      "regularPrice": 2.47,
+      "salePrice": 1.27,
+      "savings": 1.2,
+      "unit": "each",
+      "page": 1
+    },
+    {
+      "id": "card-03",
+      "storeCode": "50631204",
+      "name": "Classico pasta sauce",
+      "size": "Selected varieties and sizes",
+      "regularPrice": 3.47,
+      "salePrice": 2.97,
+      "savings": 0.5,
+      "unit": "each",
+      "page": 1
+    },
+    {
+      "id": "card-04",
+      "storeCode": "30795316",
+      "name": "Cracker Barrel cheese",
+      "size": "400g block or 320g shreds; selected varieties",
+      "regularPrice": 6.68,
+      "salePrice": 5.98,
+      "savings": 0.7,
+      "unit": "each",
+      "page": 1
+    },
+    {
+      "id": "card-05",
+      "storeCode": "30517017",
+      "name": "Sealtest cream / International Delight creamer",
+      "size": "425mL; selected varieties",
+      "regularPrice": 3.87,
+      "salePrice": 2.97,
+      "savings": 0.9,
+      "unit": "each",
+      "page": 1
+    },
+    {
+      "id": "card-06",
+      "storeCode": "30385568",
+      "name": "Gay Lea butter",
+      "size": "454g; salted or unsalted",
+      "regularPrice": 7.96,
+      "salePrice": 4.97,
+      "savings": 2.99,
+      "unit": "each",
+      "page": 1
+    },
+    {
+      "id": "card-07",
+      "storeCode": "31625065",
+      "name": "Large white or brown eggs",
+      "size": "18-pack; selection varies by store",
+      "regularPrice": 7.24,
+      "salePrice": 6.28,
+      "savings": 0.96,
+      "unit": "pack",
+      "page": 1
+    },
+    {
+      "id": "card-08",
+      "storeCode": "9238876",
+      "name": "Pepsi",
+      "size": "12 x 355mL; selected varieties",
+      "regularPrice": 8.28,
+      "salePrice": 7.47,
+      "savings": 0.81,
+      "unit": "pack",
+      "page": 1
+    },
+    {
+      "id": "card-09",
+      "storeCode": "30784321",
+      "name": "Royale bathroom tissue",
+      "size": "30-pack; 251 Everyday Comfort or 147 Velour sheets per roll",
+      "regularPrice": 16.97,
+      "salePrice": 12.97,
+      "savings": 4.0,
+      "unit": "pack",
+      "page": 1
+    },
+    {
+      "id": "card-10",
+      "storeCode": "9255851",
+      "name": "Club House sauces or gravy mixes",
+      "size": "Selected varieties",
+      "regularPrice": 1.27,
+      "salePrice": 0.98,
+      "savings": 0.29,
+      "unit": "each",
+      "page": 2
+    },
+    {
+      "id": "card-11",
+      "storeCode": "9202389",
+      "name": "Ocean Spray cranberry sauce",
+      "size": "348mL; selected varieties",
+      "regularPrice": 2.77,
+      "salePrice": 1.57,
+      "savings": 1.2,
+      "unit": "each",
+      "page": 2
+    },
+    {
+      "id": "card-12",
+      "storeCode": "31354686",
+      "name": "Green Giant canned vegetables",
+      "size": "Selected varieties and sizes",
+      "regularPrice": 1.88,
+      "salePrice": 1.67,
+      "savings": 0.21,
+      "unit": "each",
+      "page": 2
+    },
+    {
+      "id": "card-13",
+      "storeCode": "30182298",
+      "name": "Your Fresh Market pies",
+      "size": "9?10 inches; selected varieties",
+      "regularPrice": 7.96,
+      "salePrice": 5.94,
+      "savings": 2.02,
+      "unit": "each",
+      "page": 2
+    },
+    {
+      "id": "card-14",
+      "storeCode": "9204291",
+      "name": "Coca-Cola",
+      "size": "12 x 355mL",
+      "regularPrice": 8.28,
+      "salePrice": 6.94,
+      "savings": 1.34,
+      "unit": "pack",
+      "page": 2
+    }
+  ]
+}
