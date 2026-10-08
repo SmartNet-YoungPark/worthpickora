@@ -19,8 +19,7 @@ Flyer price: ${money(item.salePrice)}${item.unit==="lb"?"/lb":""}
 Savings: ${money(item.savings)}${item.unit==="lb"?" per lb":""}
 Currency: CAD
 Flyer dates: ${flyer.startDate} to ${flyer.endDate}
-Status: ${status}
-Selected varieties, sizes and store availability apply. UPC/GTIN and exact cross-store matches are not verified. Source: supplied flyer, page ${item.page}.`}));
+Status: ${status}`}));
  const saleFooters=Object.fromEntries(items.map(item=>[item.id,{promotionType:"Rollback",price:money(item.salePrice)+(item.unit==="lb"?"/lb":""),previousPrice:money(item.regularPrice)+(item.unit==="lb"?"/lb":""),savings:`Save ${money(item.savings)}${item.unit==="lb"?"/lb":""}`} ]));
  const sets=Array.from({length:Math.ceil(products.length/10)},(_,i)=>products.slice(i*10,i*10+10));
  return <main className="walmart-admin"><nav><Link href="/admin/products">Products</Link><Link href="/admin/store-apps">Store apps & offers</Link></nav>
