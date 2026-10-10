@@ -18,6 +18,7 @@ export default async function StoreAppsPage() {
   return <main className="store-app-admin"><nav><Link href="/admin/products">← Products</Link><Link href="/admin/analytics">Product analytics</Link><Link href="/">Landing page</Link></nav>
     <h1>Store apps & offers</h1><p><Link href="/admin/walmart-flyer">View Walmart PDF product cards ?</Link></p><p>Official app guides help shoppers find retailer apps. Product images keep their existing affiliate destinations.</p>
     {error && <p role="alert" className="store-app-error">{error}</p>}
+    <p><Link href="/admin/temu-promotions">Temu promotion research and official conditions</Link></p>
     <section id="promotion-previews" aria-labelledby="promotion-preview-title">
       <h2 id="promotion-preview-title">Store promotion previews</h2>
       <p>Open a store's promotion page in a new tab. Save your offer changes before previewing. Stores without offers show an empty page with official app links.</p>

@@ -221,6 +221,7 @@ export default function ProductsAdmin({ initialCatalog }: { initialCatalog: Cata
       <p className="admin-nav-label second">QUICK LINKS</p>
       <Link href="/admin/analytics" className="admin-button"><Icon name="chart"/>Click analytics</Link>
       <Link href="/admin/walmart-flyer" className="admin-button"><Icon name="external"/>Walmart PDF cards</Link>
+      <Link href="/admin/temu-promotions" className="admin-button"><Icon name="external"/>Temu promotions</Link>
       <Link href="/admin/store-apps" className="admin-button"><Icon name="external"/>Store apps &amp; offers</Link>
       <Link href="/admin/store-apps#department-rankings" className="admin-button"><Icon name="external"/>Department counts</Link>
       <Link href="/admin/store-apps#promotion-previews" className="admin-button"><Icon name="external"/>Promotion previews</Link>
