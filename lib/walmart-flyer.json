@@ -15,7 +15,15 @@
       "salePrice": 6.34,
       "savings": 1.09,
       "unit": "lb",
-      "page": 1
+      "page": 1,
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "sourcePages": [
+        1
+      ],
+      "imageFile": "product-01.jpg",
+      "priceConflict": false
     },
     {
       "id": "card-02",
@@ -26,7 +34,16 @@
       "salePrice": 1.27,
       "savings": 1.2,
       "unit": "each",
-      "page": 1
+      "page": 1,
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "sourcePages": [
+        1,
+        2
+      ],
+      "imageFile": "product-02.jpg",
+      "priceConflict": false
     },
     {
       "id": "card-03",
@@ -37,7 +54,15 @@
       "salePrice": 2.97,
       "savings": 0.5,
       "unit": "each",
-      "page": 1
+      "page": 1,
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "sourcePages": [
+        1
+      ],
+      "imageFile": "product-03.jpg",
+      "priceConflict": false
     },
     {
       "id": "card-04",
@@ -48,7 +73,15 @@
       "salePrice": 5.98,
       "savings": 0.7,
       "unit": "each",
-      "page": 1
+      "page": 1,
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "sourcePages": [
+        1
+      ],
+      "imageFile": "product-04.jpg",
+      "priceConflict": false
     },
     {
       "id": "card-05",
@@ -59,7 +92,15 @@
       "salePrice": 2.97,
       "savings": 0.9,
       "unit": "each",
-      "page": 1
+      "page": 1,
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "sourcePages": [
+        1
+      ],
+      "imageFile": "product-05.jpg",
+      "priceConflict": false
     },
     {
       "id": "card-06",
@@ -70,7 +111,15 @@
       "salePrice": 4.97,
       "savings": 2.99,
       "unit": "each",
-      "page": 1
+      "page": 1,
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "sourcePages": [
+        1
+      ],
+      "imageFile": "product-06.jpg",
+      "priceConflict": false
     },
     {
       "id": "card-07",
@@ -81,7 +130,15 @@
       "salePrice": 6.28,
       "savings": 0.96,
       "unit": "pack",
-      "page": 1
+      "page": 1,
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "sourcePages": [
+        1
+      ],
+      "imageFile": "product-07.jpg",
+      "priceConflict": false
     },
     {
       "id": "card-08",
@@ -92,7 +149,15 @@
       "salePrice": 7.47,
       "savings": 0.81,
       "unit": "pack",
-      "page": 1
+      "page": 1,
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "sourcePages": [
+        1
+      ],
+      "imageFile": "product-08.jpg",
+      "priceConflict": false
     },
     {
       "id": "card-09",
@@ -103,7 +168,167 @@
       "salePrice": 12.97,
       "savings": 4.0,
       "unit": "pack",
-      "page": 1
+      "page": 1,
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "sourcePages": [
+        1
+      ],
+      "imageFile": "product-09.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-15",
+      "storeCode": "50783079",
+      "name": "Flamingo Canada A fresh turkey",
+      "size": "3-7 kg; sold per bird; selected stores; while quantities last",
+      "salePrice": 2.71,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "lb",
+      "page": 1,
+      "sourcePages": [
+        1
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-15.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-16",
+      "storeCode": "51017184",
+      "name": "Great Value hickory smoked bone-in portion ham",
+      "size": "While quantities last",
+      "salePrice": 1.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "lb",
+      "page": 1,
+      "sourcePages": [
+        1
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-16.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-17",
+      "storeCode": "50970591",
+      "name": "AA Angus beef boneless cross rib roast",
+      "size": "While quantities last",
+      "salePrice": 7.88,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "lb",
+      "page": 1,
+      "sourcePages": [
+        1
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-17.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-18",
+      "storeCode": "51217212",
+      "name": "Your Fresh Market coho salmon side",
+      "size": "While quantities last",
+      "salePrice": 7.88,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "lb",
+      "page": 1,
+      "sourcePages": [
+        1
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-18.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-19",
+      "storeCode": "9445140",
+      "name": "Romaine lettuce hearts",
+      "size": "3-pack; Canada or USA",
+      "salePrice": 3.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 1,
+      "sourcePages": [
+        1
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-19.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-20",
+      "storeCode": "30087402",
+      "name": "Raspberries",
+      "size": "170 g; USA or Mexico",
+      "salePrice": 2.44,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 1,
+      "sourcePages": [
+        1
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-20.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-21",
+      "storeCode": "30428331",
+      "name": "Red or green seedless grapes",
+      "size": "USA; No. 1 grade",
+      "salePrice": 2.94,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "lb",
+      "page": 1,
+      "sourcePages": [
+        1
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-21.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-22",
+      "storeCode": "30463247",
+      "name": "Ruffles chips",
+      "size": "200 g; selected flavours",
+      "salePrice": 3.27,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 1,
+      "sourcePages": [
+        1
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-22.jpg",
+      "priceConflict": false
     },
     {
       "id": "card-10",
@@ -114,7 +339,16 @@
       "salePrice": 0.98,
       "savings": 0.29,
       "unit": "each",
-      "page": 2
+      "page": 2,
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "sourcePages": [
+        2,
+        9
+      ],
+      "imageFile": "product-10.jpg",
+      "priceConflict": false
     },
     {
       "id": "card-11",
@@ -125,7 +359,16 @@
       "salePrice": 1.57,
       "savings": 1.2,
       "unit": "each",
-      "page": 2
+      "page": 2,
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "sourcePages": [
+        2,
+        9
+      ],
+      "imageFile": "product-11.jpg",
+      "priceConflict": false
     },
     {
       "id": "card-12",
@@ -136,7 +379,16 @@
       "salePrice": 1.67,
       "savings": 0.21,
       "unit": "each",
-      "page": 2
+      "page": 2,
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "sourcePages": [
+        2,
+        3
+      ],
+      "imageFile": "product-12.jpg",
+      "priceConflict": false
     },
     {
       "id": "card-13",
@@ -147,7 +399,15 @@
       "salePrice": 5.94,
       "savings": 2.02,
       "unit": "each",
-      "page": 2
+      "page": 2,
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "sourcePages": [
+        2
+      ],
+      "imageFile": "product-13.jpg",
+      "priceConflict": false
     },
     {
       "id": "card-14",
@@ -158,7 +418,6281 @@
       "salePrice": 6.94,
       "savings": 1.34,
       "unit": "pack",
-      "page": 2
+      "page": 2,
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "sourcePages": [
+        2
+      ],
+      "imageFile": "product-14.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-23",
+      "storeCode": "31202635",
+      "name": "Canada Grade A or Utility frozen turkey",
+      "size": "5-7 kg; sold per bird; selected varieties",
+      "salePrice": 23.0,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 2,
+      "sourcePages": [
+        2
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-23.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-24",
+      "storeCode": "50969842",
+      "name": "Your Fresh Market potatoes or yellow onions",
+      "size": "4.54 kg / 10 lb; Canada No. 1",
+      "salePrice": 3.94,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 2,
+      "sourcePages": [
+        2
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-24.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-25",
+      "storeCode": "30010392",
+      "name": "Your Fresh Market carrots",
+      "size": "1.36 kg / 3 lb; Canada No. 1",
+      "salePrice": 2.44,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 2,
+      "sourcePages": [
+        2
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-25.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-26",
+      "storeCode": "9498347",
+      "name": "White cauliflower or broccoli stalks",
+      "size": "Product of Canada",
+      "salePrice": 2.94,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 2,
+      "sourcePages": [
+        2
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-26.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-27",
+      "storeCode": "9148356",
+      "name": "Nestle Parlour frozen dessert",
+      "size": "1.5 L; selected flavours",
+      "salePrice": 2.94,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 2,
+      "sourcePages": [
+        2
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-27.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-28",
+      "storeCode": "9275318",
+      "name": "Campbell's broth",
+      "size": "900 mL; selected varieties",
+      "salePrice": 1.47,
+      "regularPrice": 1.97,
+      "savings": 0.5,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-28.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-29",
+      "storeCode": "30561721",
+      "name": "Silk plant-based beverage or Pillsbury fall cookie dough",
+      "size": "Selected varieties and sizes",
+      "salePrice": 3.98,
+      "regularPrice": 4.98,
+      "savings": 1.0,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-29.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-30",
+      "storeCode": "9243464",
+      "name": "Robin Hood or Five Roses flour",
+      "size": "2.5 kg; selected varieties",
+      "salePrice": 4.97,
+      "regularPrice": 5.93,
+      "savings": 0.96,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-30.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-31",
+      "storeCode": "31506606",
+      "name": "Simply Lemonade or apple / cranberry juice",
+      "size": "Lemonade 2.25 L; juice 1.54 L",
+      "salePrice": 5.48,
+      "regularPrice": 6.48,
+      "savings": 1.0,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-31.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-32",
+      "storeCode": "50297426",
+      "name": "Christie Ritz crackers",
+      "size": "162-180 g; selected varieties",
+      "salePrice": 2.48,
+      "regularPrice": 2.78,
+      "savings": 0.3,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-32.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-33",
+      "storeCode": "30997524",
+      "name": "McCain breakfast or Bistro potatoes",
+      "size": "600-800 g; selected varieties",
+      "salePrice": 2.77,
+      "regularPrice": 4.48,
+      "savings": 1.71,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-33.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-34",
+      "storeCode": "50438976",
+      "name": "Tropicana orange juice",
+      "size": "2.63 L; selected varieties",
+      "salePrice": 7.97,
+      "regularPrice": 8.98,
+      "savings": 1.01,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-34.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-35",
+      "storeCode": "30390897",
+      "name": "Cheez-It crackers",
+      "size": "Selected varieties and sizes",
+      "salePrice": 1.97,
+      "regularPrice": 2.97,
+      "savings": 1.0,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-35.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-36",
+      "storeCode": "50964704",
+      "name": "Your Fresh Market pies",
+      "size": "Selected varieties and sizes",
+      "salePrice": 5.94,
+      "regularPrice": 7.96,
+      "savings": 2.02,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-36.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-37",
+      "storeCode": "9126908",
+      "name": "Chapman's frozen desserts",
+      "size": "Sandwich novelties 12 x 120 mL or Premium 2 L",
+      "salePrice": 5.97,
+      "regularPrice": 7.97,
+      "savings": 2.0,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-37.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-38",
+      "storeCode": "31397272",
+      "name": "Balderson cheddar or Your Fresh Market double cream brie",
+      "size": "Selected varieties and sizes",
+      "salePrice": 6.67,
+      "regularPrice": 7.47,
+      "savings": 0.8,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-38.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-39",
+      "storeCode": "30814711",
+      "name": "Great Value cooked pork back ribs",
+      "size": "500 g",
+      "salePrice": 8.46,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-39.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-40",
+      "storeCode": "50982773",
+      "name": "Great Value cola",
+      "size": "12 x 355 mL",
+      "salePrice": 5.67,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-40.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-41",
+      "storeCode": "50130954",
+      "name": "Kettle Brand potato chips",
+      "size": "198 g; selected flavours",
+      "salePrice": 2.88,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-41.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-42",
+      "storeCode": "51069408",
+      "name": "Purex laundry detergent",
+      "size": "3.45-3.85 L; 85-115 loads",
+      "salePrice": 10.47,
+      "regularPrice": 15.97,
+      "savings": 5.5,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-42.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-43",
+      "storeCode": "50147792",
+      "name": "Bounty paper towels",
+      "size": "8 = 16 rolls; 82 sheets per roll",
+      "salePrice": 16.98,
+      "regularPrice": 21.98,
+      "savings": 5.0,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-43.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-44",
+      "storeCode": "50611357",
+      "name": "Always or Tampax premium products",
+      "size": "Selected varieties and sizes",
+      "salePrice": 10.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-44.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-45",
+      "storeCode": "50479347",
+      "name": "Nestle minis",
+      "size": "50-pack; selected varieties",
+      "salePrice": 8.47,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-45.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-46",
+      "storeCode": "50808580",
+      "name": "Hershey's minis",
+      "size": "Selected varieties and sizes",
+      "salePrice": 13.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-46.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-348",
+      "storeCode": "51049243/56",
+      "name": "24 inch Halloween blow mould",
+      "size": "Selected styles",
+      "salePrice": 49.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 3,
+      "sourcePages": [
+        3
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-348.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-47",
+      "storeCode": "51038181/425",
+      "name": "Kids' Halloween costumes",
+      "size": "Selected styles",
+      "salePrice": 19.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 4,
+      "sourcePages": [
+        4
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-47.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-48",
+      "storeCode": "51038034/45402",
+      "name": "Adults' Halloween costumes",
+      "size": "Selected styles",
+      "salePrice": 19.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 4,
+      "sourcePages": [
+        4
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-48.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-49",
+      "storeCode": "51045291",
+      "name": "Poseable skeleton",
+      "size": "Halloween decor",
+      "salePrice": 19.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 4,
+      "sourcePages": [
+        4
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-49.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-50",
+      "storeCode": "51044056",
+      "name": "Halloween inflatable",
+      "size": "3.5-4 ft",
+      "salePrice": 22.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 4,
+      "sourcePages": [
+        4
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-50.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-51",
+      "storeCode": "51043568/5497",
+      "name": "Halloween lawn stake lights",
+      "size": "Selected styles",
+      "salePrice": 14.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 4,
+      "sourcePages": [
+        4
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-51.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-52",
+      "storeCode": "51049911/51464/2212",
+      "name": "Halloween plush",
+      "size": "Selected styles",
+      "salePrice": 8.48,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 4,
+      "sourcePages": [
+        4
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-52.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-53",
+      "storeCode": "51049855",
+      "name": "Halloween projection light",
+      "size": "Selected styles",
+      "salePrice": 24.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 4,
+      "sourcePages": [
+        4
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-53.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-54",
+      "storeCode": "51049590/1",
+      "name": "Licensed Halloween greeters",
+      "size": "Selected styles",
+      "salePrice": 32.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 4,
+      "sourcePages": [
+        4
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-54.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-55",
+      "storeCode": "51041742/4",
+      "name": "Halloween plush",
+      "size": "Selected styles",
+      "salePrice": 26.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 5,
+      "sourcePages": [
+        5
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-55.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-56",
+      "storeCode": "51043926/68944",
+      "name": "Halloween wreaths",
+      "size": "Selected styles",
+      "salePrice": 39.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 5,
+      "sourcePages": [
+        5
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-56.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-57",
+      "storeCode": "51044980",
+      "name": "Halloween inflatable",
+      "size": "Selected styles",
+      "salePrice": 59.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 5,
+      "sourcePages": [
+        5
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-57.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-58",
+      "storeCode": "30423079",
+      "name": "Frito Lay Halloween chips or treat bags",
+      "size": "40-pack",
+      "salePrice": 12.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 5,
+      "sourcePages": [
+        5
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-58.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-59",
+      "storeCode": "50537009",
+      "name": "Nestle minis",
+      "size": "100-pack; selected varieties",
+      "salePrice": 18.47,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 5,
+      "sourcePages": [
+        5
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-59.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-60",
+      "storeCode": "50784876",
+      "name": "General Mills Fruit Roll-Ups or Gushers",
+      "size": "Selected varieties and sizes",
+      "salePrice": 7.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 5,
+      "sourcePages": [
+        5
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-60.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-61",
+      "storeCode": "50825326",
+      "name": "Goldfish Halloween crackers",
+      "size": "24-pack",
+      "salePrice": 9.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 5,
+      "sourcePages": [
+        5
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-61.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-62",
+      "storeCode": "51108747",
+      "name": "Bonkers Purr Pops cat treats",
+      "size": "5.6 g; while quantities last",
+      "salePrice": 1.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 5,
+      "sourcePages": [
+        5
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-62.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-63",
+      "storeCode": "30771888",
+      "name": "Milk-Bone Dipped peanut butter crunchy biscuits",
+      "size": "850 g",
+      "salePrice": 9.97,
+      "regularPrice": 11.47,
+      "savings": 1.5,
+      "unit": "each",
+      "page": 5,
+      "sourcePages": [
+        5
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-63.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-64",
+      "storeCode": "51063442",
+      "name": "Hans Dahi yogurt",
+      "size": "750 g",
+      "salePrice": 2.27,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 6,
+      "sourcePages": [
+        6
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-64.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-65",
+      "storeCode": "30392192",
+      "name": "Brar's malai paneer",
+      "size": "375 g",
+      "salePrice": 4.98,
+      "regularPrice": 5.97,
+      "savings": 0.99,
+      "unit": "each",
+      "page": 6,
+      "sourcePages": [
+        6
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-65.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-66",
+      "storeCode": "30378528",
+      "name": "Tilda basmati rice",
+      "size": "4.54 kg",
+      "salePrice": 12.98,
+      "regularPrice": 18.97,
+      "savings": 5.99,
+      "unit": "each",
+      "page": 6,
+      "sourcePages": [
+        6
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-66.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-67",
+      "storeCode": "31020693",
+      "name": "Sher durum atta flour",
+      "size": "9.07 kg",
+      "salePrice": 13.22,
+      "regularPrice": 19.27,
+      "savings": 6.05,
+      "unit": "each",
+      "page": 6,
+      "sourcePages": [
+        6
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-67.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-68",
+      "storeCode": "30369775",
+      "name": "Verka brown sugar",
+      "size": "4.54 kg",
+      "salePrice": 9.98,
+      "regularPrice": 11.24,
+      "savings": 1.26,
+      "unit": "each",
+      "page": 6,
+      "sourcePages": [
+        6
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-68.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-69",
+      "storeCode": "30090800",
+      "name": "Brar's Desi ghee",
+      "size": "1.6 kg",
+      "salePrice": 22.98,
+      "regularPrice": 29.98,
+      "savings": 7.0,
+      "unit": "each",
+      "page": 6,
+      "sourcePages": [
+        6
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-69.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-70",
+      "storeCode": "30175168",
+      "name": "Redpath white sugar",
+      "size": "2 kg",
+      "salePrice": 2.77,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 6,
+      "sourcePages": [
+        6
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-70.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-71",
+      "storeCode": "9230613",
+      "name": "PTI besan",
+      "size": "1.81 kg",
+      "salePrice": 4.88,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 6,
+      "sourcePages": [
+        6
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-71.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-72",
+      "storeCode": "31728900",
+      "name": "Mazola canola or vegetable oil",
+      "size": "1.18 L",
+      "salePrice": 6.97,
+      "regularPrice": 9.97,
+      "savings": 3.0,
+      "unit": "each",
+      "page": 6,
+      "sourcePages": [
+        6
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-72.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-73",
+      "storeCode": "51184642",
+      "name": "Lactantia condensed milk",
+      "size": "6 x 300 mL",
+      "salePrice": 17.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 6,
+      "sourcePages": [
+        6
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-73.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-74",
+      "storeCode": "50583448",
+      "name": "PTI sooji",
+      "size": "1.81 kg",
+      "salePrice": 4.47,
+      "regularPrice": 4.97,
+      "savings": 0.5,
+      "unit": "each",
+      "page": 6,
+      "sourcePages": [
+        6
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-74.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-75",
+      "storeCode": "30227767",
+      "name": "Curry leaves",
+      "size": "Pack",
+      "salePrice": 1.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 6,
+      "sourcePages": [
+        6
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-75.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-76",
+      "storeCode": "50059574",
+      "name": "Thai green chili",
+      "size": "Bulk",
+      "salePrice": 3.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "lb",
+      "page": 6,
+      "sourcePages": [
+        6
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-76.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-77",
+      "storeCode": "30248168",
+      "name": "Mint or cilantro",
+      "size": "Bunch",
+      "salePrice": 1.24,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 6,
+      "sourcePages": [
+        6
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-77.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-78",
+      "storeCode": "50633315",
+      "name": "Ginger or garlic",
+      "size": "Bulk",
+      "salePrice": 1.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "lb",
+      "page": 6,
+      "sourcePages": [
+        6
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-78.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-79",
+      "storeCode": "30664892",
+      "name": "Maggi noodles",
+      "size": "70 g",
+      "salePrice": 0.34,
+      "regularPrice": 0.44,
+      "savings": 0.1,
+      "unit": "each",
+      "page": 7,
+      "sourcePages": [
+        7
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-79.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-80",
+      "storeCode": "50805175",
+      "name": "Bikaji snacks",
+      "size": "Selected varieties",
+      "salePrice": 0.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 7,
+      "sourcePages": [
+        7
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-80.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-81",
+      "storeCode": "30362948",
+      "name": "Verka para",
+      "size": "360 g",
+      "salePrice": 3.14,
+      "regularPrice": 3.77,
+      "savings": 0.63,
+      "unit": "each",
+      "page": 7,
+      "sourcePages": [
+        7
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-81.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-82",
+      "storeCode": "50818424",
+      "name": "Verka Punjabi cookies",
+      "size": "Selected varieties",
+      "salePrice": 5.54,
+      "regularPrice": 6.97,
+      "savings": 1.43,
+      "unit": "each",
+      "page": 7,
+      "sourcePages": [
+        7
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-82.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-83",
+      "storeCode": "51130429",
+      "name": "Sitara pound or rusk cake",
+      "size": "Selected varieties",
+      "salePrice": 4.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 7,
+      "sourcePages": [
+        7
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-83.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-84",
+      "storeCode": "30392188",
+      "name": "Brar's rasmalai",
+      "size": "Selected varieties and sizes",
+      "salePrice": 9.27,
+      "regularPrice": 11.27,
+      "savings": 2.0,
+      "unit": "each",
+      "page": 7,
+      "sourcePages": [
+        7
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-84.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-85",
+      "storeCode": "30555883",
+      "name": "Wagh Bakri loose tea",
+      "size": "907 g",
+      "salePrice": 9.98,
+      "regularPrice": 12.98,
+      "savings": 3.0,
+      "unit": "each",
+      "page": 7,
+      "sourcePages": [
+        7
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-85.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-86",
+      "storeCode": "50803562",
+      "name": "Bingo Mad Angles",
+      "size": "140 g",
+      "salePrice": 1.47,
+      "regularPrice": 1.98,
+      "savings": 0.51,
+      "unit": "each",
+      "page": 7,
+      "sourcePages": [
+        7
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-86.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-87",
+      "storeCode": "51082017",
+      "name": "Fior Fiore pistachio cream",
+      "size": "190 g",
+      "salePrice": 8.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 7,
+      "sourcePages": [
+        7
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-87.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-88",
+      "storeCode": "30965088",
+      "name": "Brar's jalapeno and cheese samosas",
+      "size": "624 g",
+      "salePrice": 5.48,
+      "regularPrice": 6.97,
+      "savings": 1.49,
+      "unit": "each",
+      "page": 7,
+      "sourcePages": [
+        7
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-88.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-89",
+      "storeCode": "30224664",
+      "name": "Ashoka tandoori naan",
+      "size": "15-pack; 45 oz",
+      "salePrice": 8.98,
+      "regularPrice": 9.98,
+      "savings": 1.0,
+      "unit": "each",
+      "page": 7,
+      "sourcePages": [
+        7
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-89.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-90",
+      "storeCode": "30513032",
+      "name": "Britannia Marie Gold biscuits",
+      "size": "150 g",
+      "salePrice": 0.97,
+      "regularPrice": 1.18,
+      "savings": 0.21,
+      "unit": "each",
+      "page": 7,
+      "sourcePages": [
+        7
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-90.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-91",
+      "storeCode": "50638073",
+      "name": "Amul rasgulla or gulab jamun",
+      "size": "1 kg; Diwali Rollback offer",
+      "salePrice": 5.24,
+      "regularPrice": 5.97,
+      "savings": null,
+      "unit": "each",
+      "page": 7,
+      "sourcePages": [
+        7
+      ],
+      "promotionType": "Check price",
+      "conditions": "The flyer shows $5.24 on page 7 and $6.24 on page 8 for this code. Confirm the applicable offer with Walmart.",
+      "pricePrefix": "",
+      "imageFile": "product-91.jpg",
+      "priceConflict": true
+    },
+    {
+      "id": "card-92",
+      "storeCode": "9205321",
+      "name": "Rubicon juice",
+      "size": "1 L; selected varieties",
+      "salePrice": 1.98,
+      "regularPrice": 2.78,
+      "savings": 0.8,
+      "unit": "each",
+      "page": 7,
+      "sourcePages": [
+        7
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-92.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-93",
+      "storeCode": "50819506",
+      "name": "Verka cream rolls",
+      "size": "300 g",
+      "salePrice": 6.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 7,
+      "sourcePages": [
+        7
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-93.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-94",
+      "storeCode": "30225131",
+      "name": "Purple sweet potato",
+      "size": "Product of Brazil",
+      "salePrice": 1.87,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "lb",
+      "page": 8,
+      "sourcePages": [
+        8
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-94.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-95",
+      "storeCode": "50600786",
+      "name": "Indian red carrot",
+      "size": "Product of China",
+      "salePrice": 1.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 8,
+      "sourcePages": [
+        8
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-95.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-96",
+      "storeCode": "30161967",
+      "name": "Britannia milk rusk",
+      "size": "560 g",
+      "salePrice": 4.74,
+      "regularPrice": 5.32,
+      "savings": 0.58,
+      "unit": "each",
+      "page": 8,
+      "sourcePages": [
+        8
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-96.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-97",
+      "storeCode": "30676314",
+      "name": "Lijjat jeera papad",
+      "size": "Selected varieties and sizes",
+      "salePrice": 2.24,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 8,
+      "sourcePages": [
+        8
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-97.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-98",
+      "storeCode": "30363352",
+      "name": "Verka gurkhpur jaggery",
+      "size": "1 kg",
+      "salePrice": 2.24,
+      "regularPrice": 2.67,
+      "savings": 0.43,
+      "unit": "each",
+      "page": 8,
+      "sourcePages": [
+        8
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-98.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-99",
+      "storeCode": "30338935",
+      "name": "Senso instant cardamom chai latte mix",
+      "size": "10-pack",
+      "salePrice": 5.47,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 8,
+      "sourcePages": [
+        8
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-99.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-100",
+      "storeCode": "50638073",
+      "name": "Amul gulab jamun",
+      "size": "1 kg; Navratri feature price differs from the Diwali offer",
+      "salePrice": 6.24,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 8,
+      "sourcePages": [
+        8
+      ],
+      "promotionType": "Check price",
+      "conditions": "The flyer shows $5.24 on page 7 and $6.24 on page 8 for this code. Confirm the applicable offer with Walmart.",
+      "pricePrefix": "",
+      "imageFile": "product-100.jpg",
+      "priceConflict": true
+    },
+    {
+      "id": "card-101",
+      "storeCode": "15BGRAC79QBP",
+      "name": "Biba Rangriti Chandrima ethnic suit",
+      "size": "Women's set; online only",
+      "salePrice": 81.74,
+      "regularPrice": 125.75,
+      "savings": 44.01,
+      "unit": "each",
+      "page": 8,
+      "sourcePages": [
+        8
+      ],
+      "promotionType": "Online deal",
+      "conditions": "Online only",
+      "pricePrefix": "",
+      "imageFile": "product-101.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-102",
+      "storeCode": "3CH12NXRX1XD",
+      "name": "Biba Rangriti Festive Glam kurta pants set",
+      "size": "Women's set; online only",
+      "salePrice": 58.19,
+      "regularPrice": 89.53,
+      "savings": 31.34,
+      "unit": "each",
+      "page": 8,
+      "sourcePages": [
+        8
+      ],
+      "promotionType": "Online deal",
+      "conditions": "Online only",
+      "pricePrefix": "",
+      "imageFile": "product-102.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-103",
+      "storeCode": "2QZPP3C98FMH",
+      "name": "Dweep Sara green rayon fit and flare gown",
+      "size": "Online only",
+      "salePrice": 39.99,
+      "regularPrice": 79.99,
+      "savings": 40.0,
+      "unit": "each",
+      "page": 8,
+      "sourcePages": [
+        8
+      ],
+      "promotionType": "Online deal",
+      "conditions": "Online only",
+      "pricePrefix": "",
+      "imageFile": "product-103.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-104",
+      "storeCode": "3CWQQRH2NTS6",
+      "name": "Dweep Sara men's green silk blend kurta",
+      "size": "36-inch straight fit; embroidered; side slits; online only",
+      "salePrice": 37.99,
+      "regularPrice": 64.99,
+      "savings": 27.0,
+      "unit": "each",
+      "page": 8,
+      "sourcePages": [
+        8
+      ],
+      "promotionType": "Online deal",
+      "conditions": "Online only",
+      "pricePrefix": "",
+      "imageFile": "product-104.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-105",
+      "storeCode": "50701351",
+      "name": "OPI RapiDry quick-dry nail lacquer",
+      "size": "Selected colours",
+      "salePrice": 9.97,
+      "regularPrice": 11.97,
+      "savings": 2.0,
+      "unit": "each",
+      "page": 8,
+      "sourcePages": [
+        8,
+        20
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-105.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-106",
+      "storeCode": "30797711",
+      "name": "Garnier Nutrisse hair colour",
+      "size": "Selected varieties",
+      "salePrice": 10.22,
+      "regularPrice": 11.98,
+      "savings": 1.76,
+      "unit": "each",
+      "page": 8,
+      "sourcePages": [
+        8
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-106.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-107",
+      "storeCode": "30397223",
+      "name": "SheaMoisture styling products, treatments or detanglers",
+      "size": "Selected varieties and sizes",
+      "salePrice": 14.42,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 8,
+      "sourcePages": [
+        8
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-107.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-108",
+      "storeCode": "50412465",
+      "name": "Cetaphil Healthy Radiance serum or cream",
+      "size": "Serum 30 mL or cream 50 g",
+      "salePrice": 32.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 8,
+      "sourcePages": [
+        8
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-108.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-109",
+      "storeCode": "9477011",
+      "name": "McIntosh or Gala apples",
+      "size": "Bulk",
+      "salePrice": 0.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "lb",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-109.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-110",
+      "storeCode": "30135245",
+      "name": "Squash",
+      "size": "Selected varieties",
+      "salePrice": 0.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "lb",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-110.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-111",
+      "storeCode": "50566289",
+      "name": "Rainbow peppers",
+      "size": "3-pack",
+      "salePrice": 2.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-111.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-112",
+      "storeCode": "31375329",
+      "name": "Golden pineapple",
+      "size": "Jumbo",
+      "salePrice": 3.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-112.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-113",
+      "storeCode": "50461383",
+      "name": "Your Fresh Market basil or poultry herbs",
+      "size": "28 g",
+      "salePrice": 1.67,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-113.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-114",
+      "storeCode": "31340494",
+      "name": "Brussels sprouts",
+      "size": "454 g",
+      "salePrice": 2.94,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-114.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-115",
+      "storeCode": "9481036",
+      "name": "Green beans",
+      "size": "Bulk",
+      "salePrice": 2.44,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "lb",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-115.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-116",
+      "storeCode": "50287873",
+      "name": "Maple Leaf Natural Selections deli or Fantino & Mondello charcuterie",
+      "size": "Selected varieties and sizes",
+      "salePrice": 5.97,
+      "regularPrice": 6.97,
+      "savings": 1.0,
+      "unit": "each",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-116.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-117",
+      "storeCode": "31614800",
+      "name": "Boursin cheese",
+      "size": "150 g",
+      "salePrice": 4.98,
+      "regularPrice": 6.27,
+      "savings": 1.29,
+      "unit": "each",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-117.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-118",
+      "storeCode": "30319321",
+      "name": "Reser's side dishes",
+      "size": "567-680 g",
+      "salePrice": 6.24,
+      "regularPrice": 6.98,
+      "savings": 0.74,
+      "unit": "each",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-118.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-119",
+      "storeCode": "30510909",
+      "name": "Your Fresh Market buns or rolls",
+      "size": "Selected varieties and sizes",
+      "salePrice": 3.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-119.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-120",
+      "storeCode": "50629680",
+      "name": "Your Fresh Market butter croissants",
+      "size": "12-pack; 696 g",
+      "salePrice": 5.94,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-120.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-121",
+      "storeCode": "51124256",
+      "name": "Your Fresh Market loaf cakes",
+      "size": "Selected varieties",
+      "salePrice": 5.24,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-121.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-122",
+      "storeCode": "30126312",
+      "name": "Carnation evaporated milk",
+      "size": "354 mL",
+      "salePrice": 1.74,
+      "regularPrice": 2.47,
+      "savings": 0.73,
+      "unit": "each",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-122.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-123",
+      "storeCode": "9288032",
+      "name": "Dole pineapple",
+      "size": "398 mL",
+      "salePrice": 1.97,
+      "regularPrice": 2.47,
+      "savings": 0.5,
+      "unit": "each",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-123.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-124",
+      "storeCode": "9130968",
+      "name": "Great Value whipped topping or Tenderflake deep dish shells",
+      "size": "Topping 1 L; shells 340-397 g",
+      "salePrice": 2.97,
+      "regularPrice": 3.98,
+      "savings": 1.01,
+      "unit": "each",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-124.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-125",
+      "storeCode": "50151044",
+      "name": "Pillsbury wiener wraps or crescents",
+      "size": "200-226 g",
+      "salePrice": 1.67,
+      "regularPrice": 2.28,
+      "savings": 0.61,
+      "unit": "each",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-125.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-126",
+      "storeCode": "30263835",
+      "name": "Montellier sparkling water",
+      "size": "1 L",
+      "salePrice": 1.27,
+      "regularPrice": 1.48,
+      "savings": 0.21,
+      "unit": "each",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-126.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-127",
+      "storeCode": "30361973",
+      "name": "Green Giant frozen vegetables",
+      "size": "750 g",
+      "salePrice": 3.47,
+      "regularPrice": 3.97,
+      "savings": 0.5,
+      "unit": "each",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-127.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-128",
+      "storeCode": "30591085",
+      "name": "bubly sparkling water",
+      "size": "12 x 355 mL",
+      "salePrice": 6.27,
+      "regularPrice": 6.98,
+      "savings": 0.71,
+      "unit": "each",
+      "page": 9,
+      "sourcePages": [
+        9
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-128.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-129",
+      "storeCode": "9481904",
+      "name": "McIntosh apples",
+      "size": "Bulk",
+      "salePrice": 0.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "lb",
+      "page": 10,
+      "sourcePages": [
+        10
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-129.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-130",
+      "storeCode": "9477053",
+      "name": "Gala apples",
+      "size": "Bulk",
+      "salePrice": 0.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "lb",
+      "page": 10,
+      "sourcePages": [
+        10
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-130.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-131",
+      "storeCode": "31408090",
+      "name": "Your Fresh Market Red Delicious apples",
+      "size": "1.36 kg",
+      "salePrice": 3.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 10,
+      "sourcePages": [
+        10
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-131.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-132",
+      "storeCode": "9477095",
+      "name": "Honeycrisp apples",
+      "size": "Bulk",
+      "salePrice": 2.48,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "lb",
+      "page": 10,
+      "sourcePages": [
+        10
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-132.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-133",
+      "storeCode": "51070143",
+      "name": "Your Fresh Market Rave apples",
+      "size": "1.36 kg",
+      "salePrice": 4.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 10,
+      "sourcePages": [
+        10
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-133.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-134",
+      "storeCode": "30820087",
+      "name": "Your Fresh Market apple cider",
+      "size": "2 L",
+      "salePrice": 4.47,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 10,
+      "sourcePages": [
+        10
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-134.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-135",
+      "storeCode": "50985989",
+      "name": "Your Fresh Market apple turnovers",
+      "size": "8-pack; 708 g",
+      "salePrice": 5.94,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 10,
+      "sourcePages": [
+        10
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-135.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-136",
+      "storeCode": "51024946",
+      "name": "Your Fresh Market apple fritters",
+      "size": "4-pack; 404 g",
+      "salePrice": 4.78,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 10,
+      "sourcePages": [
+        10
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-136.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-137",
+      "storeCode": "31034407",
+      "name": "Maple Leaf lean ground pork",
+      "size": "454 g",
+      "salePrice": 4.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-137.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-138",
+      "storeCode": "30897892",
+      "name": "Maple Leaf or Schneiders bacon / Ready Crisp",
+      "size": "Bacon 375 g; Ready Crisp 65-85 g",
+      "salePrice": 4.97,
+      "regularPrice": 5.97,
+      "savings": 1.0,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-138.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-139",
+      "storeCode": "30732293",
+      "name": "Your Fresh Market BBQ or herb garlic chicken",
+      "size": "800 g",
+      "salePrice": 9.77,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-139.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-140",
+      "storeCode": "9310340",
+      "name": "Marcangelo chicken or pork kabobs",
+      "size": "480-640 g",
+      "salePrice": 9.97,
+      "regularPrice": 13.97,
+      "savings": 4.0,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-140.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-141",
+      "storeCode": "51128365",
+      "name": "Hostess Hershey's snack cakes",
+      "size": "Selected varieties",
+      "salePrice": 4.28,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-141.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-142",
+      "storeCode": "51062170",
+      "name": "Lindt Dubai chocolate",
+      "size": "150 g",
+      "salePrice": 12.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-142.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-143",
+      "storeCode": "51109172",
+      "name": "Old Orchard frozen juice",
+      "size": "355 mL",
+      "salePrice": 2.28,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-143.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-144",
+      "storeCode": "50450287",
+      "name": "Great Value long grain or Thai jasmine rice",
+      "size": "2 kg",
+      "salePrice": 4.77,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-144.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-145",
+      "storeCode": "51103437",
+      "name": "Liberte Mediterranee yogurt",
+      "size": "500 g",
+      "salePrice": 3.47,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-145.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-146",
+      "storeCode": "31537999",
+      "name": "Joe's Tasty Travels walnuts or cashews",
+      "size": "275-300 g",
+      "salePrice": 4.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-146.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-147",
+      "storeCode": "51103445",
+      "name": "Liberte yogurt tubs",
+      "size": "700-900 g",
+      "salePrice": 6.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-147.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-148",
+      "storeCode": "31164898",
+      "name": "Giuseppe thin or rising crust pizza",
+      "size": "Selected varieties and sizes",
+      "salePrice": 5.84,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-148.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-149",
+      "storeCode": "30506666",
+      "name": "Our Finest or Great Value entrees",
+      "size": "900 g-1 kg",
+      "salePrice": 7.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-149.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-150",
+      "storeCode": "50685828",
+      "name": "Great Value Italian meatballs or appetizer bags",
+      "size": "Selected varieties and sizes",
+      "salePrice": 9.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-150.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-151",
+      "storeCode": "30065390",
+      "name": "Hershey's Chipits",
+      "size": "Selected varieties and sizes",
+      "salePrice": 5.47,
+      "regularPrice": 6.44,
+      "savings": 0.97,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-151.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-152",
+      "storeCode": "30437146",
+      "name": "Hungry-Man / XL or POGO",
+      "size": "POGO 4-pack; selected varieties and sizes",
+      "salePrice": 4.47,
+      "regularPrice": 5.97,
+      "savings": 1.5,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-152.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-153",
+      "storeCode": "8104222",
+      "name": "Dempster's 7-inch tortillas",
+      "size": "10-pack; 340 g",
+      "salePrice": 2.68,
+      "regularPrice": 3.67,
+      "savings": 0.99,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-153.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-154",
+      "storeCode": "30468465",
+      "name": "Black Diamond cheese slices",
+      "size": "410 g",
+      "salePrice": 3.47,
+      "regularPrice": 4.18,
+      "savings": 0.71,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-154.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-155",
+      "storeCode": "8103214",
+      "name": "Sun-Maid raisin bread",
+      "size": "450 g",
+      "salePrice": 3.58,
+      "regularPrice": 4.87,
+      "savings": 1.29,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-155.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-156",
+      "storeCode": "31339376",
+      "name": "Natrel milk",
+      "size": "4 L; 1%, 2% or skim",
+      "salePrice": 5.98,
+      "regularPrice": 7.08,
+      "savings": 1.1,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-156.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-157",
+      "storeCode": "50438981",
+      "name": "Starbucks iced coffee",
+      "size": "1.18-1.42 L",
+      "salePrice": 6.98,
+      "regularPrice": 8.28,
+      "savings": 1.3,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-157.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-158",
+      "storeCode": "50798448",
+      "name": "Tim Hortons ground coffee or McCafe K-Cups",
+      "size": "Ground 875 g; K-Cups 30-pack",
+      "salePrice": 22.86,
+      "regularPrice": 26.97,
+      "savings": 4.11,
+      "unit": "each",
+      "page": 11,
+      "sourcePages": [
+        11
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-158.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-159",
+      "storeCode": "9118851",
+      "name": "Eggo waffles",
+      "size": "8-pack; 270-280 g",
+      "salePrice": 2.97,
+      "regularPrice": 3.97,
+      "savings": 1.0,
+      "unit": "each",
+      "page": 12,
+      "sourcePages": [
+        12
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-159.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-160",
+      "storeCode": "31184752",
+      "name": "SunChips or Smartfood",
+      "size": "Selected varieties and sizes",
+      "salePrice": 3.47,
+      "regularPrice": 3.97,
+      "savings": 0.5,
+      "unit": "each",
+      "page": 12,
+      "sourcePages": [
+        12
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-160.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-161",
+      "storeCode": "30312878",
+      "name": "Goldfish crackers",
+      "size": "Selected varieties and sizes",
+      "salePrice": 2.24,
+      "regularPrice": 2.98,
+      "savings": 0.74,
+      "unit": "each",
+      "page": 12,
+      "sourcePages": [
+        12
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-161.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-162",
+      "storeCode": "51146593",
+      "name": "Kool-Aid Jammers",
+      "size": "10 x 180 mL",
+      "salePrice": 2.97,
+      "regularPrice": 3.96,
+      "savings": 0.99,
+      "unit": "each",
+      "page": 12,
+      "sourcePages": [
+        12,
+        23
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-162.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-163",
+      "storeCode": "50126460",
+      "name": "Palmolive dish liquid",
+      "size": "4.27 L",
+      "salePrice": 7.97,
+      "regularPrice": 10.47,
+      "savings": 2.5,
+      "unit": "each",
+      "page": 12,
+      "sourcePages": [
+        12
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-163.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-164",
+      "storeCode": "30880646",
+      "name": "OxiClean stain remover",
+      "size": "1.28-1.36 kg",
+      "salePrice": 10.97,
+      "regularPrice": 13.23,
+      "savings": 2.26,
+      "unit": "each",
+      "page": 12,
+      "sourcePages": [
+        12
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-164.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-165",
+      "storeCode": "50444838",
+      "name": "Tide laundry detergent or Pods",
+      "size": "39-48 loads; Pods 31 or Power Pods 18-23",
+      "salePrice": 9.97,
+      "regularPrice": 12.97,
+      "savings": 3.0,
+      "unit": "each",
+      "page": 12,
+      "sourcePages": [
+        12
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-165.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-166",
+      "storeCode": "50287095",
+      "name": "Downy scent beads",
+      "size": "598-680 g",
+      "salePrice": 15.97,
+      "regularPrice": 19.97,
+      "savings": 4.0,
+      "unit": "each",
+      "page": 12,
+      "sourcePages": [
+        12
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-166.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-167",
+      "storeCode": "30251906",
+      "name": "Glad white garbage bags",
+      "size": "Tall 50-pack or small 100-pack",
+      "salePrice": 10.97,
+      "regularPrice": 12.97,
+      "savings": 2.0,
+      "unit": "each",
+      "page": 12,
+      "sourcePages": [
+        12
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-167.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-168",
+      "storeCode": "50569644",
+      "name": "Swiffer refills or Sweep + Mop starter kit",
+      "size": "Selected varieties and sizes",
+      "salePrice": 15.97,
+      "regularPrice": 18.97,
+      "savings": 3.0,
+      "unit": "each",
+      "page": 12,
+      "sourcePages": [
+        12
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-168.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-169",
+      "storeCode": "30283570",
+      "name": "Lysol cleaner",
+      "size": "4.26 L",
+      "salePrice": 9.97,
+      "regularPrice": 11.97,
+      "savings": 2.0,
+      "unit": "each",
+      "page": 12,
+      "sourcePages": [
+        12
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-169.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-170",
+      "storeCode": "50118724",
+      "name": "Cascade dishwasher tabs",
+      "size": "51 / 67 / 80-pack",
+      "salePrice": 19.97,
+      "regularPrice": 24.97,
+      "savings": 5.0,
+      "unit": "each",
+      "page": 12,
+      "sourcePages": [
+        12
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-170.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-171",
+      "storeCode": "418728",
+      "name": "Scotties facial tissues",
+      "size": "18-pack",
+      "salePrice": 19.97,
+      "regularPrice": 24.97,
+      "savings": 5.0,
+      "unit": "each",
+      "page": 12,
+      "sourcePages": [
+        12
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-171.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-172",
+      "storeCode": "50657162",
+      "name": "Vileda H2prO flat mop and bucket",
+      "size": "Set",
+      "salePrice": 49.96,
+      "regularPrice": 67.98,
+      "savings": 18.02,
+      "unit": "each",
+      "page": 12,
+      "sourcePages": [
+        12
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-172.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-173",
+      "storeCode": "30037518",
+      "name": "Dove body wash or soap",
+      "size": "591 mL body wash or 6 x 106 g soap",
+      "salePrice": 8.86,
+      "regularPrice": 9.98,
+      "savings": 1.12,
+      "unit": "each",
+      "page": 13,
+      "sourcePages": [
+        13
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-173.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-174",
+      "storeCode": "51116298",
+      "name": "eos shea butter lotion",
+      "size": "473 mL",
+      "salePrice": 16.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 13,
+      "sourcePages": [
+        13
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-174.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-175",
+      "storeCode": "31754988",
+      "name": "Sensodyne or Pronamel toothpaste",
+      "size": "75 mL",
+      "salePrice": 6.97,
+      "regularPrice": 8.46,
+      "savings": 1.49,
+      "unit": "each",
+      "page": 13,
+      "sourcePages": [
+        13
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-175.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-176",
+      "storeCode": "50118744",
+      "name": "TheraBreath oral rinse",
+      "size": "473 mL",
+      "salePrice": 13.47,
+      "regularPrice": 14.98,
+      "savings": 1.51,
+      "unit": "each",
+      "page": 13,
+      "sourcePages": [
+        13
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-176.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-177",
+      "storeCode": "30293418",
+      "name": "Dove hair care",
+      "size": "Selected varieties and sizes",
+      "salePrice": 4.97,
+      "regularPrice": 6.28,
+      "savings": 1.31,
+      "unit": "each",
+      "page": 13,
+      "sourcePages": [
+        13
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-177.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-178",
+      "storeCode": "30651330",
+      "name": "Pantene Pro-V shampoo or conditioner",
+      "size": "476-530 mL",
+      "salePrice": 7.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 13,
+      "sourcePages": [
+        13
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-178.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-179",
+      "storeCode": "31162450",
+      "name": "L'Oreal Hair Expertise",
+      "size": "591 mL",
+      "salePrice": 8.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 13,
+      "sourcePages": [
+        13
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-179.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-180",
+      "storeCode": "30997666",
+      "name": "Aussie shampoo or conditioner",
+      "size": "778 mL",
+      "salePrice": 8.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 13,
+      "sourcePages": [
+        13
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-180.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-181",
+      "storeCode": "50973971",
+      "name": "U by Kotex liners or pads",
+      "size": "Selected varieties and sizes",
+      "salePrice": 10.97,
+      "regularPrice": 12.98,
+      "savings": 2.01,
+      "unit": "each",
+      "page": 13,
+      "sourcePages": [
+        13
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-181.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-182",
+      "storeCode": "275941",
+      "name": "Nivea body wash",
+      "size": "500 mL",
+      "salePrice": 4.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 13,
+      "sourcePages": [
+        13
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-182.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-183",
+      "storeCode": "50380955",
+      "name": "Dove dry spray or stick deodorant",
+      "size": "Selected varieties and sizes",
+      "salePrice": 7.86,
+      "regularPrice": 9.46,
+      "savings": 1.6,
+      "unit": "each",
+      "page": 13,
+      "sourcePages": [
+        13
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-183.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-184",
+      "storeCode": "31424340",
+      "name": "Ivory body wash",
+      "size": "1.03 L",
+      "salePrice": 8.48,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 13,
+      "sourcePages": [
+        13
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-184.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-185",
+      "storeCode": "50719549",
+      "name": "Rascals baby wipes",
+      "size": "640-pack",
+      "salePrice": 16.88,
+      "regularPrice": 19.88,
+      "savings": 3.0,
+      "unit": "each",
+      "page": 13,
+      "sourcePages": [
+        13
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-185.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-186",
+      "storeCode": "30328328",
+      "name": "Pampers value pack Swaddlers or Cruisers 360",
+      "size": "Selected sizes; in-store diaper price",
+      "salePrice": 44.94,
+      "regularPrice": 54.94,
+      "savings": 10.0,
+      "unit": "each",
+      "page": 13,
+      "sourcePages": [
+        13
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-186.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-187",
+      "storeCode": "50420115",
+      "name": "Enfamil A+ NeuroPro or Gentlease",
+      "size": "18 x 237 mL",
+      "salePrice": 87.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 13,
+      "sourcePages": [
+        13
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-187.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-188",
+      "storeCode": "50673947",
+      "name": "Huggies super pack diapers",
+      "size": "Selected sizes; in-store diaper price",
+      "salePrice": 26.98,
+      "regularPrice": 32.98,
+      "savings": 6.0,
+      "unit": "each",
+      "page": 13,
+      "sourcePages": [
+        13
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-188.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-189",
+      "storeCode": "50507952",
+      "name": "Kendamil organic formula",
+      "size": "800 g",
+      "salePrice": 49.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 13,
+      "sourcePages": [
+        13
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-189.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-190",
+      "storeCode": "30193083",
+      "name": "Enfamil A+ stage 1 or 2 refill",
+      "size": "2 x 496 g",
+      "salePrice": 62.98,
+      "regularPrice": 69.98,
+      "savings": 7.0,
+      "unit": "each",
+      "page": 13,
+      "sourcePages": [
+        13
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-190.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-191",
+      "storeCode": "31197318",
+      "name": "Jamieson calcium or zinc",
+      "size": "Calcium 120-pack; zinc 100-pack",
+      "salePrice": 9.97,
+      "regularPrice": 12.07,
+      "savings": 2.1,
+      "unit": "each",
+      "page": 14,
+      "sourcePages": [
+        14
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-191.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-192",
+      "storeCode": "31199697",
+      "name": "One A Day multivitamin gummies or RestoraLAX",
+      "size": "Gummies 130-pack; RestoraLAX 14 doses",
+      "salePrice": 14.77,
+      "regularPrice": 16.48,
+      "savings": 1.71,
+      "unit": "each",
+      "page": 14,
+      "sourcePages": [
+        14
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-192.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-193",
+      "storeCode": "50361475",
+      "name": "Equate high protein meal replacement shakes",
+      "size": "6 x 235 mL; selected flavours",
+      "salePrice": 10.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 14,
+      "sourcePages": [
+        14
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-193.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-194",
+      "storeCode": "31215888",
+      "name": "Advil Cold & Sinus",
+      "size": "40-pack",
+      "salePrice": 15.07,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 14,
+      "sourcePages": [
+        14
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-194.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-195",
+      "storeCode": "31257855",
+      "name": "Tylenol Extra Strength",
+      "size": "130-pack",
+      "salePrice": 11.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 14,
+      "sourcePages": [
+        14
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-195.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-196",
+      "storeCode": "31193842",
+      "name": "Advil Liqui-Gels or Mini-Gels",
+      "size": "Liqui-Gels 72-pack; Mini-Gels 70-pack",
+      "salePrice": 16.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 14,
+      "sourcePages": [
+        14
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-196.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-197",
+      "storeCode": "30082713",
+      "name": "IAMS Proactive Health dry cat food",
+      "size": "2.72 or 3.18 kg; selected varieties",
+      "salePrice": 19.77,
+      "regularPrice": 21.97,
+      "savings": 2.2,
+      "unit": "each",
+      "page": 14,
+      "sourcePages": [
+        14
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-197.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-198",
+      "storeCode": "31227341",
+      "name": "Arm & Hammer clumping cat litter",
+      "size": "17.2, 12.7 or 4.76 kg; selected varieties",
+      "salePrice": 24.67,
+      "regularPrice": 27.46,
+      "savings": 2.79,
+      "unit": "each",
+      "page": 14,
+      "sourcePages": [
+        14
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-198.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-199",
+      "storeCode": "30309037",
+      "name": "Ol' Roy Maximum high protein dry dog food",
+      "size": "18 kg; selected varieties",
+      "salePrice": 36.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 14,
+      "sourcePages": [
+        14
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-199.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-200",
+      "storeCode": "51120480",
+      "name": "Pure Balance Pro+ dog food",
+      "size": "14 kg; selected varieties",
+      "salePrice": 49.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 14,
+      "sourcePages": [
+        14
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-200.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-201",
+      "storeCode": "30264606",
+      "name": "Blue Buffalo large breed dog food",
+      "size": "9.9 kg; selected varieties",
+      "salePrice": 56.97,
+      "regularPrice": 63.98,
+      "savings": 7.01,
+      "unit": "each",
+      "page": 14,
+      "sourcePages": [
+        14
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-201.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-202",
+      "storeCode": "51131870",
+      "name": "Minecraft Dungeons II",
+      "size": "Nintendo Switch 2 or Xbox Series X",
+      "salePrice": 69.96,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 14,
+      "sourcePages": [
+        14
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-202.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-203",
+      "storeCode": "51183596",
+      "name": "Nintendo Switch 2 + Mario Kart World bundle",
+      "size": "Set; environmental handling fees may apply",
+      "salePrice": 749.96,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 14,
+      "sourcePages": [
+        14
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-203.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-204",
+      "storeCode": "50743642",
+      "name": "14 oz three-wick candle",
+      "size": "Selected fragrances",
+      "salePrice": 9.94,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 14,
+      "sourcePages": [
+        14
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-204.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-205",
+      "storeCode": "51056398",
+      "name": "20 x 20 inch decorative cushions",
+      "size": "2-pack",
+      "salePrice": 29.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 14,
+      "sourcePages": [
+        14
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-205.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-206",
+      "storeCode": "50635331/948948",
+      "name": "Cozy knit throw",
+      "size": "Selected varieties; more selection available",
+      "salePrice": 29.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 14,
+      "sourcePages": [
+        14
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-206.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-207",
+      "storeCode": "1080151",
+      "name": "Castrol GTX high mileage motor oil",
+      "size": "5 L; various viscosities",
+      "salePrice": 45.88,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 14,
+      "sourcePages": [
+        14
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-207.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-208",
+      "storeCode": "50842279",
+      "name": "Kidde smoke alarm",
+      "size": "Interconnected alarm with battery backup",
+      "salePrice": 46.78,
+      "regularPrice": 53.47,
+      "savings": 6.69,
+      "unit": "each",
+      "page": 14,
+      "sourcePages": [
+        14
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-208.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-209",
+      "storeCode": "31278841",
+      "name": "Super Tech universal tractor fluid",
+      "size": "18.9 L; more viscosities available",
+      "salePrice": 109.0,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 14,
+      "sourcePages": [
+        14
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-209.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-210",
+      "storeCode": "30424664",
+      "name": "Parent's Choice organic baby food puree",
+      "size": "128 mL; selected flavours",
+      "salePrice": 1.0,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-210.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-211",
+      "storeCode": "50825074",
+      "name": "Parent's Choice infant formula",
+      "size": "Milk-based 700 g or Gentle+ iron-fortified 629 g",
+      "salePrice": 26.94,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-211.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-212",
+      "storeCode": "2875375",
+      "name": "Gerber Puffs or Crunchies snacks",
+      "size": "Selected varieties and sizes",
+      "salePrice": 2.47,
+      "regularPrice": 3.47,
+      "savings": 1.0,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-212.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-213",
+      "storeCode": "51102281",
+      "name": "Munchkin Any Angle or Gentle Transition cups",
+      "size": "10 oz",
+      "salePrice": 9.47,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-213.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-214",
+      "storeCode": "50958244",
+      "name": "Medela Melody InBra breast pump",
+      "size": "Wearable double electric",
+      "salePrice": 138.0,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-214.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-215",
+      "storeCode": "30332814",
+      "name": "Baby Brezza Formula Pro advanced dispenser",
+      "size": "Formula dispenser",
+      "salePrice": 198.0,
+      "regularPrice": 248.0,
+      "savings": 50.0,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-215.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-216",
+      "storeCode": "30877804",
+      "name": "Evolur Zoodle high chair",
+      "size": "2-in-1",
+      "salePrice": 129.0,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-216.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-217",
+      "storeCode": "30497574",
+      "name": "Parent's Choice wipes",
+      "size": "1,200-pack; selected varieties",
+      "salePrice": 19.94,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-217.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-218",
+      "storeCode": "50179181",
+      "name": "Rascals premium superpack diapers",
+      "size": "Selected varieties and sizes",
+      "salePrice": 19.88,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-218.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-219",
+      "storeCode": "50434242",
+      "name": "Parent's Choice training pants",
+      "size": "Selected varieties and sizes",
+      "salePrice": 19.94,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-219.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-220",
+      "storeCode": "50991154",
+      "name": "Graco Extend2Fit convertible car seat",
+      "size": "2-to-1",
+      "salePrice": 299.97,
+      "regularPrice": 449.0,
+      "savings": 149.03,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-220.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-221",
+      "storeCode": "31283348",
+      "name": "Amara organic smoothie melts or fruit bites",
+      "size": "23 g; selected flavours",
+      "salePrice": 4.47,
+      "regularPrice": 5.47,
+      "savings": 1.0,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-221.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-222",
+      "storeCode": "50799999",
+      "name": "Cerelac baby cereal",
+      "size": "400 g; selected flavours",
+      "salePrice": 8.43,
+      "regularPrice": 9.97,
+      "savings": 1.54,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-222.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-223",
+      "storeCode": "31743716",
+      "name": "Philips Avent Natural baby bottles",
+      "size": "3-pack; Natural Response nipple",
+      "salePrice": 19.97,
+      "regularPrice": 26.97,
+      "savings": 7.0,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-223.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-224",
+      "storeCode": "31527920",
+      "name": "Ingenuity Baby Base booster seat",
+      "size": "2-in-1",
+      "salePrice": 49.97,
+      "regularPrice": 59.97,
+      "savings": 10.0,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-224.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-225",
+      "storeCode": "50150403",
+      "name": "Harmony Play & Go All-in-One playard",
+      "size": "Each",
+      "salePrice": 99.0,
+      "regularPrice": 138.0,
+      "savings": 39.0,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-225.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-226",
+      "storeCode": "50933486",
+      "name": "Graco simple sway baby swing",
+      "size": "Each",
+      "salePrice": 149.97,
+      "regularPrice": 199.0,
+      "savings": 49.03,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-226.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-227",
+      "storeCode": "30624697",
+      "name": "Graco TurboBooster backless booster car seat",
+      "size": "Each",
+      "salePrice": 49.97,
+      "regularPrice": 64.97,
+      "savings": 15.0,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-227.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-228",
+      "storeCode": "50766832",
+      "name": "Clek Ozzi backless booster seat",
+      "size": "Rigid latch",
+      "salePrice": 89.97,
+      "regularPrice": 99.97,
+      "savings": 10.0,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-228.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-229",
+      "storeCode": "50682136",
+      "name": "Evenflo Tribute LX convertible car seat",
+      "size": "Child weight 5-40 lb",
+      "salePrice": 125.0,
+      "regularPrice": 135.0,
+      "savings": 10.0,
+      "unit": "each",
+      "page": 15,
+      "sourcePages": [
+        15
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-229.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-230",
+      "storeCode": "30235206",
+      "name": "Pedigree dry dog food",
+      "size": "8 kg; selected varieties",
+      "salePrice": 22.48,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-230.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-231",
+      "storeCode": "31330489",
+      "name": "Purina Beneful dry dog food",
+      "size": "7 kg; selected varieties",
+      "salePrice": 26.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-231.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-232",
+      "storeCode": "51095166",
+      "name": "Cesar wet dog food",
+      "size": "6 x 100 g; selected flavours",
+      "salePrice": 8.48,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-232.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-233",
+      "storeCode": "51069759",
+      "name": "Ol' Roy Munchy Bone dog treats",
+      "size": "24-pack",
+      "salePrice": 29.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-233.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-234",
+      "storeCode": "51123791",
+      "name": "Vibrant Life Tough Chew dog toy",
+      "size": "Each",
+      "salePrice": 6.75,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-234.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-235",
+      "storeCode": "51123794",
+      "name": "Ocean plush pet toy",
+      "size": "Each",
+      "salePrice": 4.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-235.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-236",
+      "storeCode": "30957399",
+      "name": "IAMS Proactive Health dry dog food",
+      "size": "Large breeds; 18.1 kg; selected varieties",
+      "salePrice": 64.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-236.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-237",
+      "storeCode": "50967744",
+      "name": "Special Kitty clumping cat litter",
+      "size": "22 kg; selected varieties",
+      "salePrice": 12.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-237.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-238",
+      "storeCode": "31016929",
+      "name": "Special Kitty dry cat food",
+      "size": "7 kg; selected varieties",
+      "salePrice": 18.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-238.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-239",
+      "storeCode": "50123524",
+      "name": "Vibrant Life enclosed cat litter pan",
+      "size": "Each",
+      "salePrice": 29.94,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-239.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-240",
+      "storeCode": "50955103",
+      "name": "Special Kitty pate single can cat food",
+      "size": "156 g; selected varieties",
+      "salePrice": 0.8,
+      "regularPrice": 0.9,
+      "savings": 0.1,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-240.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-241",
+      "storeCode": "50148824",
+      "name": "Sheba Bistro Perfect Portions wet cat food",
+      "size": "12 x 75 g; selected varieties",
+      "salePrice": 15.98,
+      "regularPrice": 17.98,
+      "savings": 2.0,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-241.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-242",
+      "storeCode": "51037837",
+      "name": "Fancy Feast Savory cat treats variety pack",
+      "size": "6 x 40 g; selected varieties",
+      "salePrice": 6.97,
+      "regularPrice": 8.47,
+      "savings": 1.5,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-242.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-243",
+      "storeCode": "51027938",
+      "name": "Fancy Feast Gems mousse wet cat food",
+      "size": "16 x 57 g; variety pack",
+      "salePrice": 15.93,
+      "regularPrice": 17.73,
+      "savings": 1.8,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-243.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-244",
+      "storeCode": "50623802",
+      "name": "Whiskas wet cat food pouch singles",
+      "size": "85 g; selected flavours",
+      "salePrice": 0.77,
+      "regularPrice": 0.88,
+      "savings": 0.11,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-244.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-245",
+      "storeCode": "30082955",
+      "name": "Milk-Bone dog biscuits",
+      "size": "Selected varieties and sizes",
+      "salePrice": 3.97,
+      "regularPrice": 4.77,
+      "savings": 0.8,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-245.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-246",
+      "storeCode": "31661728",
+      "name": "Caledon Farms dog treats",
+      "size": "256 g",
+      "salePrice": 7.98,
+      "regularPrice": 9.98,
+      "savings": 2.0,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-246.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-247",
+      "storeCode": "30676093",
+      "name": "Friskies Party Mix crunch cat treats",
+      "size": "170 g; selected varieties",
+      "salePrice": 2.27,
+      "regularPrice": 2.64,
+      "savings": 0.37,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-247.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-248",
+      "storeCode": "31398652",
+      "name": "Arm & Hammer Double Duty cat litter deodorizer",
+      "size": "850 g",
+      "salePrice": 4.48,
+      "regularPrice": 4.98,
+      "savings": 0.5,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-248.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-249",
+      "storeCode": "30446352",
+      "name": "Mane 'n Tail shampoo or conditioner",
+      "size": "1 L",
+      "salePrice": 10.77,
+      "regularPrice": 12.98,
+      "savings": 2.21,
+      "unit": "each",
+      "page": 16,
+      "sourcePages": [
+        16
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-249.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-250",
+      "storeCode": "51038042/426",
+      "name": "Kids' occupation costumes",
+      "size": "Selected styles",
+      "salePrice": 19.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-250.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-251",
+      "storeCode": "51044908/9330",
+      "name": "Girls' licensed costumes",
+      "size": "Selected styles",
+      "salePrice": 29.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-251.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-252",
+      "storeCode": "51050200/4552",
+      "name": "Toddlers' licensed costume",
+      "size": "Selected styles",
+      "salePrice": 32.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-252.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-253",
+      "storeCode": "51050204/3552",
+      "name": "Boys' licensed costumes",
+      "size": "Selected styles",
+      "salePrice": 34.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-253.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-254",
+      "storeCode": "51041681/2/55410/6999",
+      "name": "Halloween decor",
+      "size": "Selected styles",
+      "salePrice": 26.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-254.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-255",
+      "storeCode": "51041713/55715",
+      "name": "Adults' licensed costume",
+      "size": "Selected styles",
+      "salePrice": 39.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-255.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-256",
+      "storeCode": "51041573",
+      "name": "25 inch light-up Halloween swing girl decor",
+      "size": "Each",
+      "salePrice": 89.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-256.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-257",
+      "storeCode": "51126866",
+      "name": "Maynards share size candies",
+      "size": "Selected varieties and sizes",
+      "salePrice": 3.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-257.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-258",
+      "storeCode": "30363723",
+      "name": "Great Value Halloween lollipops",
+      "size": "100-pack; 500 g",
+      "salePrice": 5.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-258.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-259",
+      "storeCode": "30872721",
+      "name": "Kinder Surprise chocolate eggs",
+      "size": "3-pack; selected varieties",
+      "salePrice": 4.48,
+      "regularPrice": 5.48,
+      "savings": 1.0,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-259.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-260",
+      "storeCode": "51081484",
+      "name": "Haribo Halloween candy",
+      "size": "80-pack",
+      "salePrice": 14.98,
+      "regularPrice": 18.97,
+      "savings": 3.99,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-260.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-261",
+      "storeCode": "51037245/8169/71/50021",
+      "name": "Harvest collection assortment",
+      "size": "Selected pieces; prices start at the displayed amount",
+      "salePrice": 4.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "From price",
+      "conditions": "",
+      "pricePrefix": "From ",
+      "imageFile": "product-261.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-262",
+      "storeCode": "51032368/9",
+      "name": "Starfrit Dutch oven or wok with lid",
+      "size": "7.2 qt Dutch oven or 12.6 inch wok",
+      "salePrice": 19.97,
+      "regularPrice": 29.97,
+      "savings": 10.0,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-262.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-263",
+      "storeCode": "50236796",
+      "name": "Alcan bakeware foil pan",
+      "size": "Selected varieties and sizes",
+      "salePrice": 3.98,
+      "regularPrice": 5.98,
+      "savings": 2.0,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-263.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-264",
+      "storeCode": "31155225",
+      "name": "Alcan aluminum foil or Reynolds compostable parchment paper",
+      "size": "Foil 60 or 100 ft; parchment 75 ft",
+      "salePrice": 6.98,
+      "regularPrice": 8.48,
+      "savings": 1.5,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-264.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-265",
+      "storeCode": "31280327",
+      "name": "Royal Chinet dinner plates",
+      "size": "10.38 inch; 125-pack",
+      "salePrice": 21.47,
+      "regularPrice": 23.97,
+      "savings": 2.5,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-265.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-266",
+      "storeCode": "51158302/3",
+      "name": "TuffStore storage tote",
+      "size": "63 L",
+      "salePrice": 6.97,
+      "regularPrice": 7.97,
+      "savings": 1.0,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-266.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-267",
+      "storeCode": "30006671/818968",
+      "name": "Starfrit pull-chopper or onion chopper",
+      "size": "Easy mandolin also available",
+      "salePrice": 15.97,
+      "regularPrice": 19.97,
+      "savings": 4.0,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-267.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-268",
+      "storeCode": "30705176/50450018/788286",
+      "name": "Starfrit small appliances",
+      "size": "Waffle maker, sandwich maker or 10-cup rice cooker",
+      "salePrice": 29.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-268.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-269",
+      "storeCode": "50973596",
+      "name": "George packable jacket",
+      "size": "Selected sizes",
+      "salePrice": 25.0,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-269.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-270",
+      "storeCode": "31703217/50449864",
+      "name": "Hamilton Beach microwave",
+      "size": "1.1 cu ft",
+      "salePrice": 84.97,
+      "regularPrice": 114.97,
+      "savings": 30.0,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-270.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-271",
+      "storeCode": "50286518",
+      "name": "Bissell PowerForce Turbo bagless upright vacuum",
+      "size": "Each",
+      "salePrice": 98.98,
+      "regularPrice": 119.98,
+      "savings": 21.0,
+      "unit": "each",
+      "page": 17,
+      "sourcePages": [
+        17
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-271.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-272",
+      "storeCode": "2060WJBRODW",
+      "name": "Ray-Ban Aviator sunglasses",
+      "size": "Online only",
+      "salePrice": 188.8,
+      "regularPrice": 236.0,
+      "savings": 47.2,
+      "unit": "each",
+      "page": 18,
+      "sourcePages": [
+        18
+      ],
+      "promotionType": "Online deal",
+      "conditions": "Online only",
+      "pricePrefix": "",
+      "imageFile": "product-272.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-273",
+      "storeCode": "4GSYJGIOXVVT",
+      "name": "Cordless spin scrubber",
+      "size": "Online only",
+      "salePrice": 32.99,
+      "regularPrice": 199.99,
+      "savings": 167.0,
+      "unit": "each",
+      "page": 18,
+      "sourcePages": [
+        18
+      ],
+      "promotionType": "Online deal",
+      "conditions": "Online only",
+      "pricePrefix": "",
+      "imageFile": "product-273.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-274",
+      "storeCode": "600020083507",
+      "name": "Diono Radian 3R All-in-One convertible car seat",
+      "size": "Online only",
+      "salePrice": 234.99,
+      "regularPrice": 329.99,
+      "savings": 95.0,
+      "unit": "each",
+      "page": 18,
+      "sourcePages": [
+        18
+      ],
+      "promotionType": "Online deal",
+      "conditions": "Online only",
+      "pricePrefix": "",
+      "imageFile": "product-274.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-275",
+      "storeCode": "1CLYLOETMBED",
+      "name": "Women's smart watch",
+      "size": "Online only",
+      "salePrice": 36.99,
+      "regularPrice": 89.99,
+      "savings": 53.0,
+      "unit": "each",
+      "page": 18,
+      "sourcePages": [
+        18
+      ],
+      "promotionType": "Online deal",
+      "conditions": "Online only",
+      "pricePrefix": "",
+      "imageFile": "product-275.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-276",
+      "storeCode": "6NGOFY3I88DJ",
+      "name": "Auusda 16 inch business laptop",
+      "size": "Online only",
+      "salePrice": 671.99,
+      "regularPrice": 1499.99,
+      "savings": 828.0,
+      "unit": "each",
+      "page": 18,
+      "sourcePages": [
+        18
+      ],
+      "promotionType": "Online deal",
+      "conditions": "Online only",
+      "pricePrefix": "",
+      "imageFile": "product-276.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-277",
+      "storeCode": "7I501FIV25WP",
+      "name": "MERACH vibrating muscle toner",
+      "size": "Online only",
+      "salePrice": 77.99,
+      "regularPrice": 199.99,
+      "savings": 122.0,
+      "unit": "each",
+      "page": 18,
+      "sourcePages": [
+        18
+      ],
+      "promotionType": "Online deal",
+      "conditions": "Online only",
+      "pricePrefix": "",
+      "imageFile": "product-277.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-278",
+      "storeCode": "53ZHTK7SNCOZ",
+      "name": "Set of 2 dining chairs",
+      "size": "Online only",
+      "salePrice": 155.99,
+      "regularPrice": 299.99,
+      "savings": 144.0,
+      "unit": "each",
+      "page": 18,
+      "sourcePages": [
+        18
+      ],
+      "promotionType": "Online deal",
+      "conditions": "Online only",
+      "pricePrefix": "",
+      "imageFile": "product-278.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-279",
+      "storeCode": "16RKOZCJHPSM",
+      "name": "ViscoLogic 10 inch queen mattress",
+      "size": "Online only",
+      "salePrice": 199.99,
+      "regularPrice": 389.99,
+      "savings": 190.0,
+      "unit": "each",
+      "page": 18,
+      "sourcePages": [
+        18
+      ],
+      "promotionType": "Online deal",
+      "conditions": "Online only",
+      "pricePrefix": "",
+      "imageFile": "product-279.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-280",
+      "storeCode": "5XC9CKY015Z4",
+      "name": "Joyway 5-piece luggage set",
+      "size": "Online only",
+      "salePrice": 129.99,
+      "regularPrice": 399.99,
+      "savings": 270.0,
+      "unit": "each",
+      "page": 18,
+      "sourcePages": [
+        18
+      ],
+      "promotionType": "Online deal",
+      "conditions": "Online only",
+      "pricePrefix": "",
+      "imageFile": "product-280.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-281",
+      "storeCode": "3A94COGZB56U",
+      "name": "Lefant M310 Ultra robot vacuum and mop combo",
+      "size": "Online only",
+      "salePrice": 146.99,
+      "regularPrice": 182.99,
+      "savings": 36.0,
+      "unit": "each",
+      "page": 18,
+      "sourcePages": [
+        18
+      ],
+      "promotionType": "Online deal",
+      "conditions": "Online only",
+      "pricePrefix": "",
+      "imageFile": "product-281.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-282",
+      "storeCode": "0TRG1JXL0B37",
+      "name": "Greenworks 80 V cordless snow shovel",
+      "size": "Online only",
+      "salePrice": 359.99,
+      "regularPrice": 529.99,
+      "savings": 170.0,
+      "unit": "each",
+      "page": 18,
+      "sourcePages": [
+        18
+      ],
+      "promotionType": "Online deal",
+      "conditions": "Online only",
+      "pricePrefix": "",
+      "imageFile": "product-282.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-283",
+      "storeCode": "1KXXU4IKAIXQ",
+      "name": "Gyrocopters Plaid 3.0 electric scooter",
+      "size": "Online only",
+      "salePrice": 649.96,
+      "regularPrice": 1299.99,
+      "savings": 650.03,
+      "unit": "each",
+      "page": 18,
+      "sourcePages": [
+        18
+      ],
+      "promotionType": "Online deal",
+      "conditions": "Online only",
+      "pricePrefix": "",
+      "imageFile": "product-283.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-284",
+      "storeCode": "50984435",
+      "name": "Good Protein plant-based shake mixes",
+      "size": "352 g; selected flavours",
+      "salePrice": 26.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 19,
+      "sourcePages": [
+        19
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-284.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-285",
+      "storeCode": "31305662",
+      "name": "Revolution Nutrition Iso Whey protein powder",
+      "size": "908 g; selected flavours",
+      "salePrice": 40.47,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 19,
+      "sourcePages": [
+        19
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-285.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-286",
+      "storeCode": "50433474",
+      "name": "BFit vanilla or chocolate protein shake",
+      "size": "460 mL",
+      "salePrice": 2.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 19,
+      "sourcePages": [
+        19
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-286.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-287",
+      "storeCode": "31305217",
+      "name": "Vega Essentials protein powder",
+      "size": "613-619 g; selected flavours",
+      "salePrice": 25.97,
+      "regularPrice": 29.97,
+      "savings": 4.0,
+      "unit": "each",
+      "page": 19,
+      "sourcePages": [
+        19
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-287.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-288",
+      "storeCode": "31198196",
+      "name": "Jamieson vitamins",
+      "size": "Selected varieties and sizes",
+      "salePrice": 9.97,
+      "regularPrice": 12.67,
+      "savings": 2.7,
+      "unit": "each",
+      "page": 19,
+      "sourcePages": [
+        19
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-288.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-289",
+      "storeCode": "31197355",
+      "name": "Webber Naturals magnesium",
+      "size": "Selected varieties and sizes",
+      "salePrice": 11.97,
+      "regularPrice": 13.58,
+      "savings": 1.61,
+      "unit": "each",
+      "page": 19,
+      "sourcePages": [
+        19
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-289.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-290",
+      "storeCode": "51130274",
+      "name": "De Cecco high protein pasta",
+      "size": "400 g; selected varieties",
+      "salePrice": 5.47,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 19,
+      "sourcePages": [
+        19
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-290.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-291",
+      "storeCode": "51157606",
+      "name": "Premier Protein muffin mix",
+      "size": "396 g; selected varieties",
+      "salePrice": 7.47,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 19,
+      "sourcePages": [
+        19
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-291.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-292",
+      "storeCode": "51160230",
+      "name": "Farm Girl cake mixes",
+      "size": "350 g; selected varieties",
+      "salePrice": 11.47,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 19,
+      "sourcePages": [
+        19
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-292.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-293",
+      "storeCode": "51071338",
+      "name": "Quaker oatmeal protein",
+      "size": "465 g",
+      "salePrice": 6.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 19,
+      "sourcePages": [
+        19
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-293.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-294",
+      "storeCode": "50953286",
+      "name": "Prana Grano Love",
+      "size": "300 g; selected varieties",
+      "salePrice": 3.97,
+      "regularPrice": 4.97,
+      "savings": 1.0,
+      "unit": "each",
+      "page": 19,
+      "sourcePages": [
+        19
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-294.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-295",
+      "storeCode": "50683154",
+      "name": "Clif Bars",
+      "size": "5-pack; selected varieties",
+      "salePrice": 7.47,
+      "regularPrice": 11.97,
+      "savings": 4.5,
+      "unit": "each",
+      "page": 19,
+      "sourcePages": [
+        19
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-295.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-296",
+      "storeCode": "50860006",
+      "name": "Prana overnight chia",
+      "size": "260 g; selected varieties",
+      "salePrice": 5.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 19,
+      "sourcePages": [
+        19
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-296.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-297",
+      "storeCode": "50944118",
+      "name": "Dempster's Protein bread or bagels",
+      "size": "Selected varieties and sizes",
+      "salePrice": 3.98,
+      "regularPrice": 4.68,
+      "savings": 0.7,
+      "unit": "each",
+      "page": 19,
+      "sourcePages": [
+        19
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-297.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-298",
+      "storeCode": "50446982",
+      "name": "Promise gluten free bread",
+      "size": "480 g; selected varieties",
+      "salePrice": 7.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 19,
+      "sourcePages": [
+        19
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-298.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-299",
+      "storeCode": "50944065",
+      "name": "Suave body wash or antiperspirant",
+      "size": "532 mL wash or 74 g antiperspirant",
+      "salePrice": 3.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-299.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-300",
+      "storeCode": "30270881",
+      "name": "Live Clean holiday hand soap",
+      "size": "500 mL; selected varieties",
+      "salePrice": 4.96,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-300.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-301",
+      "storeCode": "51167910",
+      "name": "Daise mystery bracelets",
+      "size": "Each",
+      "salePrice": 12.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-301.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-302",
+      "storeCode": "51068806",
+      "name": "COVERGIRL TruBlend Sun & Sculpt bronzing glow serum",
+      "size": "Selected shades",
+      "salePrice": 16.46,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-302.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-303",
+      "storeCode": "30039253",
+      "name": "CeraVe foaming facial cleanser",
+      "size": "562 mL",
+      "salePrice": 20.96,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-303.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-304",
+      "storeCode": "30039218",
+      "name": "CeraVe AM or PM moisturizing lotion",
+      "size": "89 mL; selected varieties",
+      "salePrice": 20.96,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-304.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-305",
+      "storeCode": "31217923",
+      "name": "Garnier Whole Blends shampoo or conditioner",
+      "size": "370 mL; selected varieties",
+      "salePrice": 4.98,
+      "regularPrice": 5.28,
+      "savings": 0.3,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-305.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-306",
+      "storeCode": "51086618",
+      "name": "Scent Theory hand sanitizer",
+      "size": "30 mL; selected stores or online",
+      "salePrice": 6.42,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-306.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-307",
+      "storeCode": "50957167",
+      "name": "L'Oreal Paris Revitalift Triple Power LZR eye cream",
+      "size": "15 mL",
+      "salePrice": 39.96,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-307.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-308",
+      "storeCode": "50817034",
+      "name": "Q-tips original cotton swabs",
+      "size": "500-pack",
+      "salePrice": 3.97,
+      "regularPrice": 4.97,
+      "savings": 1.0,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-308.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-309",
+      "storeCode": "50772967",
+      "name": "L'Oreal Paris Hair Expertise Density Booster",
+      "size": "Shampoo or conditioner; 150-200 mL",
+      "salePrice": 8.97,
+      "regularPrice": 10.97,
+      "savings": 2.0,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-309.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-310",
+      "storeCode": "50942632",
+      "name": "Aquaphor healing ointment",
+      "size": "396 g",
+      "salePrice": 19.96,
+      "regularPrice": 24.97,
+      "savings": 5.01,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-310.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-311",
+      "storeCode": "4614327",
+      "name": "L'Oreal Paris Voluminous mascara",
+      "size": "Selected varieties",
+      "salePrice": 8.97,
+      "regularPrice": 9.97,
+      "savings": 1.0,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-311.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-312",
+      "storeCode": "50674792",
+      "name": "Crest 3D White deep stain remover",
+      "size": "Toothpaste 67 mL or whitening rinse 946 mL",
+      "salePrice": 9.97,
+      "regularPrice": 11.46,
+      "savings": 1.49,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-312.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-313",
+      "storeCode": "206882",
+      "name": "John Frieda hair care",
+      "size": "Selected shampoo, conditioner or styling products",
+      "salePrice": 11.48,
+      "regularPrice": 12.98,
+      "savings": 1.5,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-313.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-314",
+      "storeCode": "30243271",
+      "name": "Colgate toothbrushes or toothpaste",
+      "size": "6-pack brushes; Sensitive Pro-Relief 120 mL or Optic White Advanced 133 mL",
+      "salePrice": 6.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-314.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-315",
+      "storeCode": "50812826",
+      "name": "L'ange Hair flat iron or curling wand",
+      "size": "Each",
+      "salePrice": 29.97,
+      "regularPrice": 44.98,
+      "savings": 15.01,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-315.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-316",
+      "storeCode": "50286972",
+      "name": "Jergens lotion",
+      "size": "775 mL; selected varieties",
+      "salePrice": 8.62,
+      "regularPrice": 9.97,
+      "savings": 1.35,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-316.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-317",
+      "storeCode": "50992271",
+      "name": "Aquaphor healing ointment",
+      "size": "50 g",
+      "salePrice": 9.96,
+      "regularPrice": 11.97,
+      "savings": 2.01,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-317.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-318",
+      "storeCode": "49N1Q4YGZZ5W",
+      "name": "La Roche-Posay Effaclar purifying foaming gel",
+      "size": "400 mL; oily skin; online only",
+      "salePrice": 27.16,
+      "regularPrice": 31.95,
+      "savings": 4.79,
+      "unit": "each",
+      "page": 20,
+      "sourcePages": [
+        20
+      ],
+      "promotionType": "Online deal",
+      "conditions": "Online only",
+      "pricePrefix": "",
+      "imageFile": "product-318.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-319",
+      "storeCode": "9297375",
+      "name": "Sanpellegrino sparkling water",
+      "size": "750 mL",
+      "salePrice": 2.47,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 21,
+      "sourcePages": [
+        21
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-319.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-320",
+      "storeCode": "31337720",
+      "name": "Sanpellegrino sparkling water",
+      "size": "6 x 1 L",
+      "salePrice": 11.58,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 21,
+      "sourcePages": [
+        21
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-320.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-321",
+      "storeCode": "9218104",
+      "name": "Sanpellegrino sparkling water",
+      "size": "6 x 500 mL",
+      "salePrice": 8.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 21,
+      "sourcePages": [
+        21
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-321.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-322",
+      "storeCode": "50976189/91/95/334",
+      "name": "Sanpellegrino CIAO! flavoured sparkling water",
+      "size": "6 x 330 mL; selected varieties",
+      "salePrice": 8.27,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 21,
+      "sourcePages": [
+        21
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-322.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-323",
+      "storeCode": "31003781/2",
+      "name": "Sanpellegrino flavoured sparkling drink",
+      "size": "6 x 330 mL; selected varieties",
+      "salePrice": 6.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 21,
+      "sourcePages": [
+        21
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-323.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-324",
+      "storeCode": "50761637/9/40/976198",
+      "name": "Sanpellegrino Light",
+      "size": "6 x 330 mL; selected varieties",
+      "salePrice": 6.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 21,
+      "sourcePages": [
+        21
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-324.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-325",
+      "storeCode": "51151901",
+      "name": "Activia Fibre+ probiotic yogurt tubs",
+      "size": "625 g; selected flavours",
+      "salePrice": 4.96,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 22,
+      "sourcePages": [
+        22
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-325.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-326",
+      "storeCode": "51151899",
+      "name": "Activia probiotic yogurt",
+      "size": "12 x 95 g or 12 x 100 g",
+      "salePrice": 5.96,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 22,
+      "sourcePages": [
+        22
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-326.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-327",
+      "storeCode": "51151903",
+      "name": "Activia yogurt tubs",
+      "size": "650 g; selected flavours",
+      "salePrice": 3.87,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 22,
+      "sourcePages": [
+        22
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-327.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-328",
+      "storeCode": "51151900",
+      "name": "Activia Fibre+ probiotic yogurt",
+      "size": "4 x 100 g; selected flavours",
+      "salePrice": 3.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 22,
+      "sourcePages": [
+        22
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-328.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-329",
+      "storeCode": "9059106",
+      "name": "Activia probiotic yogurt 8-pack",
+      "size": "8 x 100 g; selected flavours",
+      "salePrice": 4.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 22,
+      "sourcePages": [
+        22
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-329.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-330",
+      "storeCode": "31362213",
+      "name": "Activia probiotic drinkable yogurt",
+      "size": "8 x 93 mL; selected varieties",
+      "salePrice": 6.47,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 22,
+      "sourcePages": [
+        22
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-330.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-331",
+      "storeCode": "50281129",
+      "name": "Kraft Dinner",
+      "size": "200 g",
+      "salePrice": 1.67,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 23,
+      "sourcePages": [
+        23
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-331.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-332",
+      "storeCode": "51086407",
+      "name": "Heinz ketchup zero sugar",
+      "size": "375 mL",
+      "salePrice": 3.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 23,
+      "sourcePages": [
+        23
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-332.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-333",
+      "storeCode": "50559266",
+      "name": "Heinz pickle-flavoured tomato ketchup",
+      "size": "375 mL",
+      "salePrice": 2.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 23,
+      "sourcePages": [
+        23
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-333.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-334",
+      "storeCode": "9045834",
+      "name": "Philadelphia cream cheese",
+      "size": "227-250 g; selected varieties",
+      "salePrice": 3.97,
+      "regularPrice": 4.48,
+      "savings": 0.51,
+      "unit": "each",
+      "page": 23,
+      "sourcePages": [
+        23
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-334.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-335",
+      "storeCode": "30952043",
+      "name": "Kraft peanut butter",
+      "size": "1 kg; selected varieties",
+      "salePrice": 5.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 23,
+      "sourcePages": [
+        23
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-335.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-336",
+      "storeCode": "9126719",
+      "name": "Cool Whip whipped topping",
+      "size": "1 L",
+      "salePrice": 5.48,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 23,
+      "sourcePages": [
+        23
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-336.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-337",
+      "storeCode": "50413628",
+      "name": "Kraft salad dressing",
+      "size": "425 mL; selected varieties",
+      "salePrice": 3.24,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 23,
+      "sourcePages": [
+        23
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-337.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-338",
+      "storeCode": "51140233",
+      "name": "CRAVE crispy roll-ups",
+      "size": "540 g; selected varieties",
+      "salePrice": 11.97,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 23,
+      "sourcePages": [
+        23
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-338.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-339",
+      "storeCode": "51137757",
+      "name": "Heinz soup",
+      "size": "370-380 mL; selected varieties",
+      "salePrice": 5.47,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 23,
+      "sourcePages": [
+        23
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-339.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-340",
+      "storeCode": "50715240",
+      "name": "International Delight pumpkin spice coffee creamer",
+      "size": "946 mL",
+      "salePrice": 5.78,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 24,
+      "sourcePages": [
+        24
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-340.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-341",
+      "storeCode": "51154784",
+      "name": "Silk Almond pumpkin spice coffee creamer",
+      "size": "890 mL",
+      "salePrice": 5.46,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 24,
+      "sourcePages": [
+        24
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-341.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-342",
+      "storeCode": "50685923",
+      "name": "International Delight pistachio coffee creamer",
+      "size": "Limited edition; 425 mL",
+      "salePrice": 2.97,
+      "regularPrice": 3.87,
+      "savings": 0.9,
+      "unit": "each",
+      "page": 24,
+      "sourcePages": [
+        24
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-342.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-343",
+      "storeCode": "50853880",
+      "name": "International Delight pumpkin spice cold foam",
+      "size": "369 g",
+      "salePrice": 5.78,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 24,
+      "sourcePages": [
+        24
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-343.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-344",
+      "storeCode": "30546597",
+      "name": "Silk Barista oat beverage",
+      "size": "946 mL",
+      "salePrice": 5.47,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 24,
+      "sourcePages": [
+        24
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-344.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-345",
+      "storeCode": "50982302",
+      "name": "International Delight caramel macchiato coffee creamer",
+      "size": "1.42 L",
+      "salePrice": 6.46,
+      "regularPrice": 7.47,
+      "savings": 1.01,
+      "unit": "each",
+      "page": 24,
+      "sourcePages": [
+        24
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-345.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-346",
+      "storeCode": "50783575",
+      "name": "International Delight Reese's iced coffee",
+      "size": "1.75 L",
+      "salePrice": 4.98,
+      "regularPrice": 6.98,
+      "savings": 2.0,
+      "unit": "each",
+      "page": 24,
+      "sourcePages": [
+        24
+      ],
+      "promotionType": "Rollback",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-346.jpg",
+      "priceConflict": false
+    },
+    {
+      "id": "card-347",
+      "storeCode": "31361801/50982175",
+      "name": "STOK cold brew black coffee or cappuccino",
+      "size": "1.42 L; selected varieties",
+      "salePrice": 7.98,
+      "regularPrice": null,
+      "savings": null,
+      "unit": "each",
+      "page": 24,
+      "sourcePages": [
+        24
+      ],
+      "promotionType": "Flyer price",
+      "conditions": "",
+      "pricePrefix": "",
+      "imageFile": "product-347.jpg",
+      "priceConflict": false
     }
-  ]
+  ],
+  "review": {
+    "reviewedPages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26
+    ],
+    "productPages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24
+    ],
+    "excludedPages": [
+      {
+        "page": 25,
+        "reason": "Membership, financing and pharmacy service ads; no individually priced product offers"
+      },
+      {
+        "page": 26,
+        "reason": "Partner service ads; no individually priced product offers"
+      }
+    ],
+    "deduplication": "Repeated store code and flyer price shown once; sourcePages records each occurrence.",
+    "priceConflicts": [
+      "50638073"
+    ]
+  }
 }

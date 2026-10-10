@@ -10,3 +10,4 @@
 
 /* Keep product codes close to the card edge and name block. */
 .walmart-admin .product-slider-track .slide-card.has-sale-footer{grid-template-rows:22px 20px auto 68px}.walmart-admin .slide-card-top{padding:0 3px;min-height:0;gap:2px}.walmart-admin .slide-product-code{line-height:1.1;padding:0;margin:0}.walmart-admin .slide-card-actions .product-description-trigger{height:22px}.walmart-admin .slide-product-name{margin:0 5px}@media(max-width:760px){.walmart-admin .product-slider-track .slide-card.has-sale-footer{grid-template-rows:20px 18px auto 62px}.walmart-admin .slide-card-actions .product-description-trigger{height:20px}}
+.walmart-controls .walmart-page-filter{flex:0 1 160px;min-width:140px}.walmart-controls select{padding:12px;border:1px solid #b9cbdc;border-radius:10px;font:inherit;background:#fff;color:inherit}
