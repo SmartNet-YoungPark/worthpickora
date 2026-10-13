@@ -74,5 +74,5 @@ export async function storeClickTotals():Promise<Record<string,number>>{
  }
  const totals:Record<string,number>=Object.create(null);
  for(const row of rows){const key=row.store_name.trim().toLowerCase();totals[key]=(totals[key]||0)+Number(row.clicks);}
- return totals;
+ return Object.fromEntries(Object.entries(totals));
 }
