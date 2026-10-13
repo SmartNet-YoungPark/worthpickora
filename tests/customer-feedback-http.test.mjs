@@ -14,6 +14,9 @@ try{
  assert.equal((await mutate('/api/admin/feedback','PATCH',{}, {origin:'https://evil.test',cookie})).status,403);
  assert.equal((await mutate('/api/admin/feedback','PATCH',{})).status,401);
  assert.equal((await mutate('/api/admin/feedback','PATCH',{},{cookie})).status,400);
+ assert.equal((await mutate('/api/admin/feedback','DELETE',{}, {origin:'https://evil.test',cookie})).status,403);
+ assert.equal((await mutate('/api/admin/feedback','DELETE',{})).status,401);
+ assert.equal((await mutate('/api/admin/feedback','DELETE',{id:'00000000-0000-4000-8000-000000000001'},{cookie})).status,400);
  assert.equal((await mutate('/api/feedback','POST',{})).status,400);
  assert.equal((await mutate('/api/feedback','POST',{}, {origin:'https://evil.test'})).status,403);
  assert.equal((await fetch(base+'/api/feedback?date=oops')).status,400);

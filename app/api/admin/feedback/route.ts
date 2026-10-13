@@ -5,6 +5,16 @@ import {feedbackId} from "@/lib/customer-feedback";
 import {feedbackRpc} from "@/lib/server-feedback";
 export const dynamic="force-dynamic";
 const headers={"Cache-Control":"no-store, private"};
+export async function DELETE(request:NextRequest){
+ if(request.headers.get("origin")!==request.nextUrl.origin)return Response.json({error:"Forbidden"},{status:403,headers});
+ if(!await isAdmin())return Response.json({error:"Sign in to manage feedback."},{status:401,headers});
+ let body;try{body=await request.json();}catch{return Response.json({error:"Invalid request."},{status:400,headers});}
+ if(!body||!feedbackId(body.id)||body.confirmed!==true)return Response.json({error:"Confirm the comment you want to delete."},{status:400,headers});
+ try{
+  await feedbackRpc("customer_feedback_delete",{p_id:body.id});
+  return Response.json({message:"Comment and reply deleted."},{headers});
+ }catch{return Response.json({error:"Could not delete the comment. Please retry."},{status:503,headers});}
+}
 export async function GET(request:NextRequest){
  if(!await isAdmin())return Response.json({error:"Sign in to manage feedback."},{status:401,headers});
  const date=request.nextUrl.searchParams.get("date")||"",offset=Number(request.nextUrl.searchParams.get("offset")||0);

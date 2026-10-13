@@ -26,8 +26,13 @@ test('feedback persists, deduplicates, moderates, paginates and protects custome
  await submit(2);await submit(3);assert.equal(await submit(4),false);
  const stats=(await db.query('select customer_feedback_summary($1,$1) data',[date])).rows[0].data;assert.deepEqual(stats,{total:3,pending:2,problems:3});
  await db.query('select customer_feedback_update($1,$2,$3)',[id(1),'','hidden']);assert.equal((await list(false)).length,0);
+ await db.exec(await readFile('supabase/migrations/20261012020000_customer_feedback_delete.sql','utf8'));
+ assert.equal((await db.query('select customer_feedback_delete($1) ok',[id(1)])).rows[0].ok,true);
+ assert.equal((await db.query('select customer_feedback_delete($1) ok',[id(1)])).rows[0].ok,false);
+ assert.equal((await list(true)).length,2);
  await db.exec('set role anon');
  await assert.rejects(db.query('select * from customer_feedback'));
+ await assert.rejects(db.query('select customer_feedback_delete($1)',[id(2)]));
  await assert.rejects(db.query('select customer_feedback_list($1,true,0)',[date]));
  await assert.rejects(db.query('select customer_feedback_update($1,$2,$3)',[id(1),'fake reply','visible']));
  }finally{await db.close();}

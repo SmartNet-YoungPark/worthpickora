@@ -4,13 +4,16 @@ import {FEEDBACK_KINDS,type Feedback,type FeedbackKind} from "@/lib/customer-fee
 import {shiftDate,torontoDate,validRange} from "@/lib/click-analytics";
 import "./customer-feedback.css";
 function ReplyEditor({row,onSaved}:{row:Feedback;onSaved:()=>void}){
+ const [confirmDelete,setConfirmDelete]=useState(false);
  const [reply,setReply]=useState(row.reply),[status,setStatus]=useState(row.status),[busy,setBusy]=useState(false),[notice,setNotice]=useState("");
  return <form className="feedback-reply-editor" onSubmit={async e=>{e.preventDefault();setBusy(true);setNotice("");try{
   const r=await fetch("/api/admin/feedback",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:row.id,reply,status})});const b=await r.json();if(!r.ok)throw new Error(b.error);setNotice(b.message);onSaved();
  }catch(error){setNotice(error instanceof Error?error.message:"Save failed.");}finally{setBusy(false);}}}>
  <label>Administrator reply<textarea value={reply} maxLength={1500} onChange={e=>setReply(e.target.value)}/></label>
  <label>Visibility<select value={status} onChange={e=>setStatus(e.target.value as Feedback["status"])}><option value="pending">Pending review</option><option value="visible">Public (comment and reply)</option><option value="hidden">Hidden</option></select></label>
- <button disabled={busy}>{busy?"Saving…":"Save reply / visibility"}</button><p role="status">{notice}</p></form>;
+ <div className="feedback-editor-actions"><button disabled={busy}>{busy?"Saving...":"Save reply / visibility"}</button><button type="button" className="feedback-delete-button" disabled={busy} onClick={()=>setConfirmDelete(true)}>Delete comment</button></div>
+ {confirmDelete&&<div className="feedback-delete-confirm" role="group" aria-label="Confirm comment deletion"><strong>Delete this comment and its reply permanently?</strong><p>Customers will no longer see either. This cannot be undone.</p><div className="feedback-editor-actions"><button type="button" disabled={busy} onClick={()=>setConfirmDelete(false)}>Cancel</button><button type="button" className="feedback-delete-button" disabled={busy} onClick={async()=>{setBusy(true);setNotice("");try{const r=await fetch("/api/admin/feedback",{method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:row.id,confirmed:true})});const b=await r.json();if(!r.ok)throw new Error(b.error);onSaved();}catch(e){setNotice(e instanceof Error?e.message:"Delete failed.");}finally{setBusy(false);}}}>{busy?"Deleting...":"Delete permanently"}</button></div></div>}
+ <p role="status">{notice}</p></form>;
 }
 export default function CustomerFeedback({admin=false}:{admin?:boolean}){
  const [date,setDate]=useState(()=>torontoDate()),[rows,setRows]=useState<Feedback[]>([]),[offset,setOffset]=useState(0),[more,setMore]=useState(false),[refresh,setRefresh]=useState(0),[loading,setLoading]=useState(true),[error,setError]=useState("");
