@@ -63,3 +63,16 @@ export async function deleteClickReport(start:string,end:string):Promise<{record
   });
   globalState.clickWriteQueue=operation.catch(()=>{});return operation;
 }
+
+// Public pages receive store totals only, never product-level or visitor records.
+export async function storeClickTotals():Promise<Record<string,number>>{
+ let rows:{store_name:string;clicks:number}[];
+ if(url&&key)rows=await rpc("product_click_store_totals",{});
+ else{
+  if(process.env.VERCEL)throw new Error("Click totals are unavailable.");
+  await globalState.clickWriteQueue;rows=await readLocal();
+ }
+ const totals:Record<string,number>=Object.create(null);
+ for(const row of rows){const key=row.store_name.trim().toLowerCase();totals[key]=(totals[key]||0)+Number(row.clicks);}
+ return totals;
+}
