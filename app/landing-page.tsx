@@ -108,7 +108,6 @@ export default function LandingPage({ admin, initialCatalog, storeLinks = [], ba
         </section>;
       })}
       {filtering && !categories.some(cat => matchingProducts(cat.name).length) && <div className="empty-state"><Icon name={savedOnly ? "heart" : "search"} size={36}/><h2>{savedOnly ? "Your favorites start here." : "No finds just yet."}</h2><p>{savedOnly ? "Tap the heart on anything you love to keep it here." : "Try a product name, code, or a different search."}</p><button onClick={() => {setSavedOnly(false);setQuery("");}}>Explore the collection <Icon name="arrow" size={18}/></button></div>}
-      <div className="closing-note"><span>✦</span><p>Small choices.<br/><em>Big happiness.</em></p><span>✦</span></div>
     </main>
     <SetNavigation/>
     <footer><Link href="/" className="wordmark">Worth<span>Pickora</span>.</Link><p>A little less searching. A little more finding.</p><span>© {new Date().getFullYear()} WorthPickora</span>{admin && <Link href="/admin/products" className="catalog-admin-link">Manage products</Link>}<small>We may earn a commission from qualifying purchases through affiliate links. As an Amazon Associate I earn from qualifying purchases.</small></footer>
