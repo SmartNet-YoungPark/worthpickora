@@ -1,5 +1,6 @@
 import {storeClickTotals} from "@/lib/server-click-analytics";
-import LandingViewTracker from "./landing-view-tracker";
+import {headers} from "next/headers";
+import AffiliateMarketProvider from "./affiliate-market";
 import LandingPage from "./landing-page";
 import { isAdmin } from "@/lib/admin-auth";
 import { publicCatalog } from "@/lib/server-catalog";
@@ -10,5 +11,6 @@ export default async function Home() {
   // The shopping page only needs store names/counts for navigation. Offer details
   // and codes belong exclusively to the separate promotion pages.
   const storeNavigation=storeLinks.map(({id,store})=>({id,store,title:"",description:"",url:""}));
-  return <><LandingViewTracker admin={admin}/><LandingPage admin={admin} initialCatalog={initialCatalog} storeLinks={storeNavigation} bannerMessage={bannerMessage} storeClicks={storeClicks}/></>;
+  const country=(await headers()).get("x-vercel-ip-country");
+  return <AffiliateMarketProvider country={country}><LandingPage admin={admin} initialCatalog={initialCatalog} storeLinks={storeNavigation} bannerMessage={bannerMessage} storeClicks={storeClicks}/></AffiliateMarketProvider>;
 }
