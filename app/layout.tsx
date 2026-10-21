@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import {geniuslinkAuditScript} from "@/lib/geniuslink-audit";
 import "@fontsource-variable/inter";
 import "./globals.css";
 
@@ -21,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
   Genius.amazon.convertLinks(tsid, true, "http://buy.geni.us");
 });
 `}} />
+        <script id="geniuslink-debug-audit" type="text/javascript" dangerouslySetInnerHTML={{__html: geniuslinkAuditScript}} />
       </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
