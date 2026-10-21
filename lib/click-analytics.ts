@@ -1,4 +1,4 @@
-export type ClickRow = {click_date:string;product_id:string;product_code:string;product_name:string;category_name:string;set_name:string;store_name:string;clicks:number;source?:string;device?:string};
+export type ClickRow = {click_date:string;product_id:string;product_code:string;product_name:string;category_name:string;set_name:string;store_name:string;clicks:number;source?:string;device?:string;market?:string};
 export type GroupBy = "product" | "store" | "category" | "source" | "device";
 export type Period = "day" | "week" | "month" | "year";
 export const PERIODS: Period[] = ["day", "week", "month", "year"];

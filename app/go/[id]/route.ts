@@ -4,7 +4,7 @@ import {isAdmin} from "@/lib/admin-auth";
 import {outboundClick} from "@/lib/server-click-analytics";
 import {validUrl} from "@/lib/catalog";
 import {catalogStorage} from "@/lib/server-catalog";
-import {SOURCE_COOKIE,visitSource,deviceType} from "@/lib/click-attribution";
+import {SOURCE_COOKIE,visitSource,deviceType,clickMarket} from "@/lib/click-attribution";
 export const dynamic="force-dynamic";
 export const runtime="nodejs";
 export async function GET(request:NextRequest,{params}:{params:Promise<{id:string}>}){
@@ -20,7 +20,7 @@ export async function GET(request:NextRequest,{params}:{params:Promise<{id:strin
     if(!routed||!validUrl(routed))return new Response("Product link unavailable for your country",{status:404,headers});
     const source=visitSource(request.nextUrl,request.headers.get("referer")||"",request.cookies.get(SOURCE_COOKIE)?.value);
     const device=deviceType(request.headers.get("user-agent")||"",request.headers.get("sec-ch-ua-mobile"));
-    await outboundClick(id,!preview&&!bot&&!await isAdmin(),source,device);
+    await outboundClick(id,!preview&&!bot&&!await isAdmin(),source,device,clickMarket(country));
     return new Response(null,{status:302,headers:{...headers,Location:routed}});
   }catch{
     console.error("Product click recording failed; check analytics migration and database availability.");

@@ -16,3 +16,5 @@
 .analytics-stats>div:nth-child(2)>strong,.analytics-store-card header>strong,.analytics-store-top-five b,.analytics-click-count{color:#d92d42}
 
 .analytics-device-totals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;list-style:none;padding:0;margin:12px 0}.analytics-device-totals li{display:flex;flex-wrap:wrap;justify-content:space-between;gap:5px;padding:7px 9px;border-radius:8px;background:#f1f6f3;font-size:12px;min-width:0}.analytics-device-totals b{font-variant-numeric:tabular-nums;color:#d92d42}.analytics-stats>div:first-child>strong{color:#d92d42}
+
+.analytics-market-summary{border-top:1px solid #d7e4dc;padding-top:12px;margin:12px 0}.analytics-market-summary h3{font-size:13px;font-weight:700}.analytics-market-summary .analytics-device-totals{margin:8px 0}

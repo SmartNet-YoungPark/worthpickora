@@ -27,3 +27,10 @@ export function deviceType(userAgent:string,mobileHint:string|null=null):string 
   return "Unknown";
 }
 
+
+// Visitor market from the hosting provider's country header; never inferred from currency or a link.
+export function clickMarket(country:string|null|undefined):"US"|"CA"|"Other"|"Unknown"{
+ const value=country?.trim().toUpperCase();
+ if(value==="US"||value==="CA")return value;
+ return value&&/^[A-Z]{2}$/.test(value)&&value!=="XX"?"Other":"Unknown";
+}

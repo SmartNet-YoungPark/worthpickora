@@ -21,8 +21,11 @@ const globalState=globalThis as typeof globalThis & {clickWriteQueue?:Promise<un
 async function readLocal():Promise<ClickRow[]>{
   try{return JSON.parse(await readFile(file,"utf8"));}catch(error){if((error as NodeJS.ErrnoException).code==="ENOENT")return [];throw error;}
 }
-export async function outboundClick(id:string,count:boolean,source="Unknown",device="Unknown"):Promise<string|null>{
+export async function outboundClick(id:string,count:boolean,source="Unknown",device="Unknown",market="Unknown"):Promise<string|null>{
   if(url&&key){
+    try{return await rpc("product_click_outbound_market",{p_id:id,p_count:count,p_source:source,p_device:device,p_market:market});}
+    catch(error){if(!(error&&typeof error==="object"&&"missingFunction" in error&&error.missingFunction))throw error;}
+    // Keep recording totals as Unknown until the market migration is applied.
     try{return await rpc("product_click_outbound_attributed",{p_id:id,p_count:count,p_source:source,p_device:device});}
     catch(error){
       if(error&&typeof error==="object"&&"missingFunction" in error&&error.missingFunction)return rpc("product_click_outbound",{p_id:id,p_count:count});
@@ -35,8 +38,8 @@ export async function outboundClick(id:string,count:boolean,source="Unknown",dev
   if(count){
     const operation=(globalState.clickWriteQueue||Promise.resolve()).then(async()=>{
       const rows=await readLocal();const date=torontoDate();
-      const row=rows.find(r=>r.product_id===id&&r.click_date===date&&(r.source||"Unknown")===source&&(r.device||"Unknown")===device);
-      if(row)row.clicks++;else rows.push({click_date:date,product_id:id,product_code:product.code,product_name:product.name,category_name:product.category,set_name:product.category+" Set "+product.set,store_name:product.store,clicks:1,source,device});
+      const row=rows.find(r=>r.product_id===id&&r.click_date===date&&(r.source||"Unknown")===source&&(r.device||"Unknown")===device&&(r.market||"Unknown")===market);
+      if(row)row.clicks++;else rows.push({click_date:date,product_id:id,product_code:product.code,product_name:product.name,category_name:product.category,set_name:product.category+" Set "+product.set,store_name:product.store,clicks:1,source,device,market});
       await mkdir(dirname(file),{recursive:true});const temp=file+"."+randomUUID()+".tmp";await writeFile(temp,JSON.stringify(rows),{mode:0o600});await rename(temp,file);
     });globalState.clickWriteQueue=operation.catch(()=>{});await operation;
   }
