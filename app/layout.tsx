@@ -13,6 +13,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className="h-full antialiased"
     >
+      <head>
+        <script type="text/javascript" src="https://geniuslinkcdn.com/snippet.min.js" defer />
+        <script id="geniuslink-amazon-init" type="text/javascript" dangerouslySetInnerHTML={{__html: `
+document.addEventListener("DOMContentLoaded", function() {
+  var tsid = 447940;
+  Genius.amazon.convertLinks(tsid, true, "http://buy.geni.us");
+});
+`}} />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
