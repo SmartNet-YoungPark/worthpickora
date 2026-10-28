@@ -2,7 +2,7 @@ import {NextRequest} from "next/server";
 import {isAdmin} from "@/lib/admin-auth";
 import {catalogStorage} from "@/lib/server-catalog";
 import {outboundClick} from "@/lib/server-click-analytics";
-import {directAmazonLink} from "@/lib/direct-amazon-link";
+import {geniuslinkProduct} from "@/lib/geniuslink-product";
 import {SOURCE_COOKIE,visitSource,deviceType,clickMarket} from "@/lib/click-attribution";
 export const runtime="nodejs";
 export async function POST(request:NextRequest){
@@ -20,7 +20,7 @@ export async function POST(request:NextRequest){
   try{
     const country=request.headers.get("x-vercel-ip-country");
     const product=(await catalogStorage.read()).products.find(p=>p.id===body.id&&p.status==="Published");
-    if(!product||!directAmazonLink(product,country))return new Response(null,{status:404,headers});
+    if(!product||!geniuslinkProduct(product))return new Response(null,{status:404,headers});
     await outboundClick(product.id,true,visitSource(new URL(body.url),typeof body.referrer==="string"?body.referrer:"",request.cookies.get(SOURCE_COOKIE)?.value),deviceType(ua,request.headers.get("sec-ch-ua-mobile")),clickMarket(country));
     return new Response(null,{status:204,headers});
   }catch{

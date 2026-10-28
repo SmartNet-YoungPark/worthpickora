@@ -1,8 +1,7 @@
 "use client";
-import {useContext,useEffect,useRef,useState,type CSSProperties} from "react";
+import {useEffect,useRef,useState,type CSSProperties} from "react";
 import Image from "next/image";
-import {AffiliateMarket} from "./affiliate-market";
-import {directAmazonLink} from "@/lib/direct-amazon-link";
+import {geniuslinkProduct} from "@/lib/geniuslink-product";
 import ProductDescription from "./product-description";
 import DiscountDetails,{type DiscountDetail} from "./promotions/discount-details";
 import BrandMark from "./brand-mark";
@@ -13,8 +12,7 @@ function Arrow({direction}:{direction:"left"|"right"|"up"|"down"}){
   return <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" style={{transform:`rotate(${{right:0,down:90,left:180,up:270}[direction]}deg)`}}><path d="m9 5 7 7-7 7"/></svg>;
 }
 export default function ProductSlider({name,products,saved,onSave,tone,promotionCodes,promotionDiscounts,promotionSummaries,promotionStatuses,detailsOnly=false,showProductCode=false,saleFooters,hideSetHeading=false}:{hideSetHeading?:boolean;showProductCode?:boolean;saleFooters?:Record<string,{price:string;previousPrice:string;savings:string;promotionType?:string}>;detailsOnly?:boolean;name:string;products:Product[];saved:string[];onSave:(id:string)=>void;tone:number;promotionCodes?:Record<string,string>;promotionDiscounts?:Record<string,{percent:number;label:string}>;promotionStatuses?:Record<string,string>;promotionSummaries?:Record<string,DiscountDetail>}){
-  const country=useContext(AffiliateMarket);
-  const directLink=(product:Product)=>!detailsOnly&&promotionCodes===undefined?directAmazonLink(product,country):null;
+  const directLink=(product:Product)=>!detailsOnly&&promotionCodes===undefined?geniuslinkProduct(product):null;
   function recordClick(product:Product){
     if(!directLink(product))return;
     // One request per activation, without retries or the /go redirect (no double count).
